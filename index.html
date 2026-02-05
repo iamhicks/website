@@ -371,6 +371,23 @@
         .folder-header.dragging {
             opacity: 0.5;
         }
+        
+        .folder-drop-zone-end {
+            margin: 8px 4px;
+            padding: 12px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .folder-drop-zone-end.active {
+            border-color: var(--accent);
+            background: rgba(0, 113, 227, 0.1);
+            color: var(--accent);
+        }
 
         .folder-toggle {
             width: 16px;
@@ -2615,6 +2632,13 @@
                             
                             if (!this.draggedFolder || this.draggedFolder === folder.id) return;
                             
+                            const draggedFolder = this.data.folders.find(f => f.id === this.draggedFolder);
+                            
+                            // If dragged folder has different parent, move it to target's parent first
+                            if (draggedFolder.parentId !== folder.parentId) {
+                                draggedFolder.parentId = folder.parentId;
+                            }
+                            
                             const rect = li.getBoundingClientRect();
                             const midY = rect.top + rect.height / 2;
                             const insertBefore = e.clientY < midY;
@@ -2690,7 +2714,57 @@
                 };
                 
                 tree.appendChild(renderFolder('root'));
-            }
+                
+                // Add drop zone at end of root folders for dragging nested folders out
+                const rootDropZone = document.createElement('div');
+                rootDropZone.className = 'folder-drop-zone-end';
+                rootDropZone.innerHTML = '<span style="color: var(--text-tertiary); font-size: 12px; padding: 4px 8px;">Drop here to move to root</span>';
+                rootDropZone.style.cssText = 'padding: 8px; margin: 4px; border: 2px dashed var(--border); border-radius: 6px; text-align: center; opacity: 0; transition: opacity 0.2s;';
+                
+                rootDropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (this.draggedFolder) {
+                        rootDropZone.style.opacity = '1';
+                        rootDropZone.style.borderColor = 'var(--accent)';
+                    }
+                });
+                
+                rootDropZone.addEventListener('dragleave', () => {
+                    rootDropZone.style.opacity = '0';
+                    rootDropZone.style.borderColor = 'var(--border)';
+                });
+                
+                rootDropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    rootDropZone.style.opacity = '0';
+                    rootDropZone.style.borderColor = 'var(--border)';
+                    
+                    if (this.draggedFolder) {
+                        const folder = this.data.folders.find(f => f.id === this.draggedFolder);
+                        if (folder && folder.parentId !== 'root') {
+                            folder.parentId = 'root';
+                            this.saveData();
+                            this.render();
+                            this.showToast('Folder moved to root', 'success');
+                        }
+                        this.draggedFolder = null;
+                    }
+                });
+                
+                // Only show drop zone when dragging a folder that's not at root
+                tree.addEventListener('dragstart', () => {
+                    if (this.draggedFolder) {
+                        const folder = this.data.folders.find(f => f.id === this.draggedFolder);
+                        if (folder && folder.parentId !== 'root') {
+                            tree.appendChild(rootDropZone);
+                            setTimeout(() => rootDropZone.style.opacity = '1', 10);
+                        }
+                    }
+                });
+                
+                tree.addEventListener('dragend', () => {
+                    rootDropZone.remove();
+                });
             
             getChildFolderIds(parentId) {
                 const ids = [];
