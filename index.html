@@ -1673,6 +1673,14 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Data Recovery</label>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="checkBackupBtn">Check for Backups</button>
+                        <button class="btn btn-secondary" id="createBackupBtn">Create Backup Now</button>
+                    </div>
+                    <small id="backupStatus" style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;"></small>
+                </div>
+                <div class="form-group">
                     <label class="form-label">Danger Zone</label>
                     <button class="btn btn-secondary" id="clearAllBtn" style="color: var(--danger);">Clear All Data</button>
                 </div>
@@ -2521,9 +2529,9 @@
                         
                         // Drag and drop: Header = move as child, List item = reorder
                         
-                        // SIMPLE DRAG AND DROP - Reorder only
-                        
-                        // Make folder draggable
+                        // DRAG AND DROP DISABLED - TOO BUGGY
+                        // Simple drag indicators only - no actual drag functionality
+                        /*
                         li.draggable = true;
                         
                         li.addEventListener('dragstart', (e) => {
@@ -2586,6 +2594,7 @@
                             this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
                             this.draggedFolder = null;
                         });
+                        */
                         
                         // Render children
                         if (hasChildren && !isCollapsed) {
@@ -3015,6 +3024,60 @@
                 input.click();
             }
             
+            checkForBackups() {
+                const statusEl = document.getElementById('backupStatus');
+                const saved = localStorage.getItem('kb_data');
+                const backup = localStorage.getItem('kb_data_backup');
+                
+                let message = '';
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        const folderCount = data.folders ? data.folders.length : 0;
+                        const noteCount = data.notes ? data.notes.length : 0;
+                        message += `Current data: ${folderCount} folders, ${noteCount} notes. `;
+                    } catch (e) {
+                        message += 'Current data: corrupted. ';
+                    }
+                } else {
+                    message += 'No current data found. ';
+                }
+                
+                if (backup) {
+                    try {
+                        const data = JSON.parse(backup);
+                        const folderCount = data.folders ? data.folders.length : 0;
+                        const noteCount = data.notes ? data.notes.length : 0;
+                        message += `Backup found: ${folderCount} folders, ${noteCount} notes.`;
+                        
+                        if (confirm('Backup found! Would you like to restore it?')) {
+                            localStorage.setItem('kb_data', backup);
+                            this.loadData();
+                            this.render();
+                            this.showToast('Backup restored!', 'success');
+                        }
+                    } catch (e) {
+                        message += 'Backup: corrupted.';
+                    }
+                } else {
+                    message += 'No backup found.';
+                }
+                
+                statusEl.textContent = message;
+            }
+            
+            createBackup() {
+                const data = localStorage.getItem('kb_data');
+                if (data) {
+                    localStorage.setItem('kb_data_backup', data);
+                    localStorage.setItem('kb_backup_date', new Date().toISOString());
+                    document.getElementById('backupStatus').textContent = 'Backup created at ' + new Date().toLocaleString();
+                    this.showToast('Backup created successfully', 'success');
+                } else {
+                    document.getElementById('backupStatus').textContent = 'No data to backup';
+                }
+            }
+            
             importMarkdown(content) {
                 // Simple markdown import - create one note per file
                 const title = content.match(/^#\s+(.+)$/m)?.[1] || 'Imported Note';
@@ -3162,6 +3225,10 @@
                 document.getElementById('exportMarkdownBtn').addEventListener('click', () => this.exportMarkdown());
                 document.getElementById('importBtn').addEventListener('click', () => this.importData());
                 document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllData());
+                
+                // Backup buttons
+                document.getElementById('checkBackupBtn').addEventListener('click', () => this.checkForBackups());
+                document.getElementById('createBackupBtn').addEventListener('click', () => this.createBackup());
                 
                 // Focus mode
                 document.getElementById('focusBtn').addEventListener('click', () => this.toggleFocusMode());
