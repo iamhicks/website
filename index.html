@@ -2451,18 +2451,13 @@
                             if (e.target.classList.contains('folder-action-btn') || 
                                 e.target.closest('.folder-dropdown')) return;
                             
-                            if (hasChildren) {
-                                // Toggle collapse
-                                if (!this.data.settings.sidebarCollapsed) {
-                                    this.data.settings.sidebarCollapsed = {};
-                                }
-                                this.data.settings.sidebarCollapsed[folder.id] = !isCollapsed;
-                                this.saveData();
-                                this.renderFolderTree();
-                            } else {
-                                // Select folder if no children
-                                this.selectFolder(folder.id);
+                            // Always toggle collapse state on click
+                            if (!this.data.settings.sidebarCollapsed) {
+                                this.data.settings.sidebarCollapsed = {};
                             }
+                            this.data.settings.sidebarCollapsed[folder.id] = !isCollapsed;
+                            this.saveData();
+                            this.renderFolderTree();
                         });
                         
                         // Context menu
@@ -2524,30 +2519,9 @@
                             if (dropdown) dropdown.classList.remove('show');
                         });
                         
-                        // Drag and drop for folders
-                        header.addEventListener('dragover', (e) => {
-                            e.preventDefault();
-                            header.classList.add('drag-over');
-                        });
+                        // Drag and drop: Header = move as child, List item = reorder
                         
-                        header.addEventListener('dragleave', () => {
-                            header.classList.remove('drag-over');
-                        });
-                        
-                        header.addEventListener('drop', (e) => {
-                            e.preventDefault();
-                            header.classList.remove('drag-over');
-                            if (this.draggedNote) {
-                                this.moveNote(this.draggedNote, folder.id);
-                                this.draggedNote = null;
-                            } else if (this.draggedFolder && this.draggedFolder !== folder.id) {
-                                // Move folder as child of target folder
-                                this.moveFolder(this.draggedFolder, folder.id);
-                                this.draggedFolder = null;
-                            }
-                        });
-                        
-                        // Folder reordering drag events
+                        // Make folder draggable
                         li.draggable = true;
                         
                         li.addEventListener('dragstart', (e) => {
@@ -2561,12 +2535,56 @@
                             document.querySelectorAll('.folder-item').forEach(item => {
                                 item.classList.remove('drag-over-top', 'drag-over-bottom');
                             });
+                            document.querySelectorAll('.folder-header').forEach(h => {
+                                h.classList.remove('drag-over');
+                            });
                             this.draggedFolder = null;
                         });
                         
+                        // Header drop zone - move as child
+                        header.addEventListener('dragover', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            header.classList.add('drag-over');
+                        });
+                        
+                        header.addEventListener('dragleave', (e) => {
+                            e.stopPropagation();
+                            header.classList.remove('drag-over');
+                        });
+                        
+                        header.addEventListener('drop', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            header.classList.remove('drag-over');
+                            
+                            if (this.draggedNote) {
+                                // Move note to this folder
+                                this.moveNote(this.draggedNote, folder.id);
+                                this.draggedNote = null;
+                            } else if (this.draggedFolder && this.draggedFolder !== folder.id) {
+                                // Check if we're dropping on the header (make child) or between (reorder)
+                                // If the event came from the header, make it a child
+                                this.moveFolder(this.draggedFolder, folder.id);
+                                this.draggedFolder = null;
+                            }
+                        });
+                        
+                        // List item drop zone - reorder between siblings
                         li.addEventListener('dragover', (e) => {
                             e.preventDefault();
                             if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            
+                            // Clear other indicators first
+                            document.querySelectorAll('.folder-item').forEach(item => {
+                                if (item !== li) {
+                                    item.classList.remove('drag-over-top', 'drag-over-bottom');
+                                }
+                            });
+                            document.querySelectorAll('.folder-header').forEach(h => {
+                                h.classList.remove('drag-over');
+                            });
                             
                             const rect = li.getBoundingClientRect();
                             const midY = rect.top + rect.height / 2;
@@ -2582,8 +2600,27 @@
                             }
                         });
                         
-                        li.addEventListener('dragleave', () => {
+                        li.addEventListener('dragleave', (e) => {
+                            // Only remove if we're actually leaving the element
+                            if (!li.contains(e.relatedTarget)) {
+                                li.classList.remove('drag-over-top', 'drag-over-bottom');
+                            }
+                        });
+                        
+                        li.addEventListener('drop', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
                             li.classList.remove('drag-over-top', 'drag-over-bottom');
+                            
+                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            
+                            const rect = li.getBoundingClientRect();
+                            const midY = rect.top + rect.height / 2;
+                            const insertBefore = e.clientY < midY;
+                            
+                            this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
+                            this.draggedFolder = null;
                         });
                         
                         li.addEventListener('drop', (e) => {
@@ -2607,10 +2644,10 @@
                             li.appendChild(children);
                         }
                         
-                        // Render notes in this folder (only if selected)
-                        if (this.currentFolder === folder.id || this.getChildFolderIds(this.currentFolder).includes(folder.id)) {
+                        // Render notes in this folder (only if expanded)
+                        if (!isCollapsed) {
                             const notes = this.data.notes.filter(n => n.folderId === folder.id);
-                            if (notes.length > 0 && !isCollapsed) {
+                            if (notes.length > 0) {
                                 const notesUl = document.createElement('ul');
                                 notesUl.className = 'folder-children';
                                 notes.forEach(note => {
