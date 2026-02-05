@@ -2615,24 +2615,17 @@
                             
                             if (!this.draggedFolder || this.draggedFolder === folder.id) return;
                             
-                            const rect = li.getBoundingClientRect();
-                            const midY = rect.top + rect.height / 2;
-                            const insertBefore = e.clientY < midY;
-                            
-                            this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
-                            this.draggedFolder = null;
-                        });
-                        
-                        li.addEventListener('drop', (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            li.classList.remove('drag-over-top', 'drag-over-bottom');
-                            
-                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            const draggedFolder = this.data.folders.find(f => f.id === this.draggedFolder);
+                            if (!draggedFolder) return;
                             
                             const rect = li.getBoundingClientRect();
                             const midY = rect.top + rect.height / 2;
                             const insertBefore = e.clientY < midY;
+                            
+                            // If different parent, move to target's parent first
+                            if (draggedFolder.parentId !== folder.parentId) {
+                                draggedFolder.parentId = folder.parentId;
+                            }
                             
                             this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
                             this.draggedFolder = null;
