@@ -323,13 +323,13 @@
         }
 
         .folder-header.active {
-            background: var(--accent);
-            color: white;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
         }
 
         .folder-header.drag-over {
-            background: var(--accent);
-            color: white;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
         }
 
         .folder-toggle {
@@ -1408,6 +1408,17 @@
             </div>
             
             <div class="sidebar-content">
+                <!-- Favorites Section -->
+                <div class="sidebar-section" id="favoritesSectionContainer" style="display: none;">
+                    <div class="section-header" data-section="favorites">
+                        <span>Favorites</span>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="favoritesSection">
+                        <ul class="folder-tree" id="favoritesTree"></ul>
+                    </div>
+                </div>
+                
                 <!-- Folders Section -->
                 <div class="sidebar-section">
                     <div class="section-header" data-section="folders">
@@ -1833,10 +1844,114 @@
                     if (!this.data.settings.favoriteFolders.includes(id)) {
                         this.data.settings.favoriteFolders.push(id);
                         this.saveData();
+                        this.renderFavorites();
                         this.showToast('Added to favorites', 'success');
                     } else {
                         this.showToast('Already in favorites', 'info');
                     }
+                }
+            }
+            
+            renderFavorites() {
+                const favoritesContainer = document.getElementById('favoritesSectionContainer');
+                const favoritesTree = document.getElementById('favoritesTree');
+                const favoriteIds = this.data.settings.favoriteFolders || [];
+                
+                if (favoriteIds.length === 0) {
+                    favoritesContainer.style.display = 'none';
+                    return;
+                }
+                
+                favoritesContainer.style.display = 'block';
+                favoritesTree.innerHTML = '';
+                
+                favoriteIds.forEach(folderId => {
+                    const folder = this.data.folders.find(f => f.id === folderId);
+                    if (folder) {
+                        const li = document.createElement('li');
+                        li.className = 'folder-item';
+                        
+                        const noteCount = this.data.notes.filter(n => n.folderId === folderId).length;
+                        
+                        li.innerHTML = `
+                            <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}" 
+                                 data-folder="${folder.id}"
+                                 style="padding-left: 8px;">
+                                <span class="folder-icon">⭐</span>
+                                <span class="folder-name">${this.escapeHtml(folder.name)}</span>
+                                <span class="folder-count">${noteCount}</span>
+                                <div class="folder-actions">
+                                    <button class="folder-action-btn more-menu" title="More options"></button>
+                                    <div class="folder-dropdown" id="dropdown-fav-${folder.id}">
+                                        <div class="folder-dropdown-item" data-action="remove-favorite">
+                                            <span class="folder-dropdown-icon">⭐</span>
+                                            <span>Remove from Favorites</span>
+                                        </div>
+                                        <div class="folder-dropdown-item" data-action="rename">
+                                            <span class="folder-dropdown-icon">✏️</span>
+                                            <span>Rename</span>
+                                        </div>
+                                        <div class="folder-dropdown-divider"></div>
+                                        <div class="folder-dropdown-item delete" data-action="delete">
+                                            <span class="folder-dropdown-icon">🗑️</span>
+                                            <span>Move to Trash</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        const header = li.querySelector('.folder-header');
+                        header.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('folder-action-btn')) return;
+                            this.selectFolder(folder.id);
+                        });
+                        
+                        // More menu button
+                        const moreMenuBtn = li.querySelector('.folder-action-btn.more-menu');
+                        const dropdown = li.querySelector(`#dropdown-fav-${folder.id}`);
+                        
+                        if (moreMenuBtn && dropdown) {
+                            moreMenuBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                document.querySelectorAll('.folder-dropdown.show').forEach(d => {
+                                    if (d !== dropdown) d.classList.remove('show');
+                                });
+                                dropdown.classList.toggle('show');
+                            });
+                            
+                            dropdown.querySelectorAll('.folder-dropdown-item').forEach(item => {
+                                item.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    const action = item.dataset.action;
+                                    dropdown.classList.remove('show');
+                                    
+                                    switch(action) {
+                                        case 'remove-favorite':
+                                            this.removeFolderFromFavorites(folder.id);
+                                            break;
+                                        case 'rename':
+                                            this.renameFolder(folder.id);
+                                            break;
+                                        case 'delete':
+                                            this.deleteFolder(folder.id);
+                                            break;
+                                    }
+                                });
+                            });
+                        }
+                        
+                        favoritesTree.appendChild(li);
+                    }
+                });
+            }
+            
+            removeFolderFromFavorites(id) {
+                if (this.data.settings.favoriteFolders) {
+                    this.data.settings.favoriteFolders = this.data.settings.favoriteFolders.filter(fId => fId !== id);
+                    this.saveData();
+                    this.renderFavorites();
+                    this.showToast('Removed from favorites', 'success');
                 }
             }
             
@@ -2154,6 +2269,7 @@
             // ==================== RENDERING ====================
             
             render() {
+                this.renderFavorites();
                 this.renderFolderTree();
                 this.renderTagsCloud();
                 this.updateActiveStates();
