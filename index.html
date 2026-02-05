@@ -1681,6 +1681,10 @@
                     <small id="backupStatus" style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;"></small>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Debug</label>
+                    <button class="btn btn-secondary" id="debugBtn">Show Debug Info</button>
+                </div>
+                <div class="form-group">
                     <label class="form-label">Danger Zone</label>
                     <button class="btn btn-secondary" id="clearAllBtn" style="color: var(--danger);">Clear All Data</button>
                 </div>
@@ -3245,6 +3249,16 @@
                 document.getElementById('exportMarkdownBtn').addEventListener('click', () => this.exportMarkdown());
                 document.getElementById('importBtn').addEventListener('click', () => this.importData());
                 document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllData());
+                
+                // Debug button
+                const debugBtn = document.getElementById('debugBtn');
+                if (debugBtn) {
+                    debugBtn.addEventListener('click', () => {
+                        const folderInfo = this.data.folders.map(f => `${f.name} (parent: ${f.parentId})`).join('\n');
+                        const noteInfo = this.data.notes.map(n => `${n.title} (folder: ${n.folderId})`).join('\n');
+                        alert(`FOLDERS (${this.data.folders.length}):\n${folderInfo}\n\nNOTES (${this.data.notes.length}):\n${noteInfo}`);
+                    });
+                }
                 
                 // Backup buttons
                 document.getElementById('checkBackupBtn').addEventListener('click', () => this.checkForBackups());
