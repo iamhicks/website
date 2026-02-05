@@ -2141,9 +2141,14 @@
             updateNote(id, updates) {
                 const note = this.data.notes.find(n => n.id === id);
                 if (note) {
+                    const titleChanged = updates.title && updates.title !== note.title;
                     Object.assign(note, updates, { updatedAt: Date.now() });
                     this.saveData();
                     this.renderBacklinks();
+                    // Re-render sidebar if title changed to update folder tree
+                    if (titleChanged) {
+                        this.render();
+                    }
                 }
             }
             
