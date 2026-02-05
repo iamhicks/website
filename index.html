@@ -2340,24 +2340,24 @@
                         
                         const header = li.querySelector('.folder-header');
                         
-                        // Click to select folder
+                        // Click to toggle expand/collapse (if has children) or select
                         header.addEventListener('click', (e) => {
-                            if (e.target.classList.contains('folder-toggle')) return;
-                            this.selectFolder(folder.id);
-                        });
-                        
-                        // Toggle collapse
-                        const toggle = li.querySelector('.folder-toggle');
-                        if (toggle) {
-                            toggle.addEventListener('click', () => {
+                            // Ignore clicks on action buttons
+                            if (e.target.closest('.folder-actions')) return;
+                            
+                            if (hasChildren) {
+                                // Toggle collapse
                                 if (!this.data.settings.sidebarCollapsed) {
                                     this.data.settings.sidebarCollapsed = {};
                                 }
                                 this.data.settings.sidebarCollapsed[folder.id] = !isCollapsed;
                                 this.saveData();
                                 this.renderFolderTree();
-                            });
-                        }
+                            } else {
+                                // Select folder if no children
+                                this.selectFolder(folder.id);
+                            }
+                        });
                         
                         // Context menu
                         header.addEventListener('contextmenu', (e) => {
