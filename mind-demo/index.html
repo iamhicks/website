@@ -15,8 +15,8 @@
             --text-primary: #1d1d1f;
             --text-secondary: #6e6e73;
             --text-tertiary: #86868b;
-            --accent: #007aff;
-            --accent-hover: #0051d5;
+            --accent: #2eaadc;
+            --accent-hover: #2596c4;
             --border: rgba(0, 0, 0, 0.1);
             --shadow: rgba(0, 0, 0, 0.08);
             --success: #34c759;
@@ -35,18 +35,18 @@
         }
 
         [data-theme="dark"] {
-            --bg-primary: #1c1c1e;
-            --bg-secondary: #2c2c2e;
-            --bg-tertiary: #3a3a3c;
-            --bg-sidebar: #1c1c1e;
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --bg-tertiary: #2a2a2a;
+            --bg-sidebar: #202020;
             --text-primary: #ffffff;
-            --text-secondary: #8e8e93;
-            --text-tertiary: #636366;
-            --accent: #0a84ff;
-            --accent-hover: #409cff;
-            --border: rgba(255, 255, 255, 0.1);
+            --text-secondary: #b3b3b3;
+            --text-tertiary: #666666;
+            --accent: #2eaadc;
+            --accent-hover: #2596c4;
+            --border: #333333;
             --shadow: rgba(0, 0, 0, 0.3);
-            --tag-bg: #3a3a3c;
+            --tag-bg: #2a2a2a;
             --tag-text: #ffffff;
         }
 
@@ -1640,8 +1640,8 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon">◈</div>
-                    <span>Knowledge Base</span>
+                    <div class="logo-icon"><i class="ph ph-brain"></i></div>
+                    <span>Mind</span>
                 </div>
             </div>
             
@@ -1718,7 +1718,7 @@
             <div class="editor-container" id="editorContainer">
                 <div class="empty-state" id="emptyState">
                     <div class="empty-state-icon">◈</div>
-                    <div class="empty-state-title">Welcome to Knowledge Base</div>
+                    <div class="empty-state-title">Welcome to Mind</div>
                     <div class="empty-state-desc">
                         Your private, offline knowledge management system.
                         Create your first note to get started.
@@ -2745,7 +2745,7 @@
             
             createWelcomeNote() {
                 const welcomeContent = `
-                    <h1>Welcome to Knowledge Base!</h1>
+                    <h1>Welcome to Mind!</h1>
                     <p>This is your personal, offline knowledge management system. Here's how to get started:</p>
                     <h2>📝 Creating Notes</h2>
                     <ul>
@@ -2774,7 +2774,7 @@
                 
                 const note = {
                     id: 'note_welcome',
-                    title: '👋 Welcome to Knowledge Base',
+                    title: '👋 Welcome to Mind',
                     content: welcomeContent,
                     folderId: 'root',
                     tags: ['getting-started', 'tutorial'],
@@ -3847,7 +3847,7 @@
             }
             
             exportMarkdown() {
-                let md = '# Knowledge Base Export\n\n';
+                let md = '# Mind Export\n\n';
                 
                 this.data.notes.forEach(note => {
                     md += `## ${note.title}\n\n`;
