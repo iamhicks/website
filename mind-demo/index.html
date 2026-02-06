@@ -1362,6 +1362,58 @@
             padding: 40px 20px;
         }
 
+        /* Selection Toolbar */
+        .selection-toolbar {
+            position: absolute;
+            display: none;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            gap: 4px;
+        }
+
+        .selection-toolbar.visible {
+            display: flex;
+        }
+
+        .selection-toolbar-btn {
+            padding: 6px 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all var(--transition);
+        }
+
+        .selection-toolbar-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .selection-toolbar-btn.ai {
+            color: var(--accent);
+        }
+
+        .selection-toolbar-btn.ai:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .selection-toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+            margin: 0 4px;
+        }
+
         .editor-content {
             max-width: 800px;
             margin: 0 auto;
@@ -2027,6 +2079,11 @@
             }
         }
 
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         .toast.success {
             border-left: 4px solid var(--success);
         }
@@ -2676,6 +2733,23 @@
                     </div>
                 </div>
 
+                <!-- Selection Toolbar -->
+                <div class="selection-toolbar" id="selectionToolbar">
+                    <button class="selection-toolbar-btn" data-command="bold" title="Bold">
+                        <i class="ph ph-text-b"></i>
+                    </button>
+                    <button class="selection-toolbar-btn" data-command="italic" title="Italic">
+                        <i class="ph ph-text-italic"></i>
+                    </button>
+                    <button class="selection-toolbar-btn" data-command="underline" title="Underline">
+                        <i class="ph ph-text-underline"></i>
+                    </button>
+                    <span class="selection-toolbar-divider"></span>
+                    <button class="selection-toolbar-btn ai" id="askAiSelectionBtn" title="Ask AI">
+                        <i class="ph ph-sparkle"></i> Ask AI
+                    </button>
+                </div>
+
                 <div class="backlinks-panel hidden" id="backlinksPanel">
                     <div class="backlinks-title">Linked from</div>
                     <div class="backlinks-list" id="backlinksList"></div>
@@ -2889,6 +2963,63 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="cancelLink">Cancel</button>
                 <button class="btn btn-primary" id="confirmLink">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Selection Modal -->
+    <div class="modal-overlay" id="aiSelectionModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ph ph-sparkle"></i> Improve with AI</div>
+                <button class="modal-close" id="closeAiSelection">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Selected text</label>
+                    <div id="aiSelectedText" style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 14px; max-height: 100px; overflow-y: auto; color: var(--text-secondary);"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">What would you like to do?</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button class="btn btn-secondary ai-action-btn" data-action="improve">
+                            <i class="ph ph-text-t"></i> Improve writing
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="grammar">
+                            <i class="ph ph-check-circle"></i> Fix grammar & spelling
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="shorter">
+                            <i class="ph ph-text-align-left"></i> Make it shorter
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="longer">
+                            <i class="ph ph-text-align-justify"></i> Make it longer
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="simplify">
+                            <i class="ph ph-brain"></i> Simplify language
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="professional">
+                            <i class="ph ph-briefcase"></i> Make it more professional
+                        </button>
+                    </div>
+                </div>
+                <div id="aiSuggestionResult" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">AI Suggestion</label>
+                        <div id="aiSuggestionText" style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 15px; line-height: 1.6; border-left: 3px solid var(--accent);"></div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" id="acceptAiSuggestion" style="flex: 1;">
+                            <i class="ph ph-check"></i> Accept
+                        </button>
+                        <button class="btn btn-secondary" id="discardAiSuggestion" style="flex: 1;">
+                            <i class="ph ph-x"></i> Discard
+                        </button>
+                    </div>
+                </div>
+                <div id="aiLoadingState" style="display: none; text-align: center; padding: 24px;">
+                    <i class="ph ph-spinner" style="font-size: 32px; color: var(--accent); animation: spin 1s linear infinite;"></i>
+                    <p style="margin-top: 12px; color: var(--text-secondary);">Thinking...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -6208,6 +6339,203 @@
                         }
                     }
                 });
+
+                // Selection Toolbar
+                this.setupSelectionToolbar();
+            }
+
+            setupSelectionToolbar() {
+                const toolbar = document.getElementById('selectionToolbar');
+                const editor = document.getElementById('wysiwygEditor');
+                let currentSelection = null;
+                let currentRange = null;
+
+                // Show toolbar on selection
+                document.addEventListener('mouseup', (e) => {
+                    setTimeout(() => {
+                        const selection = window.getSelection();
+                        const text = selection.toString().trim();
+
+                        if (text.length > 0 && editor.contains(selection.anchorNode)) {
+                            currentSelection = text;
+                            currentRange = selection.getRangeAt(0).cloneRange();
+
+                            // Position toolbar above selection
+                            const rect = currentRange.getBoundingClientRect();
+                            const toolbarRect = toolbar.getBoundingClientRect();
+
+                            let left = rect.left + (rect.width / 2) - (toolbarRect.width / 2);
+                            let top = rect.top - toolbarRect.height - 10;
+
+                            // Keep within viewport
+                            left = Math.max(10, Math.min(left, window.innerWidth - toolbarRect.width - 10));
+                            top = Math.max(10, top);
+
+                            toolbar.style.left = left + 'px';
+                            toolbar.style.top = top + window.scrollY + 'px';
+                            toolbar.classList.add('visible');
+                        } else {
+                            toolbar.classList.remove('visible');
+                        }
+                    }, 0);
+                });
+
+                // Hide toolbar when clicking elsewhere
+                document.addEventListener('mousedown', (e) => {
+                    if (!toolbar.contains(e.target)) {
+                        toolbar.classList.remove('visible');
+                    }
+                });
+
+                // Formatting buttons
+                toolbar.querySelectorAll('[data-command]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const command = btn.dataset.command;
+                        document.execCommand(command, false, null);
+                        toolbar.classList.remove('visible');
+                    });
+                });
+
+                // Ask AI button
+                document.getElementById('askAiSelectionBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toolbar.classList.remove('visible');
+                    this.openAiSelectionModal(currentSelection, currentRange);
+                });
+            }
+
+            openAiSelectionModal(selectedText, range) {
+                const modal = document.getElementById('aiSelectionModal');
+                document.getElementById('aiSelectedText').textContent = selectedText;
+                document.getElementById('aiSuggestionResult').style.display = 'none';
+                document.getElementById('aiLoadingState').style.display = 'none';
+
+                // Store for later use
+                this.currentAiRange = range;
+                this.currentAiText = selectedText;
+
+                modal.classList.add('active');
+
+                // Close button
+                document.getElementById('closeAiSelection').onclick = () => {
+                    modal.classList.remove('active');
+                };
+
+                // AI action buttons
+                document.querySelectorAll('.ai-action-btn').forEach(btn => {
+                    btn.onclick = () => {
+                        const action = btn.dataset.action;
+                        this.processAiSelection(action);
+                    };
+                });
+
+                // Accept/Discard buttons
+                document.getElementById('acceptAiSuggestion').onclick = () => {
+                    this.applyAiSuggestion();
+                    modal.classList.remove('active');
+                };
+
+                document.getElementById('discardAiSuggestion').onclick = () => {
+                    document.getElementById('aiSuggestionResult').style.display = 'none';
+                };
+            }
+
+            processAiSelection(action) {
+                const loading = document.getElementById('aiLoadingState');
+                const result = document.getElementById('aiSuggestionResult');
+                const resultText = document.getElementById('aiSuggestionText');
+
+                loading.style.display = 'block';
+                result.style.display = 'none';
+
+                // Simulate AI processing
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    result.style.display = 'block';
+
+                    const original = this.currentAiText;
+                    let suggestion = original;
+
+                    switch(action) {
+                        case 'improve':
+                            suggestion = this.simulateAiImprove(original);
+                            break;
+                        case 'grammar':
+                            suggestion = this.simulateAiGrammar(original);
+                            break;
+                        case 'shorter':
+                            suggestion = this.simulateAiShorter(original);
+                            break;
+                        case 'longer':
+                            suggestion = this.simulateAiLonger(original);
+                            break;
+                        case 'simplify':
+                            suggestion = this.simulateAiSimplify(original);
+                            break;
+                        case 'professional':
+                            suggestion = this.simulateAiProfessional(original);
+                            break;
+                    }
+
+                    this.currentAiSuggestion = suggestion;
+                    resultText.textContent = suggestion;
+                }, 1500);
+            }
+
+            simulateAiImprove(text) {
+                // Simple simulation - in real app this would call an AI API
+                return text.replace(/\b(good|nice|big)\b/g, (match) => {
+                    const improvements = {
+                        'good': 'excellent',
+                        'nice': 'elegant',
+                        'big': 'substantial'
+                    };
+                    return improvements[match] || match;
+                }) + ' (improved with better vocabulary and flow)';
+            }
+
+            simulateAiGrammar(text) {
+                return text.replace(/\s+/g, ' ').trim() + '.';
+            }
+
+            simulateAiShorter(text) {
+                const sentences = text.split(/[.!?]+/).filter(s => s.trim());
+                return sentences.slice(0, Math.max(1, Math.floor(sentences.length / 2))).join('. ') + '.';
+            }
+
+            simulateAiLonger(text) {
+                return text + ' This expanded version provides additional context and detail to make the point more comprehensive and easier to understand for the reader.';
+            }
+
+            simulateAiSimplify(text) {
+                return text.replace(/\b(utilize|implement|facilitate|subsequently)\b/gi, (match) => {
+                    const simple = {
+                        'utilize': 'use',
+                        'implement': 'do',
+                        'facilitate': 'help',
+                        'subsequently': 'then'
+                    };
+                    return simple[match.toLowerCase()] || match;
+                }) + ' (simplified)';
+            }
+
+            simulateAiProfessional(text) {
+                return 'In accordance with established protocols, ' + text.toLowerCase() + ' This approach ensures compliance with industry standards and best practices.';
+            }
+
+            applyAiSuggestion() {
+                if (!this.currentAiRange || !this.currentAiSuggestion) return;
+
+                const editor = document.getElementById('wysiwygEditor');
+                editor.focus();
+
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(this.currentAiRange);
+
+                document.execCommand('insertText', false, this.currentAiSuggestion);
+                this.showToast('AI suggestion applied', 'success');
             }
 
             setupMobileGestures() {
