@@ -237,6 +237,23 @@
             display: none;
         }
 
+        .folder-header:hover .folder-actions {
+            display: flex !important;
+        }
+
+        .folder-actions .btn {
+            opacity: 0.6;
+        }
+
+        .folder-actions .btn:hover {
+            opacity: 1;
+            background: var(--bg-tertiary);
+        }
+
+        .folder-header.active .folder-actions .btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
         /* ==================== FOLDER TREE ==================== */
         .folder-tree, .bookmark-list {
             list-style: none;
@@ -1668,6 +1685,14 @@
                                     <i class="fa-solid fa-folder"></i>
                                     <span class="folder-name">${this.escapeHtml(folder.name)}</span>
                                     ${noteCount > 0 ? `<span class="folder-count">${noteCount}</span>` : ''}
+                                    <div class="folder-actions" style="display: none; margin-left: auto; gap: 4px;">
+                                        <button class="btn btn-icon folder-add-btn" data-folder="${folder.id}" title="Add a page inside" style="padding: 2px 6px; font-size: 11px;">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                        <button class="btn btn-icon folder-menu-btn" data-folder="${folder.id}" title="More options" style="padding: 2px 6px; font-size: 11px;">
+                                            <i class="fa-solid fa-ellipsis"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 ${hasChildren && !isCollapsed ? `
                                     <ul class="folder-tree" style="padding-left: 16px;">
@@ -1697,6 +1722,22 @@
                             // Select folder
                             this.selectFolder(header.dataset.folder);
                         }
+                    });
+                });
+                
+                // Folder add button handlers (+)
+                tree.querySelectorAll('.folder-add-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.createNoteInFolder(btn.dataset.folder);
+                    });
+                });
+                
+                // Folder menu button handlers (...)
+                tree.querySelectorAll('.folder-menu-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.showFolderMenu(btn.dataset.folder);
                     });
                 });
                 
@@ -1811,6 +1852,113 @@
                 };
                 
                 this.data.folders.push(folder);
+                this.saveData();
+                this.render();
+            }
+            
+            createNoteInFolder(folderId) {
+                const title = prompt('Note title:');
+                if (!title?.trim()) return;
+                
+                const note = {
+                    id: 'note_' + Date.now(),
+                    title: title.trim(),
+                    content: '',
+                    folderId: folderId,
+                    tags: [],
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                    versions: []
+                };
+                
+                this.data.notes.push(note);
+                this.saveData();
+                this.openNote(note.id);
+                this.render();
+            }
+            
+            showFolderMenu(folderId) {
+                const folder = this.data.folders.find(f => f.id === folderId);
+                if (!folder) return;
+                
+                const actions = [
+                    'Add subfolder',
+                    'Rename folder',
+                    'Delete folder',
+                    folder.id !== 'root' ? 'Move to root' : null
+                ].filter(Boolean);
+                
+                const choice = prompt(`Folder: ${folder.name}\n\n${actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}`);
+                if (!choice) return;
+                
+                switch(choice.trim()) {
+                    case '1':
+                        this.createSubfolder(folderId);
+                        break;
+                    case '2':
+                        this.renameFolder(folderId);
+                        break;
+                    case '3':
+                        if (confirm(`Delete "${folder.name}" and all its contents?`)) {
+                            this.deleteFolder(folderId);
+                        }
+                        break;
+                    case '4':
+                        if (folder.id !== 'root') {
+                            folder.parentId = null;
+                            this.saveData();
+                            this.render();
+                        }
+                        break;
+                }
+            }
+            
+            createSubfolder(parentId) {
+                const name = prompt('Subfolder name:');
+                if (!name?.trim()) return;
+                
+                const folder = {
+                    id: 'folder_' + Date.now(),
+                    name: name.trim(),
+                    parentId: parentId,
+                    createdAt: Date.now()
+                };
+                
+                this.data.folders.push(folder);
+                this.saveData();
+                this.render();
+            }
+            
+            renameFolder(folderId) {
+                const folder = this.data.folders.find(f => f.id === folderId);
+                if (!folder) return;
+                
+                const newName = prompt('New folder name:', folder.name);
+                if (newName?.trim()) {
+                    folder.name = newName.trim();
+                    this.saveData();
+                    this.render();
+                }
+            }
+            
+            deleteFolder(folderId) {
+                // Delete all notes in this folder
+                this.data.notes = this.data.notes.filter(n => n.folderId !== folderId);
+                
+                // Recursively delete subfolders
+                const deleteSubfolders = (parentId) => {
+                    const children = this.data.folders.filter(f => f.parentId === parentId);
+                    children.forEach(child => {
+                        this.data.notes = this.data.notes.filter(n => n.folderId !== child.id);
+                        deleteSubfolders(child.id);
+                    });
+                    this.data.folders = this.data.folders.filter(f => f.parentId !== parentId);
+                };
+                deleteSubfolders(folderId);
+                
+                // Delete the folder itself
+                this.data.folders = this.data.folders.filter(f => f.id !== folderId);
+                
                 this.saveData();
                 this.render();
             }
