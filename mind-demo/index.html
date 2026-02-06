@@ -2187,6 +2187,20 @@
                     </div>
                 </div>
 
+                <!-- Trash Section -->
+                <div class="sidebar-section" id="trashSectionContainer" style="display: none;">
+                    <div class="section-header" data-section="trash">
+                        <span>Trash</span>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="trashSection">
+                        <ul class="bookmark-list" id="trashList"></ul>
+                        <div style="padding: 12px; border-top: 1px solid var(--border);">
+                            <button class="btn btn-secondary" id="emptyTrashBtn" style="width: 100%; font-size: 12px;">Empty Trash</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Favorites Section -->
                 <div class="sidebar-section" id="favoritesSectionContainer" style="display: none;">
                     <div class="section-header" data-section="favorites">
@@ -3386,6 +3400,106 @@
                 });
             }
 
+            renderTrash() {
+                const trashContainer = document.getElementById('trashSectionContainer');
+                const trashList = document.getElementById('trashList');
+                const trashItems = this.data.trash || [];
+
+                if (trashItems.length === 0) {
+                    trashContainer.style.display = 'none';
+                    return;
+                }
+
+                trashContainer.style.display = 'block';
+                trashList.innerHTML = '';
+
+                // Sort by deleted date (newest first)
+                const sorted = [...trashItems].sort((a, b) => b.deletedAt - a.deletedAt);
+
+                sorted.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'bookmark-item';
+                    li.style.display = 'flex';
+                    li.style.alignItems = 'center';
+                    li.style.justifyContent = 'space-between';
+
+                    const icon = item.type === 'folder' ? 'ph-folder' : 'ph-file-text';
+                    const name = item.type === 'folder' ? item.name : item.title;
+
+                    li.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 8px; flex: 1; overflow: hidden;">
+                            <i class="ph ${icon}"></i>
+                            <span class="bookmark-title" style="flex: 1;">${this.escapeHtml(name || 'Untitled')}</span>
+                        </div>
+                        <div style="display: flex; gap: 4px;">
+                            <button class="folder-action-btn restore-btn" title="Restore" data-id="${item.id}" data-type="${item.type}">
+                                <i class="ph ph-arrow-counter-clockwise"></i>
+                            </button>
+                            <button class="folder-action-btn delete-btn" title="Delete Permanently" data-id="${item.id}">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
+                    `;
+
+                    // Restore button
+                    li.querySelector('.restore-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.restoreFromTrash(item.id);
+                    });
+
+                    // Permanent delete button
+                    li.querySelector('.delete-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.permanentDelete(item.id);
+                    });
+
+                    trashList.appendChild(li);
+                });
+            }
+
+            restoreFromTrash(id) {
+                const item = this.data.trash?.find(t => t.id === id);
+                if (!item) return;
+
+                if (item.type === 'folder') {
+                    // Check if parent still exists, default to root if not
+                    const parentExists = this.data.folders.some(f => f.id === item.parentId);
+                    this.data.folders.push({
+                        id: item.id,
+                        name: item.name,
+                        parentId: parentExists ? item.parentId : 'root',
+                        created: new Date().toISOString()
+                    });
+                } else {
+                    // Check if folder still exists, default to inbox if not
+                    const folderExists = this.data.folders.some(f => f.id === item.folderId);
+                    this.data.notes.push({
+                        id: item.id,
+                        title: item.title,
+                        content: item.content,
+                        folderId: folderExists ? item.folderId : 'inbox',
+                        tags: item.tags || [],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    });
+                }
+
+                // Remove from trash
+                this.data.trash = this.data.trash.filter(t => t.id !== id);
+                this.saveData();
+                this.render();
+                this.showToast('Item restored', 'success');
+            }
+
+            permanentDelete(id) {
+                if (!confirm('Delete permanently? This cannot be undone.')) return;
+
+                this.data.trash = this.data.trash.filter(t => t.id !== id);
+                this.saveData();
+                this.render();
+                this.showToast('Item permanently deleted', 'success');
+            }
+
             duplicateFolder(id) {
                 const folder = this.data.folders.find(f => f.id === id);
                 if (folder && !this.isSystemFolder(id)) {
@@ -3473,23 +3587,51 @@
                     return;
                 }
 
+                const folder = this.data.folders.find(f => f.id === id);
+                if (!folder) return;
+
+                // Move folder to trash
+                if (!this.data.trash) this.data.trash = [];
+                this.data.trash.push({
+                    type: 'folder',
+                    id: folder.id,
+                    name: folder.name,
+                    parentId: folder.parentId,
+                    deletedAt: Date.now()
+                });
+
+                // Also move all notes in this folder to trash
                 const notesInFolder = this.data.notes.filter(n => n.folderId === id);
-                if (notesInFolder.length > 0) {
-                    // Move notes to parent
-                    const folder = this.data.folders.find(f => f.id === id);
-                    const parentId = folder?.parentId || 'root';
-                    notesInFolder.forEach(n => n.folderId = parentId);
+                notesInFolder.forEach(note => {
+                    this.data.trash.push({
+                        type: 'note',
+                        id: note.id,
+                        title: note.title,
+                        content: note.content,
+                        folderId: note.folderId,
+                        tags: note.tags,
+                        deletedAt: Date.now()
+                    });
+                });
+                this.data.notes = this.data.notes.filter(n => n.folderId !== id);
+
+                // Handle child folders - recursively delete them
+                const childFolders = this.data.folders.filter(f => f.parentId === id);
+                childFolders.forEach(child => {
+                    this.deleteFolder(child.id);
+                });
+
+                // Remove from favorites if present
+                if (this.data.settings.favoriteFolders) {
+                    this.data.settings.favoriteFolders = this.data.settings.favoriteFolders.filter(fId => fId !== id);
                 }
 
-                // Move child folders to parent
-                const folder = this.data.folders.find(f => f.id === id);
-                const parentId = folder?.parentId || 'root';
-                this.data.folders.filter(f => f.parentId === id).forEach(f => f.parentId = parentId);
-
+                // Actually delete the folder
                 this.data.folders = this.data.folders.filter(f => f.id !== id);
+
                 this.saveData();
                 this.render();
-                this.showToast('Folder deleted', 'success');
+                this.showToast('Folder moved to Trash', 'success');
             }
 
             isSystemFolder(id) {
@@ -3584,6 +3726,24 @@
             }
 
             deleteNote(id) {
+                const note = this.data.notes.find(n => n.id === id);
+                if (!note) return;
+
+                // Move to trash instead of permanent delete
+                if (!this.data.trash) this.data.trash = [];
+                this.data.trash.push({
+                    type: 'note',
+                    id: note.id,
+                    title: note.title,
+                    content: note.content,
+                    folderId: note.folderId,
+                    tags: note.tags,
+                    deletedAt: Date.now()
+                });
+
+                // Remove from open tabs if present
+                this.openTabs = this.openTabs.filter(tabId => tabId !== id);
+
                 this.data.notes = this.data.notes.filter(n => n.id !== id);
                 if (this.currentNote?.id === id) {
                     this.currentNote = null;
@@ -3591,7 +3751,7 @@
                 }
                 this.saveData();
                 this.render();
-                this.showToast('Note deleted', 'success');
+                this.showToast('Note moved to Trash', 'success');
             }
 
             duplicateNote(id) {
@@ -3855,6 +4015,7 @@
 
             render() {
                 this.renderClippedPages();
+                this.renderTrash();
                 this.renderFavorites();
                 this.renderFolderTree();
                 this.renderTagsCloud();
@@ -5195,6 +5356,24 @@
                 document.getElementById('exportMarkdownBtn').addEventListener('click', () => this.exportMarkdown());
                 document.getElementById('importBtn').addEventListener('click', () => this.importData());
                 document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllData());
+
+                // Empty Trash button
+                const emptyTrashBtn = document.getElementById('emptyTrashBtn');
+                if (emptyTrashBtn) {
+                    emptyTrashBtn.addEventListener('click', () => {
+                        const trashCount = this.data.trash?.length || 0;
+                        if (trashCount === 0) {
+                            this.showToast('Trash is already empty', 'info');
+                            return;
+                        }
+                        if (confirm(`Empty trash permanently? ${trashCount} item(s) will be deleted forever.`)) {
+                            this.data.trash = [];
+                            this.saveData();
+                            this.render();
+                            this.showToast('Trash emptied', 'success');
+                        }
+                    });
+                }
 
                 // Debug button
                 const debugBtn = document.getElementById('debugBtn');
