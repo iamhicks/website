@@ -3561,6 +3561,78 @@
                             }
                         }
 
+                        // Drag to reorder favorites
+                        li.draggable = true;
+                        li.addEventListener('dragstart', (e) => {
+                            this.draggedFavoriteIndex = favoriteIds.indexOf(folder.id);
+                            li.style.opacity = '0.5';
+                            e.dataTransfer.effectAllowed = 'move';
+                        });
+
+                        li.addEventListener('dragend', () => {
+                            li.style.opacity = '';
+                            this.draggedFavoriteIndex = null;
+                            document.querySelectorAll('.folder-item').forEach(item => {
+                                item.style.borderTop = '';
+                                item.style.borderBottom = '';
+                            });
+                        });
+
+                        li.addEventListener('dragover', (e) => {
+                            e.preventDefault();
+                            if (this.draggedFavoriteIndex === null) return;
+                            
+                            const currentIndex = favoriteIds.indexOf(folder.id);
+                            if (currentIndex === this.draggedFavoriteIndex) return;
+                            
+                            const rect = li.getBoundingClientRect();
+                            const midpoint = rect.top + rect.height / 2;
+                            
+                            if (e.clientY < midpoint) {
+                                li.style.borderTop = '2px solid var(--accent)';
+                                li.style.borderBottom = '';
+                            } else {
+                                li.style.borderTop = '';
+                                li.style.borderBottom = '2px solid var(--accent)';
+                            }
+                        });
+
+                        li.addEventListener('dragleave', () => {
+                            li.style.borderTop = '';
+                            li.style.borderBottom = '';
+                        });
+
+                        li.addEventListener('drop', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            li.style.borderTop = '';
+                            li.style.borderBottom = '';
+                            
+                            if (this.draggedFavoriteIndex === null) return;
+                            
+                            const currentIndex = favoriteIds.indexOf(folder.id);
+                            if (currentIndex === this.draggedFavoriteIndex) return;
+                            
+                            const rect = li.getBoundingClientRect();
+                            const midpoint = rect.top + rect.height / 2;
+                            let newIndex = currentIndex;
+                            
+                            if (e.clientY > midpoint) {
+                                newIndex = currentIndex + 1;
+                            }
+                            
+                            // Reorder
+                            const [moved] = this.data.settings.favoriteFolders.splice(this.draggedFavoriteIndex, 1);
+                            if (newIndex > this.draggedFavoriteIndex) {
+                                newIndex--;
+                            }
+                            this.data.settings.favoriteFolders.splice(newIndex, 0, moved);
+                            
+                            this.saveData();
+                            this.renderFavorites();
+                            this.showToast('Favorites reordered', 'success');
+                        });
+
                         favoritesTree.appendChild(li);
                     }
                 });
@@ -3843,7 +3915,7 @@
             }
 
             isSystemFolder(id) {
-                return ['root', 'inbox'].includes(id);
+                return ['root'].includes(id);
             }
 
             getFolderPath(folderId) {
