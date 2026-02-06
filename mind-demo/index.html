@@ -5084,12 +5084,17 @@
                 const container = document.getElementById('noteTagsInput');
                 const input = document.getElementById('tagInput');
 
-                // Clear existing tags (keep input)
+                // Clear existing tags AND any incomplete input text
                 Array.from(container.children).forEach(child => {
                     if (!child.classList.contains('tag-input')) {
                         child.remove();
                     }
                 });
+                input.value = ''; // Clear incomplete tag text
+                
+                // Also hide autocomplete
+                const tagAutocomplete = document.getElementById('tagAutocomplete');
+                if (tagAutocomplete) tagAutocomplete.style.display = 'none';
 
                 // Add tags before input
                 if (this.currentNote) {
@@ -5984,6 +5989,7 @@
 
                 tagInput.addEventListener('input', (e) => {
                     const value = e.target.value.trim().toLowerCase();
+                    console.log('Tag input:', value, 'currentNote:', this.currentNote?.id);
                     
                     if (value.length === 0) {
                         tagAutocomplete.style.display = 'none';
@@ -5992,11 +5998,14 @@
                     
                     // Get all existing tags that match and aren't already on this note
                     const existingTags = this.getAllTags();
+                    console.log('Existing tags:', existingTags);
                     const currentNoteTags = this.currentNote?.tags || [];
                     const matches = existingTags.filter(tag => 
                         tag.toLowerCase().includes(value) && 
                         !currentNoteTags.includes(tag)
                     ).slice(0, 5); // Max 5 suggestions
+                    
+                    console.log('Matches:', matches);
                     
                     if (matches.length > 0) {
                         tagAutocomplete.innerHTML = matches.map((tag, index) => `
