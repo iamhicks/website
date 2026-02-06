@@ -2771,6 +2771,9 @@
                                     <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
                                     <div class="tag-autocomplete" id="tagAutocomplete" style="display: none;"></div>
                                 </div>
+                                <button class="btn btn-secondary" id="suggestTagsBtn" title="AI Suggest Tags" style="padding: 4px 8px; font-size: 11px; margin-left: 4px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary);">
+                                    <i class="ph ph-sparkle"></i> Suggest
+                                </button>
                             </div>
                         </div>
                         
@@ -6612,6 +6615,118 @@
 
                 // Template selector
                 document.getElementById('templateSelect')?.addEventListener('change', (e) => this.applyTemplate(e.target.value));
+
+                // AI Suggest Tags button
+                document.getElementById('suggestTagsBtn')?.addEventListener('click', () => this.suggestTagsWithAi());
+            }
+
+            suggestTagsWithAi() {
+                if (!this.currentNote) {
+                    this.showToast('Open a note first', 'error');
+                    return;
+                }
+
+                const content = document.getElementById('wysiwygEditor').innerText.trim();
+                if (content.length < 10) {
+                    this.showToast('Note needs more content', 'error');
+                    return;
+                }
+
+                // Demo mode - generate suggestions based on keywords
+                const suggestions = this.generateDemoTagSuggestions(content, this.currentNote.tags || []);
+                
+                if (suggestions.length === 0) {
+                    this.showToast('No tag suggestions found', 'info');
+                    return;
+                }
+
+                this.showTagSuggestionsModal(suggestions);
+            }
+
+            generateDemoTagSuggestions(content, existingTags) {
+                const text = content.toLowerCase();
+                const suggestions = [];
+                
+                const keywords = {
+                    'trading': ['trading', 'trade', 'market', 'buy', 'sell', 'position'],
+                    'psychology': ['psychology', 'mental', 'mindset', 'emotion', 'fear', 'greed'],
+                    'analysis': ['analysis', 'chart', 'pattern', 'trend', 'support', 'resistance'],
+                    'strategy': ['strategy', 'plan', 'system', 'method', 'approach'],
+                    'risk-management': ['risk', 'stop loss', 'stop-loss', 'position size'],
+                    'journal': ['journal', 'log', 'record', 'track', 'review'],
+                    'learning': ['learn', 'study', 'education', 'course', 'book'],
+                    'crypto': ['crypto', 'bitcoin', 'btc', 'ethereum', 'eth'],
+                    'forex': ['forex', 'currency', 'eurusd', 'gbpusd'],
+                    'stocks': ['stock', 'equity', 'shares', 'nasdaq', 'nyse'],
+                    'gold': ['gold', 'xauusd', 'xau'],
+                    'tutorial': ['tutorial', 'guide', 'how to', 'lesson'],
+                    'research': ['research', 'study', 'data', 'backtest'],
+                    'ideas': ['idea', 'concept', 'thought', 'insight'],
+                    'workflow': ['workflow', 'process', 'routine', 'habit'],
+                    'review': ['review', 'retrospective', 'summary'],
+                    'goals': ['goal', 'target', 'objective', 'aim']
+                };
+
+                for (const [tag, words] of Object.entries(keywords)) {
+                    if (words.some(w => text.includes(w)) && !existingTags.includes(tag)) {
+                        suggestions.push(tag);
+                    }
+                }
+
+                return [...new Set(suggestions)].slice(0, 5);
+            }
+
+            showTagSuggestionsModal(suggestions) {
+                // Create modal if not exists
+                let modal = document.getElementById('tagSuggestionsModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'tagSuggestionsModal';
+                    modal.className = 'modal-overlay';
+                    modal.innerHTML = `
+                        <div class="modal" style="max-width: 400px;">
+                            <div class="modal-header">
+                                <div class="modal-title"><i class="ph ph-sparkle"></i> Suggested Tags</div>
+                                <button class="modal-close" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="background: var(--bg-tertiary); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);">
+                                    <i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags suggested based on keywords in your note.
+                                </div>
+                                <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 13px;">Click tags to add them:</p>
+                                <div id="tagSuggestionsList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">Close</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+
+                // Populate suggestions
+                const list = document.getElementById('tagSuggestionsList');
+                list.innerHTML = suggestions.map(tag => `
+                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" data-tag="${tag}">
+                        <i class="ph ph-plus"></i> ${tag}
+                    </button>
+                `).join('');
+
+                // Add click handlers
+                list.querySelectorAll('button').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const tag = btn.dataset.tag;
+                        if (this.currentNote) {
+                            this.addTagToNote(this.currentNote.id, tag);
+                            btn.style.opacity = '0.5';
+                            btn.disabled = true;
+                            btn.innerHTML = `<i class="ph ph-check"></i> ${tag}`;
+                        }
+                    });
+                });
+
+                // Show modal
+                modal.classList.add('active');
             }
 
             applyTemplate(templateId) {
