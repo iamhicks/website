@@ -6647,14 +6647,19 @@
                 // AI Panel setup (for the panel itself, not the button)
                 this.setupAiPanelListeners();
 
-                // Handle internal link clicks
+                // Handle link clicks
                 document.getElementById('wysiwygEditor').addEventListener('click', (e) => {
-                    if (e.target.tagName === 'A' && e.target.classList.contains('internal-link')) {
+                    if (e.target.tagName === 'A') {
                         e.preventDefault();
-                        const noteId = e.target.getAttribute('href').replace('note:', '');
-                        const note = this.data.notes.find(n => n.id === noteId);
-                        if (note) {
-                            this.selectNote(note.id);
+                        const href = e.target.getAttribute('href');
+                        if (e.target.classList.contains('internal-link')) {
+                            const noteId = href.replace('note:', '');
+                            const note = this.data.notes.find(n => n.id === noteId);
+                            if (note) {
+                                this.selectNote(note.id);
+                            }
+                        } else if (href) {
+                            window.open(href, '_blank');
                         }
                     }
                 });
