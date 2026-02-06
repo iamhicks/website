@@ -1516,7 +1516,7 @@
             box-shadow: 0 4px 12px var(--shadow);
             max-height: 200px;
             overflow-y: auto;
-            z-index: 100;
+            z-index: 1000;
             margin-top: 4px;
         }
 
@@ -3606,7 +3606,11 @@
                                 this.data.settings.sidebarCollapsed[folder.id] = !currentCollapsed;
                             }
                             this.saveData();
-                            this.render();
+                            if (useFavoritesState) {
+                                this.renderFavorites();
+                            } else {
+                                this.render();
+                            }
                         } else {
                             this.selectFolder(folder.id);
                         }
