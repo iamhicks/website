@@ -2766,6 +2766,20 @@
                 <div class="editor-content-wrapper hidden" id="editorContentWrapper">
                     <div class="editor-content">
                         <input type="text" class="note-title-input" id="noteTitle" placeholder="Note Title">
+                        
+                        <!-- AI Summary Section -->
+                        <div id="noteSummarySection" style="margin: 8px 0 12px 0; display: none;">
+                            <div style="display: flex; align-items: flex-start; gap: 8px;">
+                                <i class="ph ph-text-t" style="color: var(--accent); margin-top: 2px;"></i>
+                                <div style="flex: 1;">
+                                    <div id="noteSummaryText" style="font-size: 13px; color: var(--text-secondary); font-style: italic; line-height: 1.5;"></div>
+                                    <button id="regenerateSummaryBtn" style="background: none; border: none; color: var(--accent); font-size: 11px; cursor: pointer; padding: 0; margin-top: 4px;">
+                                        <i class="ph ph-arrows-clockwise"></i> Regenerate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="note-meta">
                             <div class="note-meta-item">
                                 <span><i class="ph ph-calendar-blank"></i></span>
@@ -2779,6 +2793,11 @@
                                 </div>
                                 <button class="btn btn-secondary" id="suggestTagsBtn" title="AI Suggest Tags" style="padding: 4px 8px; font-size: 11px; margin-left: 4px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary);">
                                     <i class="ph ph-sparkle"></i> Suggest
+                                </button>
+                            </div>
+                            <div class="note-meta-item" style="margin-left: auto;">
+                                <button class="btn btn-secondary" id="summarizeBtn" title="AI Summarize Note" style="padding: 4px 8px; font-size: 11px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary);">
+                                    <i class="ph ph-text-t"></i> Summarize
                                 </button>
                             </div>
                         </div>
@@ -4173,6 +4192,13 @@
                 // Update tags
                 this.renderNoteTags();
 
+                // Display summary if exists
+                if (note.metadata?.summary) {
+                    this.displayNoteSummary(note.metadata.summary);
+                } else {
+                    this.hideNoteSummary();
+                }
+
                 // Apply font preference
                 const editor = document.getElementById('wysiwygEditor');
                 editor.classList.remove('font-serif', 'font-mono');
@@ -4538,6 +4564,108 @@ Respond with ONLY a JSON array of tag strings, like: ["tag1", "tag2", "tag3"]`;
 
                 // Show modal
                 modal.classList.add('active');
+            }
+
+            // ==================== AI SUMMARIZE ====================
+            
+            async summarizeNoteWithAi() {
+                if (!this.currentNote) {
+                    this.showToast('Open a note first to summarize', 'error');
+                    return;
+                }
+
+                const content = document.getElementById('wysiwygEditor').innerText.trim();
+                if (!content || content.length < 20) {
+                    this.showToast('Note needs more content to summarize', 'error');
+                    return;
+                }
+
+                // Check if AI provider is configured
+                const provider = document.querySelector('input[name="aiProvider"]:checked')?.value || 'webllm';
+                const isConfigured = this.isAiProviderConfigured(provider);
+                
+                if (!isConfigured) {
+                    this.showAiNotConfiguredModal(provider);
+                    return;
+                }
+
+                // Show loading on button
+                const btn = document.getElementById('summarizeBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Summarizing...';
+                btn.disabled = true;
+
+                try {
+                    // Generate summary (demo mode)
+                    const summary = this.generateDemoSummary(content);
+                    
+                    // Store summary in note
+                    if (!this.currentNote.metadata) this.currentNote.metadata = {};
+                    this.currentNote.metadata.summary = summary;
+                    this.currentNote.metadata.summaryGeneratedAt = new Date().toISOString();
+                    this.saveData();
+                    
+                    // Display summary
+                    this.displayNoteSummary(summary);
+                    
+                    this.showToast('Summary generated!', 'success');
+
+                } catch (error) {
+                    console.error('Summary error:', error);
+                    this.showToast('Failed to generate summary', 'error');
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }
+
+            generateDemoSummary(content) {
+                const text = content.toLowerCase();
+                const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 10);
+                
+                // Extract key sentences based on keyword density
+                const keywords = ['trading', 'strategy', 'analysis', 'psychology', 'risk', 'market', 'trend', 'support', 'resistance', 'pattern'];
+                const scoredSentences = sentences.map(sentence => {
+                    const score = keywords.reduce((acc, kw) => {
+                        return acc + (sentence.toLowerCase().includes(kw) ? 2 : 0);
+                    }, 0);
+                    return { sentence: sentence.trim(), score };
+                });
+                
+                // Sort by score and pick top sentences
+                scoredSentences.sort((a, b) => b.score - a.score);
+                
+                let summary = '';
+                if (scoredSentences.length > 0 && scoredSentences[0].score > 0) {
+                    // Use highest scoring sentence
+                    summary = scoredSentences[0].sentence;
+                    if (scoredSentences.length > 1 && scoredSentences[1].score > 0) {
+                        summary += '. ' + scoredSentences[1].sentence;
+                    }
+                } else if (sentences.length > 0) {
+                    // Fallback: use first sentence
+                    summary = sentences[0].trim();
+                }
+                
+                // Clean up
+                summary = summary.replace(/\s+/g, ' ').trim();
+                if (!summary.endsWith('.')) summary += '.';
+                
+                // Add demo indicator
+                return summary;
+            }
+
+            displayNoteSummary(summary) {
+                const section = document.getElementById('noteSummarySection');
+                const textEl = document.getElementById('noteSummaryText');
+                
+                textEl.textContent = summary;
+                section.style.display = 'block';
+            }
+
+            hideNoteSummary() {
+                const section = document.getElementById('noteSummarySection');
+                section.style.display = 'none';
             }
 
             // ==================== RENDERING ====================
@@ -6368,6 +6496,10 @@ Respond with ONLY a JSON array of tag strings, like: ["tag1", "tag2", "tag3"]`;
 
                 // AI Suggest Tags button
                 document.getElementById('suggestTagsBtn').addEventListener('click', () => this.suggestTagsWithAi());
+
+                // AI Summarize button
+                document.getElementById('summarizeBtn').addEventListener('click', () => this.summarizeNoteWithAi());
+                document.getElementById('regenerateSummaryBtn').addEventListener('click', () => this.summarizeNoteWithAi());
 
                 // Context menu
                 document.getElementById('ctxRename').addEventListener('click', () => {
