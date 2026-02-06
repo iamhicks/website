@@ -1561,6 +1561,12 @@
             transform: rotate(45deg);
         }
 
+        .task-title-input:empty:before {
+            content: attr(data-placeholder);
+            color: var(--text-tertiary);
+            pointer-events: none;
+        }
+
         .tag-autocomplete-item:hover,
         .tag-autocomplete-item.active {
             background: var(--bg-hover);
@@ -7091,13 +7097,13 @@
                 }
 
                 container.innerHTML = tasks.map(task => `
-                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
+                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
                         <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}
-                            >
-                        <input type="text" class="task-title-input" value="${this.escapeHtml(task.text)}"
-                            placeholder="Task..."
-                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'}; padding: 0;">
-                        <button class="task-delete" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; opacity: 0; transition: opacity 0.2s;">
+                            style="margin-top: 4px; flex-shrink: 0;">
+                        <div class="task-title-input" contenteditable="true"
+                            data-placeholder="Task..."
+                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'}; min-height: 20px;">${task.text}</div>
+                        <button class="task-delete" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; opacity: 0; transition: opacity 0.2s; margin-top: 2px; flex-shrink: 0;">
                             <i class="ph ph-trash"></i>
                         </button>
                     </div>
@@ -7111,12 +7117,12 @@
                     const deleteBtn = item.querySelector('.task-delete');
 
                     checkbox.addEventListener('change', () => this.toggleTask(taskId));
-                    titleInput.addEventListener('input', (e) => this.updateTaskTitle(taskId, e.target.value));
+                    titleInput.addEventListener('input', () => this.updateTaskTitle(taskId, titleInput.innerHTML));
                     deleteBtn.addEventListener('click', () => this.deleteTask(taskId));
 
-                    // Return key creates new task
+                    // Return key creates new task (shift+return for new line)
                     titleInput.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === 'Enter' && !e.shiftKey) {
                             e.preventDefault();
                             this.addTask();
                         }
@@ -7140,9 +7146,13 @@
                         const selection = window.getSelection();
                         const text = selection.toString().trim();
 
-                        if (text.length > 0 && editor.contains(selection.anchorNode)) {
-                            currentSelection = text;
-                            currentRange = selection.getRangeAt(0).cloneRange();
+                        if (text.length > 0) {
+                            const isInEditor = editor.contains(selection.anchorNode);
+                            const isInTask = selection.anchorNode?.parentElement?.closest('.task-title-input');
+                            
+                            if (isInEditor || isInTask) {
+                                currentSelection = text;
+                                currentRange = selection.getRangeAt(0).cloneRange();
 
                             // Get selection coordinates using getBoundingClientRect for viewport positioning
                             const rect = currentRange.getBoundingClientRect();
