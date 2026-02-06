@@ -3510,7 +3510,9 @@
                         if (toggle && hasChildren) {
                             toggle.addEventListener('click', (e) => {
                                 e.stopPropagation();
-                                this.data.settings.favoritesExpanded[folder.id] = !isExpanded;
+                                // Get current state at click time, not render time
+                                const currentExpanded = !!this.data.settings.favoritesExpanded?.[folder.id];
+                                this.data.settings.favoritesExpanded[folder.id] = !currentExpanded;
                                 this.saveData();
                                 this.renderFavorites();
                             });
@@ -3597,18 +3599,14 @@
                         if (e.target.classList.contains('folder-toggle')) {
                             // Toggle collapse - use appropriate state
                             if (useFavoritesState) {
-                                if (!this.data.settings.favoritesExpanded) {
-                                    this.data.settings.favoritesExpanded = {};
-                                }
-                                this.data.settings.favoritesExpanded[folder.id] = !this.data.settings.favoritesExpanded[folder.id];
+                                const currentExpanded = !!this.data.settings.favoritesExpanded?.[folder.id];
+                                this.data.settings.favoritesExpanded[folder.id] = !currentExpanded;
                             } else {
-                                if (!this.data.settings.sidebarCollapsed) {
-                                    this.data.settings.sidebarCollapsed = {};
-                                }
-                                this.data.settings.sidebarCollapsed[folder.id] = !this.data.settings.sidebarCollapsed[folder.id];
+                                const currentCollapsed = !!this.data.settings.sidebarCollapsed?.[folder.id];
+                                this.data.settings.sidebarCollapsed[folder.id] = !currentCollapsed;
                             }
                             this.saveData();
-                            this.renderFavorites();
+                            this.render();
                         } else {
                             this.selectFolder(folder.id);
                         }
