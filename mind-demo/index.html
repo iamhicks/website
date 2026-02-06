@@ -970,6 +970,84 @@
         </div>
     </div>
 
+    <!-- AI Assistant Modal -->
+    <div class="modal-overlay" id="aiModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ph ph-sparkle"></i> Mind AI</div>
+                <button class="modal-close" id="closeAiModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">AI Provider</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <label style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--accent); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">🚀 WebLLM (Recommended)</div>
+                                <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. No installation. Private & offline.</div>
+                            </div>
+                        </label>
+                        <label style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">⚡ Ollama Desktop</div>
+                                <div style="font-size: 13px; color: var(--text-secondary);">Better performance. Requires app install.</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" id="aiFeatures">
+                    <label class="form-label">AI Features</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button class="btn" id="aiSummarizeBtn" style="justify-content: flex-start; text-align: left;">
+                            <i class="ph ph-text-t"></i> Summarize Note
+                        </button>
+                        <button class="btn" id="aiSuggestTagsBtn" style="justify-content: flex-start; text-align: left;">
+                            <i class="ph ph-tag"></i> Suggest Tags
+                        </button>
+                        <button class="btn" id="aiContinueBtn" style="justify-content: flex-start; text-align: left;">
+                            <i class="ph ph-pencil-simple"></i> Continue Writing
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="closeAiModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ph ph-upload-simple"></i> Import from Notion/Obsidian</div>
+                <button class="modal-close" id="closeImportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">How to Export</label>
+                    <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; font-size: 13px;">
+                        <p style="margin-bottom: 8px;"><strong>Notion:</strong> Settings → Export → Markdown & CSV → Include subpages</p>
+                        <p><strong>Obsidian:</strong> Your vault is already Markdown. Just zip it.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Upload ZIP File</label>
+                    <div id="dropZone" style="border: 2px dashed var(--border); border-radius: 8px; padding: 32px; text-align: center; cursor: pointer;">
+                        <i class="ph ph-cloud-arrow-up" style="font-size: 32px; color: var(--accent); margin-bottom: 8px;"></i>
+                        <p style="color: var(--text-secondary);">Drop ZIP file here or click to browse</p>
+                        <input type="file" id="importFileInput" accept=".zip" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="closeImportModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
         // ==================== KNOWLEDGE BASE APP ====================
@@ -1067,6 +1145,36 @@
                 
                 // Search
                 document.getElementById('searchInput')?.addEventListener('input', (e) => this.handleSearch(e.target.value));
+                
+                // AI Assistant
+                document.getElementById('aiAssistBtn')?.addEventListener('click', () => this.openAiModal());
+                document.getElementById('closeAiModal')?.addEventListener('click', () => this.closeModal('aiModal'));
+                document.getElementById('closeAiModalBtn')?.addEventListener('click', () => this.closeModal('aiModal'));
+                document.getElementById('aiSummarizeBtn')?.addEventListener('click', () => this.aiSummarize());
+                document.getElementById('aiSuggestTagsBtn')?.addEventListener('click', () => this.aiSuggestTags());
+                document.getElementById('aiContinueBtn')?.addEventListener('click', () => this.aiContinue());
+                
+                // Import
+                document.getElementById('closeImportModal')?.addEventListener('click', () => this.closeModal('importModal'));
+                document.getElementById('closeImportModalBtn')?.addEventListener('click', () => this.closeModal('importModal'));
+                
+                // Drop zone for import
+                const dropZone = document.getElementById('dropZone');
+                if (dropZone) {
+                    dropZone.addEventListener('click', () => document.getElementById('importFileInput')?.click());
+                    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; });
+                    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'var(--border)'; });
+                    dropZone.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        dropZone.style.borderColor = 'var(--border)';
+                        const file = e.dataTransfer.files[0];
+                        if (file) this.handleImport(file);
+                    });
+                }
+                
+                document.getElementById('importFileInput')?.addEventListener('change', (e) => {
+                    if (e.target.files[0]) this.handleImport(e.target.files[0]);
+                });
             }
             
             openNewNoteModal() {
@@ -1252,6 +1360,52 @@
                 
                 let html = '';
                 
+                // Bookmarks section
+                const bookmarkedNotes = this.data.notes.filter(n => n.bookmarked);
+                if (bookmarkedNotes.length > 0) {
+                    html += `
+                        <div class="sidebar-section">
+                            <div class="section-header" data-section="bookmarks">
+                                <span>Bookmarks</span>
+                                <span class="section-toggle">▼</span>
+                            </div>
+                            <div class="section-content" id="bookmarksSection">
+                                <ul class="bookmark-list" style="list-style: none; padding: 4px 0;">
+                                    ${bookmarkedNotes.map(note => `
+                                        <li class="bookmark-item" data-note-id="${note.id}" style="padding: 6px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                            <i class="ph ph-bookmark" style="color: var(--accent);"></i>
+                                            <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(note.title || 'Untitled')}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Clipped pages section
+                const clippedNotes = this.data.notes.filter(n => n.clippedFrom);
+                if (clippedNotes.length > 0) {
+                    html += `
+                        <div class="sidebar-section">
+                            <div class="section-header" data-section="clipped">
+                                <span>Clipped Pages</span>
+                                <span class="section-toggle">▼</span>
+                            </div>
+                            <div class="section-content" id="clippedSection">
+                                <ul class="bookmark-list" style="list-style: none; padding: 4px 0;">
+                                    ${clippedNotes.map(note => `
+                                        <li class="bookmark-item" data-note-id="${note.id}" style="padding: 6px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                            <i class="ph ph-globe" style="color: var(--accent);"></i>
+                                            <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(note.title || 'Clipped Page')}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                }
+                
                 // Favorites section
                 if (this.data.settings.favoriteFolders?.length > 0) {
                     html += `
@@ -1333,6 +1487,13 @@
                             contentEl.classList.toggle('collapsed');
                             toggle?.classList.toggle('collapsed');
                         }
+                    });
+                });
+                
+                // Bookmark click handlers
+                content.querySelectorAll('.bookmark-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        this.openNote(item.dataset.noteId);
                     });
                 });
                 
@@ -1539,6 +1700,149 @@
                 document.getElementById('wysiwygEditor').innerHTML = version.content;
                 
                 this.saveData();
+            }
+            
+            // ==================== AI ASSISTANT ====================
+            openAiModal() {
+                document.getElementById('aiModal').classList.add('active');
+            }
+            
+            aiSummarize() {
+                if (!this.currentNote) return;
+                const content = document.getElementById('wysiwygEditor').innerText;
+                if (content.length < 50) {
+                    alert('Note is too short to summarize');
+                    return;
+                }
+                
+                // Simulate AI response in demo mode
+                const summary = `<p><strong>Summary:</strong> ${content.substring(0, 100)}...</p>`;
+                document.getElementById('wysiwygEditor').innerHTML += '<hr>' + summary;
+                this.closeModal('aiModal');
+            }
+            
+            aiSuggestTags() {
+                if (!this.currentNote) return;
+                const content = document.getElementById('wysiwygEditor').innerText.toLowerCase();
+                
+                // Simple keyword extraction for demo
+                const keywords = ['project', 'meeting', 'idea', 'research', 'todo', 'important', 'idea'];
+                const suggested = keywords.filter(k => content.includes(k));
+                
+                if (suggested.length > 0) {
+                    suggested.forEach(tag => {
+                        if (!this.currentNote.tags.includes(tag)) {
+                            this.currentNote.tags.push(tag);
+                        }
+                    });
+                    this.saveData();
+                    this.renderTags();
+                }
+                this.closeModal('aiModal');
+            }
+            
+            aiContinue() {
+                if (!this.currentNote) return;
+                const content = document.getElementById('wysiwygEditor').innerText;
+                
+                // Simulate continuation
+                const continuation = '\n\n<p><em>[AI continues writing...]</em> Building on your ideas, consider exploring related concepts, adding specific examples, or connecting this to other notes in your knowledge base.</p>';
+                document.getElementById('wysiwygEditor').innerHTML += continuation;
+                this.closeModal('aiModal');
+            }
+            
+            // ==================== IMPORT ====================
+            openImportModal() {
+                document.getElementById('importModal').classList.add('active');
+            }
+            
+            async handleImport(file) {
+                if (!file.name.endsWith('.zip')) {
+                    alert('Please upload a ZIP file');
+                    return;
+                }
+                
+                try {
+                    // In a real implementation, we'd use JSZip to extract
+                    // For demo, show success message
+                    alert('Import feature: ' + file.name + ' would be processed here.\n\nIn the full version, this extracts Markdown files and creates notes/folders.');
+                    this.closeModal('importModal');
+                } catch (err) {
+                    alert('Import failed: ' + err.message);
+                }
+            }
+            
+            showMoreMenu() {
+                const actions = [
+                    'Clip Web Page',
+                    'Toggle Bookmark',
+                    'Version History',
+                    'Full Width',
+                    'Small Text',
+                    'Delete Note'
+                ];
+                
+                const choice = prompt('Choose action:\n' + actions.map((a, i) => `${i + 1}. ${a}`).join('\n'));
+                if (!choice) return;
+                
+                switch(choice.trim()) {
+                    case '1':
+                        const url = prompt('Enter URL to clip:');
+                        if (url) this.clipWebpage(url);
+                        break;
+                    case '2':
+                        this.toggleBookmark();
+                        break;
+                    case '3':
+                        this.showVersionHistory();
+                        break;
+                    case '4':
+                        document.getElementById('editorContent').classList.toggle('full-width');
+                        break;
+                    case '5':
+                        document.getElementById('wysiwygEditor').classList.toggle('small-text');
+                        break;
+                    case '6':
+                        if (confirm('Delete this note?')) {
+                            this.deleteNote(this.currentNote?.id);
+                        }
+                        break;
+                }
+            }
+            
+            showVersionHistory() {
+                if (!this.currentNote || !this.currentNote.versions?.length) {
+                    alert('No version history available');
+                    return;
+                }
+                
+                const versions = this.currentNote.versions.map((v, i) => 
+                    `${i + 1}. ${new Date(v.timestamp).toLocaleString()}`
+                ).join('\n');
+                
+                const choice = prompt('Select version to restore:\n' + versions);
+                if (choice) {
+                    const index = parseInt(choice) - 1;
+                    if (!isNaN(index) && this.currentNote.versions[index]) {
+                        this.restoreVersion(index);
+                    }
+                }
+            }
+            
+            deleteNote(noteId) {
+                if (!noteId) return;
+                this.data.notes = this.data.notes.filter(n => n.id !== noteId);
+                this.openTabs = this.openTabs.filter(id => id !== noteId);
+                if (this.activeTabId === noteId) {
+                    this.activeTabId = this.openTabs[this.openTabs.length - 1] || null;
+                    if (this.activeTabId) {
+                        this.openNote(this.activeTabId);
+                    } else {
+                        this.showEmptyState();
+                    }
+                }
+                this.saveData();
+                this.render();
             }
             
             // ==================== BOOKMARKS ====================
