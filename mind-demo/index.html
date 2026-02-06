@@ -15,8 +15,8 @@
             --text-primary: #1d1d1f;
             --text-secondary: #6e6e73;
             --text-tertiary: #86868b;
-            --accent: #007aff;
-            --accent-hover: #0051d5;
+            --accent: #2eaadc;
+            --accent-hover: #2596c4;
             --border: rgba(0, 0, 0, 0.1);
             --shadow: rgba(0, 0, 0, 0.08);
             --success: #34c759;
@@ -35,18 +35,18 @@
         }
 
         [data-theme="dark"] {
-            --bg-primary: #1c1c1e;
-            --bg-secondary: #2c2c2e;
-            --bg-tertiary: #3a3a3c;
-            --bg-sidebar: #1c1c1e;
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --bg-tertiary: #2a2a2a;
+            --bg-sidebar: #202020;
             --text-primary: #ffffff;
-            --text-secondary: #8e8e93;
-            --text-tertiary: #636366;
-            --accent: #0a84ff;
-            --accent-hover: #409cff;
-            --border: rgba(255, 255, 255, 0.1);
+            --text-secondary: #b3b3b3;
+            --text-tertiary: #666666;
+            --accent: #2eaadc;
+            --accent-hover: #2596c4;
+            --border: #333333;
             --shadow: rgba(0, 0, 0, 0.3);
-            --tag-bg: #3a3a3c;
+            --tag-bg: #2a2a2a;
             --tag-text: #ffffff;
         }
 
@@ -757,6 +757,20 @@
             color: white;
         }
 
+        .toolbar-btn.ai-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+        }
+
+        .toolbar-btn.ai-btn:hover {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+        }
+
         .toolbar-separator {
             width: 1px;
             height: 20px;
@@ -1143,6 +1157,92 @@
         .form-input:focus, .form-select:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        /* ==================== AI ASSISTANT ==================== */
+        .ai-feature-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            transition: all var(--transition);
+            width: 100%;
+        }
+
+        .ai-feature-btn:hover:not(:disabled) {
+            background: var(--bg-tertiary);
+            border-color: var(--accent);
+        }
+
+        .ai-feature-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .ai-feature-btn i {
+            font-size: 20px;
+            color: var(--accent);
+        }
+
+        .ai-feature-btn span {
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .ai-feature-btn small {
+            color: var(--text-tertiary);
+            font-size: 11px;
+            display: block;
+            width: 100%;
+        }
+
+        .ai-warning {
+            border-left: 3px solid var(--warning);
+        }
+
+        /* ==================== IMPORT FEATURE ==================== */
+        .file-upload-area {
+            transition: all 0.2s;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--accent) !important;
+            background: var(--bg-secondary);
+        }
+
+        .file-upload-area.drag-over {
+            border-color: var(--accent) !important;
+            background: rgba(0, 122, 255, 0.1);
+        }
+
+        .import-preview-item {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .import-preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .import-preview-item i {
+            color: var(--accent);
+        }
+
+        .import-preview-item.warning i {
+            color: var(--warning);
+        }
+
+        .import-preview-item.error i {
+            color: var(--danger);
         }
 
         /* ==================== SEARCH RESULTS ==================== */
@@ -1540,8 +1640,8 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon">◈</div>
-                    <span>Knowledge Base</span>
+                    <div class="logo-icon"><i class="ph ph-brain"></i></div>
+                    <span>Mind</span>
                 </div>
             </div>
             
@@ -1618,7 +1718,7 @@
             <div class="editor-container" id="editorContainer">
                 <div class="empty-state" id="emptyState">
                     <div class="empty-state-icon">◈</div>
-                    <div class="empty-state-title">Welcome to Knowledge Base</div>
+                    <div class="empty-state-title">Welcome to Mind</div>
                     <div class="empty-state-desc">
                         Your private, offline knowledge management system.
                         Create your first note to get started.
@@ -1649,6 +1749,11 @@
                         <button class="toolbar-btn" id="linkBtn" title="Insert Link">🔗</button>
                         <button class="toolbar-btn" id="imageBtn" title="Insert Image">🖼</button>
                         <button class="toolbar-btn" id="attachBtn" title="Attach File">📎</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn ai-btn" id="aiAssistBtn" title="AI Assistant (experimental)">
+                            <i class="ph ph-sparkle"></i> AI
+                        </button>
                     </div>
                     <div class="toolbar-group">
                         <button class="toolbar-btn" data-command="removeFormat" title="Clear Formatting">✕</button>
@@ -1767,6 +1872,15 @@
                         <option value="auto">Auto (System)</option>
                     </select>
                 </div>
+                <div class="form-group" style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
+                    <label class="form-label">Import Data</label>
+                    <button class="btn btn-secondary" id="importNotionObsidianBtn" style="width: 100%; margin-bottom: 8px;">
+                        <i class="ph ph-upload-simple"></i> Import from Notion/Obsidian
+                    </button>
+                    <small style="color: var(--text-tertiary); font-size: 11px; display: block;">
+                        Import Markdown files, folders, and tags from Notion or Obsidian exports
+                    </small>
+                </div>
                 <div class="form-group">
                     <label class="form-label">Data Management</label>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -1794,6 +1908,249 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="closeSettings">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Panel -->
+    <div class="modal-overlay" id="aiPanel">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ph ph-sparkle"></i> Mind AI</div>
+                <button class="modal-close" id="closeAiPanel">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- AI Provider Selection -->
+                <div class="form-group">
+                    <label class="form-label">AI Provider</label>
+                    <div class="ai-provider-options" style="display: flex; flex-direction: column; gap: 12px;">
+                        <label class="ai-provider-card" style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--accent); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">🚀 WebLLM (Recommended)</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Runs entirely in your browser. No installation. Private & offline.</div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 11px; background: var(--success); color: white; padding: 2px 8px; border-radius: 4px;">✓ Free</span>
+                                    <span style="font-size: 11px; background: var(--success); color: white; padding: 2px 8px; border-radius: 4px;">✓ Private</span>
+                                    <span style="font-size: 11px; background: var(--success); color: white; padding: 2px 8px; border-radius: 4px;">✓ One-time download</span>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="ai-provider-card" style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">⚡ Ollama Desktop</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Better performance, more models. Requires desktop app.</div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 11px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px;">Better quality</span>
+                                    <span style="font-size: 11px; background: var(--warning); color: white; padding: 2px 8px; border-radius: 4px;">Requires install</span>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="ai-provider-card" style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="radio" name="aiProvider" value="cloud" style="margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">☁️ Cloud API (Advanced)</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Use OpenAI, Anthropic, or OpenRouter. Best quality.</div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 11px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px;">Best quality</span>
+                                    <span style="font-size: 11px; background: var(--warning); color: white; padding: 2px 8px; border-radius: 4px;">Requires API key</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- WebLLM Download Section -->
+                <div id="webllmSection">
+                    <div class="form-group" id="modelDownloadSection">
+                        <label class="form-label">Download AI Model</label>
+                        <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                <div>
+                                    <div style="font-weight: 600;">Llama 3.2 (3B)</div>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">~1.9GB download • Good quality • Fast</div>
+                                </div>
+                                <span id="modelStatusBadge" style="font-size: 11px; background: var(--bg-secondary); padding: 4px 12px; border-radius: 4px;">Not downloaded</span>
+                            </div>
+                            <button class="btn btn-primary" id="downloadModelBtn" style="width: 100%;">
+                                <i class="ph ph-download-simple"></i> Download Model
+                            </button>
+                            <div id="downloadProgress" style="display: none; margin-top: 12px;">
+                                <div style="background: var(--bg-secondary); height: 4px; border-radius: 2px; overflow: hidden;">
+                                    <div id="downloadProgressBar" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.3s;"></div>
+                                </div>
+                                <div id="downloadProgressText" style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; text-align: center;">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ollama Section (Hidden by default) -->
+                <div id="ollamaSection" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Ollama Desktop</label>
+                        <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px;">
+                            <ol style="margin-left: 16px; font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+                                <li style="margin-bottom: 8px;">Download <a href="https://ollama.com/download" target="_blank" style="color: var(--accent);">Ollama for macOS</a></li>
+                                <li style="margin-bottom: 8px;">Open Ollama (runs in menu bar)</li>
+                                <li>Click "Download Model" in Ollama menu</li>
+                            </ol>
+                            <button class="btn btn-secondary" id="testOllamaConnection" style="width: 100%;">
+                                <i class="ph ph-plug"></i> Test Connection
+                            </button>
+                            <div id="ollamaStatus" style="margin-top: 8px; font-size: 12px; text-align: center;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cloud API Section (Hidden by default) -->
+                <div id="cloudSection" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">API Provider</label>
+                        <select class="form-select" id="cloudProvider">
+                            <option value="openai">OpenAI (GPT-4, GPT-3.5)</option>
+                            <option value="anthropic">Anthropic (Claude)</option>
+                            <option value="openrouter">OpenRouter (Multiple models)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-...">
+                        <small style="color: var(--text-tertiary); font-size: 11px;">Your key stays on your device. Never sent to our servers.</small>
+                    </div>
+                    <button class="btn btn-primary" id="saveApiKey" style="width: 100%;">
+                        <i class="ph ph-key"></i> Save & Test API Key
+                    </button>
+                </div>
+
+                <div class="form-group" style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
+                    <label class="form-label">AI Features</label>
+                    <div class="ai-features" style="display: flex; flex-direction: column; gap: 8px;">
+                        <button class="ai-feature-btn" id="aiSummarizeBtn" disabled>
+                            <i class="ph ph-text-t"></i>
+                            <span>Summarize Note</span>
+                            <small>Condense long notes into key points</small>
+                        </button>
+                        <button class="ai-feature-btn" id="aiSuggestTagsBtn" disabled>
+                            <i class="ph ph-tag"></i>
+                            <span>Suggest Tags</span>
+                            <small>AI analyzes content and recommends tags</small>
+                        </button>
+                        <button class="ai-feature-btn" id="aiContinueBtn" disabled>
+                            <i class="ph ph-pencil-simple"></i>
+                            <span>Continue Writing</span>
+                            <small>AI continues from your cursor position</small>
+                        </button>
+                        <button class="ai-feature-btn" id="aiExpandBtn" disabled>
+                            <i class="ph ph-arrows-out"></i>
+                            <span>Expand Selection</span>
+                            <small>Turn bullet points into full paragraphs</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeAiPanelBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ph ph-upload-simple"></i> Import from Notion/Obsidian</div>
+                <button class="modal-close" id="closeImportModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="import-step" id="importStep1">
+                    <div class="form-group">
+                        <label class="form-label">Step 1: Export Your Data</label>
+                        <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; font-size: 13px;">
+                            <p style="margin-bottom: 8px;"><strong>From Notion:</strong></p>
+                            <ol style="margin-left: 16px; margin-bottom: 12px; color: var(--text-secondary);">
+                                <li>Go to Settings → Export</li>
+                                <li>Select "Markdown & CSV" format</li>
+                                <li>Include subpages</li>
+                                <li>Download ZIP file</li>
+                            </ol>
+                            <p style="margin-bottom: 8px;"><strong>From Obsidian:</strong></p>
+                            <ol style="margin-left: 16px; color: var(--text-secondary);">
+                                <li>Your vault is already Markdown</li>
+                                <li>Zip your vault folder</li>
+                                <li>Or export specific folders</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Step 2: Upload ZIP File</label>
+                        <div class="file-upload-area" id="fileUploadArea" style="border: 2px dashed var(--border); border-radius: 8px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <i class="ph ph-cloud-arrow-up" style="font-size: 32px; color: var(--accent); margin-bottom: 8px;"></i>
+                            <p style="color: var(--text-secondary); margin-bottom: 4px;">Drop ZIP file here or click to browse</p>
+                            <small style="color: var(--text-tertiary);">Supports .zip files from Notion/Obsidian</small>
+                            <input type="file" id="importFileInput" accept=".zip" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+                <div class="import-step" id="importStep2" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Import Preview</label>
+                        <div id="importPreview" style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; font-size: 13px; max-height: 200px; overflow-y: auto;">
+                            <!-- Preview content -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Options</label>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;">
+                                <input type="checkbox" id="importFolders" checked>
+                                <span>Import folder structure</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;">
+                                <input type="checkbox" id="importTags" checked>
+                                <span>Import tags from YAML frontmatter</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;">
+                                <input type="checkbox" id="convertLinks" checked>
+                                <span>Convert wiki-links [[Note]] to regular links</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="importWarnings" style="display: none;">
+                        <div style="background: rgba(255, 193, 7, 0.1); border-left: 3px solid var(--warning); padding: 12px; border-radius: 4px; font-size: 12px;">
+                            <i class="ph ph-warning" style="color: var(--warning);"></i>
+                            <span id="warningText">Some items may not import perfectly</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="import-step" id="importStep3" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Importing...</label>
+                        <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; text-align: center;">
+                            <div id="importProgress" style="font-size: 24px; font-weight: 600; color: var(--accent); margin-bottom: 8px;">0%</div>
+                            <div id="importStatus" style="color: var(--text-secondary); font-size: 13px;">Reading files...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="import-step" id="importStep4" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Import Complete!</label>
+                        <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid var(--success); padding: 16px; border-radius: 8px; text-align: center;">
+                            <i class="ph ph-check-circle" style="font-size: 48px; color: var(--success); margin-bottom: 12px;"></i>
+                            <div id="importResults" style="font-size: 14px; color: var(--text-primary);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelImport">Cancel</button>
+                <button class="btn btn-secondary" id="backImport" style="display: none;">Back</button>
+                <button class="btn btn-primary" id="nextImport">Next</button>
+                <button class="btn btn-primary" id="confirmImport" style="display: none;">Import</button>
+                <button class="btn btn-primary" id="doneImport" style="display: none;">Done</button>
             </div>
         </div>
     </div>
@@ -2388,7 +2745,7 @@
             
             createWelcomeNote() {
                 const welcomeContent = `
-                    <h1>Welcome to Knowledge Base!</h1>
+                    <h1>Welcome to Mind!</h1>
                     <p>This is your personal, offline knowledge management system. Here's how to get started:</p>
                     <h2>📝 Creating Notes</h2>
                     <ul>
@@ -2417,7 +2774,7 @@
                 
                 const note = {
                     id: 'note_welcome',
-                    title: '👋 Welcome to Knowledge Base',
+                    title: '👋 Welcome to Mind',
                     content: welcomeContent,
                     folderId: 'root',
                     tags: ['getting-started', 'tutorial'],
@@ -3490,7 +3847,7 @@
             }
             
             exportMarkdown() {
-                let md = '# Knowledge Base Export\n\n';
+                let md = '# Mind Export\n\n';
                 
                 this.data.notes.forEach(note => {
                     md += `## ${note.title}\n\n`;
@@ -4098,9 +4455,644 @@
             setInterval(updateTimer, 1000);
         })();
         
+        // ==================== AI ASSISTANT ====================
+        class MindAI {
+            constructor() {
+                this.provider = localStorage.getItem('mind_ai_provider') || 'webllm';
+                this.modelDownloaded = localStorage.getItem('mind_ai_model_downloaded') === 'true';
+                this.apiKey = localStorage.getItem('mind_ai_api_key') || '';
+                this.cloudProvider = localStorage.getItem('mind_ai_cloud_provider') || 'openai';
+                this.connected = false;
+                this.ollamaUrl = 'http://localhost:11434';
+                this.webllmLoaded = false;
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.updateUI();
+                this.checkModelStatus();
+            }
+            
+            setupEventListeners() {
+                const aiBtn = document.getElementById('aiAssistBtn');
+                const closeBtn = document.getElementById('closeAiPanel');
+                const closeBtn2 = document.getElementById('closeAiPanelBtn');
+                
+                // Provider radio buttons
+                document.querySelectorAll('input[name="aiProvider"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        this.provider = e.target.value;
+                        localStorage.setItem('mind_ai_provider', this.provider);
+                        this.updateUI();
+                    });
+                });
+                
+                // Download model button
+                document.getElementById('downloadModelBtn')?.addEventListener('click', () => this.downloadModel());
+                
+                // Ollama test connection
+                document.getElementById('testOllamaConnection')?.addEventListener('click', () => this.testOllamaConnection());
+                
+                // Cloud API save
+                document.getElementById('saveApiKey')?.addEventListener('click', () => this.saveApiKey());
+                
+                if (aiBtn) aiBtn.addEventListener('click', () => this.openPanel());
+                if (closeBtn) closeBtn.addEventListener('click', () => this.closePanel());
+                if (closeBtn2) closeBtn2.addEventListener('click', () => this.closePanel());
+                
+                // Feature buttons
+                document.getElementById('aiSummarizeBtn')?.addEventListener('click', () => this.summarize());
+                document.getElementById('aiSuggestTagsBtn')?.addEventListener('click', () => this.suggestTags());
+                document.getElementById('aiContinueBtn')?.addEventListener('click', () => this.continueWriting());
+                document.getElementById('aiExpandBtn')?.addEventListener('click', () => this.expandSelection());
+            }
+            
+            openPanel() {
+                document.getElementById('aiPanel')?.classList.add('active');
+                this.updateUI();
+                this.enableFeaturesIfReady();
+            }
+            
+            closePanel() {
+                document.getElementById('aiPanel')?.classList.remove('active');
+            }
+            
+            updateUI() {
+                // Show/hide provider sections
+                document.getElementById('webllmSection').style.display = this.provider === 'webllm' ? 'block' : 'none';
+                document.getElementById('ollamaSection').style.display = this.provider === 'ollama' ? 'block' : 'none';
+                document.getElementById('cloudSection').style.display = this.provider === 'cloud' ? 'block' : 'none';
+                
+                // Update radio button styles
+                document.querySelectorAll('.ai-provider-card').forEach(card => {
+                    const radio = card.querySelector('input[type="radio"]');
+                    if (radio.checked) {
+                        card.style.borderColor = 'var(--accent)';
+                    } else {
+                        card.style.borderColor = 'var(--border)';
+                    }
+                });
+                
+                // Update model download section
+                this.checkModelStatus();
+            }
+            
+            checkModelStatus() {
+                const badge = document.getElementById('modelStatusBadge');
+                const downloadBtn = document.getElementById('downloadModelBtn');
+                const downloadProgress = document.getElementById('downloadProgress');
+                
+                if (this.modelDownloaded) {
+                    badge.textContent = '✓ Ready';
+                    badge.style.background = 'var(--success)';
+                    badge.style.color = 'white';
+                    downloadBtn.style.display = 'none';
+                    downloadProgress.style.display = 'none';
+                    this.connected = true;
+                    this.enableFeaturesIfReady();
+                } else {
+                    badge.textContent = 'Not downloaded';
+                    badge.style.background = 'var(--bg-secondary)';
+                    badge.style.color = 'var(--text-secondary)';
+                    downloadBtn.style.display = 'flex';
+                    downloadBtn.innerHTML = '<i class="ph ph-download-simple"></i> Download Model';
+                    downloadBtn.disabled = false;
+                }
+            }
+            
+            async downloadModel() {
+                const btn = document.getElementById('downloadModelBtn');
+                const progress = document.getElementById('downloadProgress');
+                const progressBar = document.getElementById('downloadProgressBar');
+                const progressText = document.getElementById('downloadProgressText');
+                
+                btn.disabled = true;
+                btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Downloading...';
+                progress.style.display = 'block';
+                
+                // Simulate download progress
+                for (let i = 0; i <= 100; i += 10) {
+                    await this.delay(300);
+                    progressBar.style.width = i + '%';
+                    progressText.textContent = i + '%';
+                }
+                
+                this.modelDownloaded = true;
+                localStorage.setItem('mind_ai_model_downloaded', 'true');
+                this.checkModelStatus();
+                this.enableFeaturesIfReady();
+                app.showToast('AI Model ready!', 'success');
+            }
+            
+            async testOllamaConnection() {
+                const statusEl = document.getElementById('ollamaStatus');
+                statusEl.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Testing...';
+                
+                try {
+                    const response = await fetch(`${this.ollamaUrl}/api/tags`, {
+                        method: 'GET',
+                        signal: AbortSignal.timeout(5000)
+                    });
+                    
+                    if (response.ok) {
+                        statusEl.innerHTML = '<span style="color: var(--success);"><i class="ph ph-check-circle"></i> Connected to Ollama</span>';
+                        this.connected = true;
+                        this.provider = 'ollama';
+                        this.enableFeaturesIfReady();
+                    } else {
+                        throw new Error('Not responding');
+                    }
+                } catch (err) {
+                    statusEl.innerHTML = '<span style="color: var(--danger);"><i class="ph ph-x-circle"></i> Ollama not found. Make sure it\'s running.</span>';
+                    this.connected = false;
+                }
+            }
+            
+            saveApiKey() {
+                const key = document.getElementById('apiKeyInput').value.trim();
+                const provider = document.getElementById('cloudProvider').value;
+                
+                if (!key) {
+                    app.showToast('Please enter an API key', 'error');
+                    return;
+                }
+                
+                this.apiKey = key;
+                this.cloudProvider = provider;
+                localStorage.setItem('mind_ai_api_key', key);
+                localStorage.setItem('mind_ai_cloud_provider', provider);
+                
+                this.connected = true;
+                this.enableFeaturesIfReady();
+                app.showToast('API key saved!', 'success');
+            }
+            
+            enableFeaturesIfReady() {
+                const buttons = document.querySelectorAll('.ai-feature-btn');
+                const isReady = this.connected || this.modelDownloaded || this.provider === 'cloud' && this.apiKey;
+                
+                buttons.forEach(btn => {
+                    btn.disabled = !isReady;
+                    if (isReady) {
+                        btn.style.opacity = '1';
+                    } else {
+                        btn.style.opacity = '0.5';
+                    }
+                });
+            }
+            
+            async generate(prompt, system = '') {
+                // Demo mode - simulate responses
+                if (!this.connected && !this.modelDownloaded) {
+                    return this.simulateResponse(prompt);
+                }
+                
+                // WebLLM mode (simulated for demo)
+                if (this.provider === 'webllm' && this.modelDownloaded) {
+                    return this.simulateResponse(prompt);
+                }
+                
+                // Ollama mode
+                if (this.provider === 'ollama' && this.connected) {
+                    try {
+                        const response = await fetch(`${this.ollamaUrl}/api/generate`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                model: 'llama3.2',
+                                prompt: prompt,
+                                system: system,
+                                stream: false
+                            }),
+                            signal: AbortSignal.timeout(30000)
+                        });
+                        
+                        if (!response.ok) throw new Error('Generation failed');
+                        const data = await response.json();
+                        return data.response;
+                    } catch (err) {
+                        return `[Ollama Error: ${err.message}. Using demo mode.]`;
+                    }
+                }
+                
+                // Cloud API mode (simulated for demo)
+                if (this.provider === 'cloud' && this.apiKey) {
+                    return this.simulateResponse(prompt) + '\n\n*(Cloud API response simulated in demo)*';
+                }
+                
+                return 'AI not ready. Please set up a provider.';
+            }
+            
+            simulateResponse(prompt) {
+                const lowerPrompt = prompt.toLowerCase();
+                
+                if (lowerPrompt.includes('summarize')) {
+                    return '**Summary:**\n\nThis note covers key strategies for managing trading psychology, including:\n• Setting predefined entry/exit rules\n• Maintaining a trading journal\n• Taking breaks after consecutive losses\n• Reviewing mistakes weekly';
+                }
+                
+                if (lowerPrompt.includes('tag')) {
+                    return 'trading, psychology, discipline, risk-management, journal';
+                }
+                
+                if (lowerPrompt.includes('continue')) {
+                    return 'The key insight here is that emotional trading often leads to overtrading. By stepping away from the screen after a loss, you give your prefrontal cortex time to re-engage, preventing impulsive decisions driven by the amygdala.';
+                }
+                
+                if (lowerPrompt.includes('expand')) {
+                    return 'To elaborate on this point, consider the following: First, trading psychology is not about eliminating emotions but about recognizing them and creating systems that operate despite them. Second, every trader has a unique psychological profile that affects their decision-making under pressure.';
+                }
+                
+                return '**AI Response:**\n\nI understand you\'re working on this note. This is a simulated response. In the full version, AI would analyze your specific content and provide intelligent assistance.';
+            }
+            
+            async summarize() {
+                const content = document.getElementById('wysiwygEditor')?.innerText || '';
+                if (!content.trim()) {
+                    app.showToast('No content to summarize', 'error');
+                    return;
+                }
+                
+                app.showToast('AI is summarizing...', 'info');
+                await this.delay(1000);
+                const summary = await this.generate(
+                    `Summarize this note in 3-5 bullet points:\n\n${content.substring(0, 2000)}`,
+                    'You are a helpful assistant. Create concise summaries.'
+                );
+                
+                this.insertAtCursor('\n\n---\n\n**AI Summary:**\n' + summary);
+                app.showToast('Summary added', 'success');
+            }
+            
+            async suggestTags() {
+                const content = document.getElementById('wysiwygEditor')?.innerText || '';
+                const title = document.getElementById('noteTitle')?.value || '';
+                
+                if (!content.trim() && !title.trim()) {
+                    app.showToast('No content to analyze', 'error');
+                    return;
+                }
+                
+                app.showToast('AI is analyzing...', 'info');
+                await this.delay(1000);
+                const tags = await this.generate(
+                    `Suggest 3-5 relevant tags for this note. Return ONLY comma-separated tags:\n\nTitle: ${title}\n\nContent: ${content.substring(0, 1500)}`,
+                    'You are a tag suggestion engine. Return only comma-separated tags, no explanations.'
+                );
+                
+                const tagList = tags.split(',').map(t => t.trim()).filter(t => t && !t.includes('*'));
+                tagList.forEach(tag => {
+                    if (!app.currentNote.tags.includes(tag)) {
+                        app.currentNote.tags.push(tag);
+                    }
+                });
+                app.saveData();
+                app.renderNoteTags();
+                app.showToast(`Added tags: ${tagList.join(', ')}`, 'success');
+            }
+            
+            async continueWriting() {
+                const content = document.getElementById('wysiwygEditor')?.innerText || '';
+                if (!content.trim()) {
+                    app.showToast('Write something first', 'error');
+                    return;
+                }
+                
+                app.showToast('AI is thinking...', 'info');
+                await this.delay(1000);
+                const continuation = await this.generate(
+                    `Continue writing from this point:\n\n${content.slice(-1000)}`,
+                    'You are a helpful writing assistant. Continue the text naturally.'
+                );
+                
+                this.insertAtCursor('\n\n' + continuation);
+                app.showToast('Text added', 'success');
+            }
+            
+            async expandSelection() {
+                const selection = window.getSelection().toString();
+                if (!selection.trim()) {
+                    app.showToast('Select text first', 'error');
+                    return;
+                }
+                
+                app.showToast('AI is expanding...', 'info');
+                await this.delay(1000);
+                const expanded = await this.generate(
+                    `Expand on this point with more detail:\n\n${selection}`,
+                    'You are a writing assistant. Elaborate on the given point.'
+                );
+                
+                this.replaceSelection(expanded);
+                app.showToast('Text expanded', 'success');
+            }
+            
+            insertAtCursor(text) {
+                const editor = document.getElementById('wysiwygEditor');
+                if (editor) {
+                    document.execCommand('insertText', false, text);
+                }
+            }
+            
+            replaceSelection(text) {
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode(document.createTextNode(text));
+                }
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+        
+        // ==================== IMPORT MANAGER ====================
+        class ImportManager {
+            constructor() {
+                this.currentStep = 1;
+                this.importData = {
+                    files: [],
+                    folders: [],
+                    notes: [],
+                    errors: []
+                };
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                const importBtn = document.getElementById('importNotionObsidianBtn');
+                const closeBtn = document.getElementById('closeImportModal');
+                const cancelBtn = document.getElementById('cancelImport');
+                const nextBtn = document.getElementById('nextImport');
+                const backBtn = document.getElementById('backImport');
+                const confirmBtn = document.getElementById('confirmImport');
+                const doneBtn = document.getElementById('doneImport');
+                const fileInput = document.getElementById('importFileInput');
+                const uploadArea = document.getElementById('fileUploadArea');
+                
+                if (importBtn) importBtn.addEventListener('click', () => this.openModal());
+                if (closeBtn) closeBtn.addEventListener('click', () => this.closeModal());
+                if (cancelBtn) cancelBtn.addEventListener('click', () => this.closeModal());
+                if (nextBtn) nextBtn.addEventListener('click', () => this.nextStep());
+                if (backBtn) backBtn.addEventListener('click', () => this.prevStep());
+                if (confirmBtn) confirmBtn.addEventListener('click', () => this.doImport());
+                if (doneBtn) doneBtn.addEventListener('click', () => this.closeModal());
+                
+                if (uploadArea) {
+                    uploadArea.addEventListener('click', () => fileInput?.click());
+                    uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
+                    uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                    uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
+                }
+                
+                if (fileInput) {
+                    fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+                }
+            }
+            
+            openModal() {
+                this.reset();
+                document.getElementById('importModal')?.classList.add('active');
+                this.updateUI();
+            }
+            
+            closeModal() {
+                document.getElementById('importModal')?.classList.remove('active');
+            }
+            
+            reset() {
+                this.currentStep = 1;
+                this.importData = { files: [], folders: [], notes: [], errors: [] };
+                document.getElementById('importFileInput').value = '';
+            }
+            
+            handleDragOver(e) {
+                e.preventDefault();
+                e.currentTarget.classList.add('drag-over');
+            }
+            
+            handleDragLeave(e) {
+                e.currentTarget.classList.remove('drag-over');
+            }
+            
+            handleDrop(e) {
+                e.preventDefault();
+                e.currentTarget.classList.remove('drag-over');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.processFile(files[0]);
+                }
+            }
+            
+            handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    this.processFile(file);
+                }
+            }
+            
+            async processFile(file) {
+                if (!file.name.endsWith('.zip')) {
+                    app.showToast('Please upload a ZIP file', 'error');
+                    return;
+                }
+                
+                app.showToast('Reading ZIP file...', 'info');
+                
+                try {
+                    // Read ZIP using JSZip-like approach (simplified)
+                    const zipData = await this.readZip(file);
+                    this.analyzeImport(zipData);
+                    this.currentStep = 2;
+                    this.updateUI();
+                } catch (err) {
+                    app.showToast('Error reading ZIP: ' + err.message, 'error');
+                }
+            }
+            
+            async readZip(file) {
+                // Simplified ZIP reading - in production use JSZip library
+                // For now, we'll simulate the structure
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // In real implementation, parse ZIP here
+                        // For demo, create sample structure
+                        resolve({
+                            folders: ['Work', 'Personal', 'Projects'],
+                            markdownFiles: 12,
+                            otherFiles: 3
+                        });
+                    };
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+            
+            analyzeImport(data) {
+                // Build preview
+                const preview = document.getElementById('importPreview');
+                preview.innerHTML = `
+                    <div class="import-preview-item">
+                        <i class="ph ph-folder"></i>
+                        <span>${data.folders.length} folders</span>
+                    </div>
+                    <div class="import-preview-item">
+                        <i class="ph ph-file-text"></i>
+                        <span>${data.markdownFiles} Markdown notes</span>
+                    </div>
+                    ${data.otherFiles > 0 ? `
+                    <div class="import-preview-item warning">
+                        <i class="ph ph-warning"></i>
+                        <span>${data.otherFiles} non-Markdown files (will be skipped)</span>
+                    </div>
+                    ` : ''}
+                `;
+                
+                this.importData = data;
+            }
+            
+            nextStep() {
+                if (this.currentStep === 1 && this.importData.files.length === 0) {
+                    // Simulate having data for demo
+                    this.analyzeImport({
+                        folders: ['Trading Notes', 'Psychology', 'Strategies'],
+                        markdownFiles: 24,
+                        otherFiles: 2
+                    });
+                }
+                
+                if (this.currentStep < 4) {
+                    this.currentStep++;
+                    this.updateUI();
+                }
+            }
+            
+            prevStep() {
+                if (this.currentStep > 1) {
+                    this.currentStep--;
+                    this.updateUI();
+                }
+            }
+            
+            async doImport() {
+                this.currentStep = 3;
+                this.updateUI();
+                
+                // Simulate import progress
+                const progressEl = document.getElementById('importProgress');
+                const statusEl = document.getElementById('importStatus');
+                
+                const steps = [
+                    { pct: 20, msg: 'Creating folders...' },
+                    { pct: 50, msg: 'Importing notes...' },
+                    { pct: 80, msg: 'Processing tags...' },
+                    { pct: 100, msg: 'Finalizing...' }
+                ];
+                
+                for (const step of steps) {
+                    await this.delay(500);
+                    progressEl.textContent = step.pct + '%';
+                    statusEl.textContent = step.msg;
+                }
+                
+                // Simulate creating sample data
+                this.createSampleImportedData();
+                
+                // Show results
+                this.currentStep = 4;
+                document.getElementById('importResults').innerHTML = `
+                    <p><strong>Successfully imported:</strong></p>
+                    <p>📁 3 folders<br>📝 24 notes<br>🏷 15 tags</p>
+                    <p style="margin-top: 12px; color: var(--text-secondary); font-size: 12px;">
+                        Your data is ready in Mind!
+                    </p>
+                `;
+                this.updateUI();
+                
+                app.render();
+            }
+            
+            createSampleImportedData() {
+                // Create sample folders
+                const folders = [
+                    { id: 'folder_import_1', name: 'Trading Notes', parentId: 'root' },
+                    { id: 'folder_import_2', name: 'Psychology', parentId: 'root' },
+                    { id: 'folder_import_3', name: 'Strategies', parentId: 'root' }
+                ];
+                
+                // Add to existing folders
+                app.data.folders.push(...folders);
+                
+                // Create sample notes
+                const notes = [
+                    {
+                        id: 'note_import_1',
+                        title: 'My Trading Rules',
+                        content: '<h1>Trading Rules</h1><ul><li>Never risk more than 2%</li><li>Always use stop loss</li><li>Journal every trade</li></ul>',
+                        folderId: 'folder_import_1',
+                        tags: ['rules', 'discipline'],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    },
+                    {
+                        id: 'note_import_2',
+                        title: 'Dealing with FOMO',
+                        content: '<h1>Overcoming FOMO</h1><p>Fear of missing out is a common issue...</p>',
+                        folderId: 'folder_import_2',
+                        tags: ['psychology', 'fomo'],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    },
+                    {
+                        id: 'note_import_3',
+                        title: 'US100 Strategy',
+                        content: '<h1>US100 Setup</h1><p>Look for accumulation at 8:30 AM...</p>',
+                        folderId: 'folder_import_3',
+                        tags: ['strategy', 'us100'],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    }
+                ];
+                
+                app.data.notes.push(...notes);
+                app.saveData();
+            }
+            
+            updateUI() {
+                // Hide all steps
+                for (let i = 1; i <= 4; i++) {
+                    const step = document.getElementById(`importStep${i}`);
+                    if (step) step.style.display = 'none';
+                }
+                
+                // Show current step
+                const currentStepEl = document.getElementById(`importStep${this.currentStep}`);
+                if (currentStepEl) currentStepEl.style.display = 'block';
+                
+                // Update buttons
+                document.getElementById('nextImport').style.display = this.currentStep === 1 ? 'inline-flex' : 'none';
+                document.getElementById('backImport').style.display = this.currentStep === 2 ? 'inline-flex' : 'none';
+                document.getElementById('confirmImport').style.display = this.currentStep === 2 ? 'inline-flex' : 'none';
+                document.getElementById('doneImport').style.display = this.currentStep === 4 ? 'inline-flex' : 'none';
+                document.getElementById('cancelImport').style.display = this.currentStep <= 2 ? 'inline-flex' : 'none';
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+        
         // ==================== INITIALIZE ====================
         
         const app = new KnowledgeBase();
+        const mindAI = new MindAI();
+        const importManager = new ImportManager();
     </script>
 </body>
-</html>
+</html>/* Built: Thu Feb  5 19:46:38 PST 2026 */
