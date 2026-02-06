@@ -4011,6 +4011,11 @@
                 return path;
             }
 
+            getFolderName(folderId) {
+                const folder = this.data.folders.find(f => f.id === folderId);
+                return folder ? folder.name : 'Unknown';
+            }
+
             // ==================== NOTE OPERATIONS ====================
 
             createNote(title, folderId = 'root') {
@@ -4204,6 +4209,15 @@
                 document.getElementById('tabsBar').classList.remove('hidden');
                 document.getElementById('editorContentWrapper').classList.remove('hidden');
                 document.getElementById('backlinksPanel').classList.remove('hidden');
+
+                // Hide tag results if showing
+                const tagResults = document.getElementById('tagResultsContainer');
+                if (tagResults) tagResults.style.display = 'none';
+
+                // Show editor and note elements
+                document.getElementById('wysiwygEditor').style.display = 'block';
+                document.getElementById('noteMeta').style.display = 'flex';
+                document.getElementById('noteTitle').style.display = 'block';
 
                 // Populate fields
                 document.getElementById('noteTitle').value = note.title;
@@ -5284,20 +5298,82 @@
                 this.currentTagFilter = tag;
                 this.currentFolder = 'tag:' + tag;
                 this.currentNote = null;
-                this.showEmptyState();
 
                 // Update UI
                 document.querySelectorAll('.tag-item-small').forEach(el => {
                     el.classList.toggle('active', el.dataset.tag === tag);
                 });
 
-                document.getElementById('headerTitle').textContent = `Tag: ${tag}`;
+                document.getElementById('headerTitle').textContent = `#${tag}`;
 
                 // Re-render tags to show active state
                 this.renderTagsCloud();
 
-                // Re-render folder tree to show filtered notes
-                this.renderFolderTreeForTag(tag);
+                // Show tag results in main content
+                this.renderTagResults(tag);
+            }
+
+            renderTagResults(tag) {
+                const notes = this.data.notes.filter(n => n.tags.includes(tag));
+                const editor = document.getElementById('wysiwygEditor');
+                const noteTitle = document.getElementById('noteTitle');
+                const noteMeta = document.getElementById('noteMeta');
+                
+                // Hide editor and note meta
+                editor.style.display = 'none';
+                noteMeta.style.display = 'none';
+                if (noteTitle) noteTitle.style.display = 'none';
+
+                // Create or update tag results container
+                let resultsContainer = document.getElementById('tagResultsContainer');
+                if (!resultsContainer) {
+                    resultsContainer = document.createElement('div');
+                    resultsContainer.id = 'tagResultsContainer';
+                    editor.parentNode.insertBefore(resultsContainer, editor);
+                }
+                
+                resultsContainer.style.display = 'block';
+                resultsContainer.innerHTML = `
+                    <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+                        <div style="margin-bottom: 24px;">
+                            <h2 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0;">
+                                <i class="ph ph-tag" style="color: #fbbf24; margin-right: 8px;"></i>Notes tagged with #${this.escapeHtml(tag)}
+                            </h2>
+                            <p style="color: var(--text-secondary); margin: 0;">${notes.length} note${notes.length !== 1 ? 's' : ''}</p>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            ${notes.map(note => `
+                                <div class="tag-result-card" data-note-id="${note.id}" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: all 0.2s;"
+                                    onmouseover="this.style.borderColor='var(--accent)'" 
+                                    onmouseout="this.style.borderColor='var(--border)'"
+                                >
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                        <i class="ph ph-file-text" style="color: var(--text-secondary);"></i>
+                                        <span style="font-weight: 500; color: var(--text-primary);">${this.escapeHtml(note.title) || 'Untitled'}</span>
+                                    </div>
+                                    <div style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
+                                        ${this.escapeHtml(this.stripHtml(note.content).substring(0, 150))}${this.stripHtml(note.content).length > 150 ? '...' : ''}
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                            ${note.tags.map(t => `<span style="background: var(--bg-primary); color: var(--text-secondary); padding: 2px 8px; border-radius: 12px; font-size: 12px;">#${this.escapeHtml(t)}</span>`).join('')}
+                                        </div>
+                                        <span style="color: var(--text-tertiary); font-size: 12px;">
+                                            <i class="ph ph-folder" style="margin-right: 4px;"></i>${this.getFolderName(note.folderId)}
+                                        </span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                // Add click handlers
+                resultsContainer.querySelectorAll('.tag-result-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        this.selectNote(card.dataset.noteId);
+                    });
+                });
             }
 
             renderFolderTreeForTag(tag) {
