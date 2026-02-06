@@ -3358,7 +3358,7 @@
 
                         // Render children if expanded
                         if (isExpanded && hasChildren) {
-                            const childrenUl = this.renderFolderChildren(folder.id, 1);
+                            const childrenUl = this.renderFolderChildren(folder.id, 1, true);
                             if (childrenUl) {
                                 li.appendChild(childrenUl);
                             }
@@ -3369,7 +3369,7 @@
                 });
             }
 
-            renderFolderChildren(parentId, level = 0) {
+            renderFolderChildren(parentId, level = 0, useFavoritesState = false) {
                 const folders = this.data.folders.filter(f => f.parentId === parentId);
                 if (folders.length === 0) return null;
 
@@ -3383,7 +3383,9 @@
 
                     const noteCount = this.data.notes.filter(n => n.folderId === folder.id).length;
                     const hasChildren = this.data.folders.some(f => f.parentId === folder.id);
-                    const isCollapsed = this.data.settings.sidebarCollapsed?.[folder.id];
+                    const isCollapsed = useFavoritesState 
+                        ? !this.data.settings.favoritesExpanded?.[folder.id]
+                        : this.data.settings.sidebarCollapsed?.[folder.id];
 
                     li.innerHTML = `
                         <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}"
@@ -3399,11 +3401,18 @@
                     const header = li.querySelector('.folder-header');
                     header.addEventListener('click', (e) => {
                         if (e.target.classList.contains('folder-toggle')) {
-                            // Toggle collapse
-                            if (!this.data.settings.sidebarCollapsed) {
-                                this.data.settings.sidebarCollapsed = {};
+                            // Toggle collapse - use appropriate state
+                            if (useFavoritesState) {
+                                if (!this.data.settings.favoritesExpanded) {
+                                    this.data.settings.favoritesExpanded = {};
+                                }
+                                this.data.settings.favoritesExpanded[folder.id] = !this.data.settings.favoritesExpanded[folder.id];
+                            } else {
+                                if (!this.data.settings.sidebarCollapsed) {
+                                    this.data.settings.sidebarCollapsed = {};
+                                }
+                                this.data.settings.sidebarCollapsed[folder.id] = !this.data.settings.sidebarCollapsed[folder.id];
                             }
-                            this.data.settings.sidebarCollapsed[folder.id] = !isCollapsed;
                             this.saveData();
                             this.renderFavorites();
                         } else {
@@ -3413,7 +3422,7 @@
 
                     // Recursively render children
                     if (hasChildren && !isCollapsed) {
-                        const childrenUl = this.renderFolderChildren(folder.id, level + 1);
+                        const childrenUl = this.renderFolderChildren(folder.id, level + 1, useFavoritesState);
                         if (childrenUl) {
                             li.appendChild(childrenUl);
                         }
