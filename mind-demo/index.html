@@ -2781,6 +2781,17 @@
                             <button class="note-tab" data-tab="tasks" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">Tasks</button>
                         </div>
                         <div class="note-tab-content" id="noteTabContent">
+                            <!-- Template Selector -->
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                                <select id="templateSelect" style="background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
+                                    <option value="">Template</option>
+                                    <option value="blank">Blank</option>
+                                    <option value="trading-journal">Trading Journal</option>
+                                    <option value="daily-review">Daily Review</option>
+                                    <option value="strategy">Strategy Plan</option>
+                                    <option value="meeting">Meeting Notes</option>
+                                </select>
+                            </div>
                             <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
                         </div>
                         <div class="note-tab-content" id="summaryTabContent" style="display: none;">
@@ -6598,6 +6609,122 @@
 
                 // Add First Task button
                 document.getElementById('addFirstTaskBtn')?.addEventListener('click', () => this.addTask());
+
+                // Template selector
+                document.getElementById('templateSelect')?.addEventListener('change', (e) => this.applyTemplate(e.target.value));
+            }
+
+            applyTemplate(templateId) {
+                if (!templateId || !this.currentNote) return;
+                
+                const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
+                if (currentContent.length > 50) {
+                    if (!confirm('This will replace your current note content. Continue?')) {
+                        document.getElementById('templateSelect').value = '';
+                        return;
+                    }
+                }
+                
+                const templates = {
+                    'blank': '',
+                    'trading-journal': `<h2>Trade Setup</h2>
+<p><strong>Instrument:</strong> </p>
+<p><strong>Timeframe:</strong> </p>
+<p><strong>Direction:</strong> Long / Short</p>
+<p><strong>Entry:</strong> </p>
+<p><strong>Stop Loss:</strong> </p>
+<p><strong>Target:</strong> </p>
+<p><strong>Risk:Reward:</strong> </p>
+
+<h2>Analysis</h2>
+<p>Market structure / Key levels / Confluences:</p>
+
+<h2>Psychology</h2>
+<p>Emotional state / Confidence level:</p>
+
+<h2>Outcome</h2>
+<p>Result / Lessons learned:</p>`,
+                    'daily-review': `<h2>Market Overview</h2>
+<p>Key moves / Economic events:</p>
+
+<h2>My Trades</h2>
+<ul>
+<li>Trade 1:</li>
+<li>Trade 2:</li>
+</ul>
+
+<h2>What Worked</h2>
+<p></p>
+
+<h2>What Didn't</h2>
+<p></p>
+
+<h2>Tomorrow's Focus</h2>
+<p></p>`,
+                    'strategy': `<h2>Strategy Name</h2>
+<p></p>
+
+<h2>Setup Criteria</h2>
+<ul>
+<li>Criterion 1:</li>
+<li>Criterion 2:</li>
+<li>Criterion 3:</li>
+</ul>
+
+<h2>Entry Rules</h2>
+<p></p>
+
+<h2>Exit Rules</h2>
+<p>Take profit / Stop loss:</p>
+
+<h2>Risk Management</h2>
+<p>Position sizing / Max risk per trade:</p>
+
+<h2>Backtest Results</h2>
+<p>Win rate / Expectancy / Sample size:</p>`,
+                    'meeting': `<h2>Meeting Details</h2>
+<p><strong>Date:</strong> </p>
+<p><strong>Attendees:</strong> </p>
+<p><strong>Objective:</strong> </p>
+
+<h2>Agenda</h2>
+<ul>
+<li>Item 1:</li>
+<li>Item 2:</li>
+</ul>
+
+<h2>Key Discussion Points</h2>
+<p></p>
+
+<h2>Decisions Made</h2>
+<ul>
+<li>Decision 1:</li>
+</ul>
+
+<h2>Action Items</h2>
+<ul>
+<li>[ ] Action 1 - Owner:</li>
+<li>[ ] Action 2 - Owner:</li>
+</ul>`
+                };
+                
+                const template = templates[templateId];
+                if (template === undefined) return;
+                
+                document.getElementById('wysiwygEditor').innerHTML = template;
+                this.currentNote.content = template;
+                this.saveData();
+                
+                document.getElementById('templateSelect').value = '';
+                
+                const templateNames = {
+                    'blank': 'Blank',
+                    'trading-journal': 'Trading Journal',
+                    'daily-review': 'Daily Review',
+                    'strategy': 'Strategy Plan',
+                    'meeting': 'Meeting Notes'
+                };
+                this.showToast(`Applied ${templateNames[templateId]} template`, 'success');
             }
 
             switchNoteTab(tabName) {
