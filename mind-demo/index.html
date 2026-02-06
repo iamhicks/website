@@ -2212,20 +2212,6 @@
                     </div>
                 </div>
 
-                <!-- Trash Section -->
-                <div class="sidebar-section" id="trashSectionContainer" style="display: none;">
-                    <div class="section-header" data-section="trash">
-                        <span>Trash</span>
-                        <span class="section-toggle">▼</span>
-                    </div>
-                    <div class="section-content" id="trashSection">
-                        <ul class="bookmark-list" id="trashList"></ul>
-                        <div style="padding: 12px; border-top: 1px solid var(--border);">
-                            <button class="btn btn-secondary" id="emptyTrashBtn" style="width: 100%; font-size: 12px;">Empty Trash</button>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Favorites Section -->
                 <div class="sidebar-section" id="favoritesSectionContainer" style="display: none;">
                     <div class="section-header" data-section="favorites">
@@ -2827,6 +2813,13 @@
                     <small id="backupStatus" style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;"></small>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Trash</label>
+                    <button class="btn btn-secondary" id="trashBtn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="ph ph-trash"></i> View Trash
+                    </button>
+                    <small id="trashCount" style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;">0 items in trash</small>
+                </div>
+                <div class="form-group">
                     <label class="form-label">Debug</label>
                     <button class="btn btn-secondary" id="debugBtn">Show Debug Info</button>
                 </div>
@@ -2837,6 +2830,38 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="closeSettings">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trash Modal -->
+    <div class="modal-overlay" id="trashModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ph ph-trash"></i> Trash</div>
+                <button class="modal-close" id="closeTrashModal">&times;</button>
+            </div>
+            <div class="modal-body" id="trashModalBody">
+                <div id="trashEmptyState" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                    <i class="ph ph-trash" style="font-size: 48px; opacity: 0.3; margin-bottom: 16px;"></i>
+                    <p>Trash is empty</p>
+                </div>
+                <div id="trashItemsList" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Items in Trash</label>
+                        <div id="trashItemsContainer" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px;">
+                            <!-- Trash items rendered here -->
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);">
+                        <button class="btn btn-secondary" id="emptyTrashNowBtn" style="width: 100%; color: var(--danger);">
+                            <i class="ph ph-trash"></i> Delete All Permanently
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeTrashBtn">Close</button>
             </div>
         </div>
     </div>
@@ -3432,64 +3457,6 @@
                     clippedList.appendChild(li);
                 });
             }
-
-            renderTrash() {
-                const trashContainer = document.getElementById('trashSectionContainer');
-                const trashList = document.getElementById('trashList');
-                const trashItems = this.data.trash || [];
-
-                if (trashItems.length === 0) {
-                    trashContainer.style.display = 'none';
-                    return;
-                }
-
-                trashContainer.style.display = 'block';
-                trashList.innerHTML = '';
-
-                // Sort by deleted date (newest first)
-                const sorted = [...trashItems].sort((a, b) => b.deletedAt - a.deletedAt);
-
-                sorted.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = 'bookmark-item';
-                    li.style.display = 'flex';
-                    li.style.alignItems = 'center';
-                    li.style.justifyContent = 'space-between';
-
-                    const icon = item.type === 'folder' ? 'ph-folder' : 'ph-file-text';
-                    const name = item.type === 'folder' ? item.name : item.title;
-
-                    li.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 8px; flex: 1; overflow: hidden;">
-                            <i class="ph ${icon}"></i>
-                            <span class="bookmark-title" style="flex: 1;">${this.escapeHtml(name || 'Untitled')}</span>
-                        </div>
-                        <div style="display: flex; gap: 4px;">
-                            <button class="folder-action-btn restore-btn" title="Restore" data-id="${item.id}" data-type="${item.type}">
-                                <i class="ph ph-arrow-counter-clockwise"></i>
-                            </button>
-                            <button class="folder-action-btn delete-btn" title="Delete Permanently" data-id="${item.id}">
-                                <i class="ph ph-trash"></i>
-                            </button>
-                        </div>
-                    `;
-
-                    // Restore button
-                    li.querySelector('.restore-btn').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        this.restoreFromTrash(item.id);
-                    });
-
-                    // Permanent delete button
-                    li.querySelector('.delete-btn').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        this.permanentDelete(item.id);
-                    });
-
-                    trashList.appendChild(li);
-                });
-            }
-
             restoreFromTrash(id) {
                 const item = this.data.trash?.find(t => t.id === id);
                 if (!item) return;
@@ -4048,14 +4015,87 @@
 
             render() {
                 this.renderClippedPages();
-                this.renderTrash();
                 this.renderFavorites();
                 this.renderFolderTree();
                 this.renderTagsCloud();
                 this.updateActiveStates();
+                this.updateTrashCount();
 
                 // Debug: Log folder state
                 console.log('Folders:', this.data.folders.map(f => ({id: f.id, name: f.name, parentId: f.parentId})));
+            }
+
+            updateTrashCount() {
+                const count = this.data.trash?.length || 0;
+                const trashCountEl = document.getElementById('trashCount');
+                if (trashCountEl) {
+                    trashCountEl.textContent = count === 1 ? '1 item in trash' : `${count} items in trash`;
+                }
+            }
+
+            openTrashModal() {
+                const modal = document.getElementById('trashModal');
+                const emptyState = document.getElementById('trashEmptyState');
+                const itemsList = document.getElementById('trashItemsList');
+                const container = document.getElementById('trashItemsContainer');
+                
+                const trashItems = this.data.trash || [];
+                
+                if (trashItems.length === 0) {
+                    emptyState.style.display = 'block';
+                    itemsList.style.display = 'none';
+                } else {
+                    emptyState.style.display = 'none';
+                    itemsList.style.display = 'block';
+                    
+                    // Sort by deleted date (newest first)
+                    const sorted = [...trashItems].sort((a, b) => b.deletedAt - a.deletedAt);
+                    
+                    container.innerHTML = sorted.map(item => `
+                        <div class="trash-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border);" data-id="${item.id}">
+                            <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                                <i class="ph ${item.type === 'folder' ? 'ph-folder' : 'ph-file-text'}" style="color: var(--text-tertiary); font-size: 20px;"></i>
+                                <div style="min-width: 0;">
+                                    <div style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(item.name || item.title || 'Untitled')}</div>
+                                    <div style="font-size: 12px; color: var(--text-tertiary);">${item.type === 'folder' ? 'Folder' : 'Note'} • Deleted ${new Date(item.deletedAt).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary restore-trash-item" data-id="${item.id}" style="padding: 6px 12px; font-size: 13px; white-space: nowrap;">
+                                <i class="ph ph-arrow-counter-clockwise"></i> Restore
+                            </button>
+                        </div>
+                    `).join('');
+                    
+                    // Add restore listeners
+                    container.querySelectorAll('.restore-trash-item').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            this.restoreFromTrash(btn.dataset.id);
+                            this.openTrashModal(); // Refresh the modal
+                        });
+                    });
+                }
+                
+                modal.classList.add('active');
+                
+                // Setup close buttons
+                document.getElementById('closeTrashModal').onclick = () => modal.classList.remove('active');
+                document.getElementById('closeTrashBtn').onclick = () => modal.classList.remove('active');
+                
+                // Setup empty trash button
+                document.getElementById('emptyTrashNowBtn').onclick = () => {
+                    if (trashItems.length === 0) {
+                        this.showToast('Trash is already empty', 'info');
+                        return;
+                    }
+                    if (confirm(`Delete ${trashItems.length} item(s) permanently? This cannot be undone.`)) {
+                        this.data.trash = [];
+                        this.saveData();
+                        this.render();
+                        this.openTrashModal(); // Refresh
+                        this.showToast('Trash emptied', 'success');
+                    }
+                };
             }
 
             renderFolderTree() {
@@ -5592,25 +5632,6 @@
                     this.openImportWizard();
                 });
                 document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllData());
-
-                // Empty Trash button
-                const emptyTrashBtn = document.getElementById('emptyTrashBtn');
-                if (emptyTrashBtn) {
-                    emptyTrashBtn.addEventListener('click', () => {
-                        const trashCount = this.data.trash?.length || 0;
-                        if (trashCount === 0) {
-                            this.showToast('Trash is already empty', 'info');
-                            return;
-                        }
-                        if (confirm(`Empty trash permanently? ${trashCount} item(s) will be deleted forever.`)) {
-                            this.data.trash = [];
-                            this.saveData();
-                            this.render();
-                            this.showToast('Trash emptied', 'success');
-                        }
-                    });
-                }
-
                 // Debug button
                 const debugBtn = document.getElementById('debugBtn');
                 if (debugBtn) {
@@ -6122,6 +6143,12 @@
                 document.getElementById('aiSettingsBtn')?.addEventListener('click', () => {
                     document.getElementById('settingsModal').classList.remove('active');
                     document.getElementById('aiPanelModal').classList.add('active');
+                });
+
+                // Trash - opened from Settings
+                document.getElementById('trashBtn')?.addEventListener('click', () => {
+                    document.getElementById('settingsModal').classList.remove('active');
+                    this.openTrashModal();
                 });
 
                 // AI Panel setup (for the panel itself, not the button)
