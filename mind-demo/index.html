@@ -1544,12 +1544,6 @@
             flex-shrink: 0;
         }
 
-        .task-title-input:empty:before {
-            content: attr(placeholder);
-            color: var(--text-tertiary);
-            pointer-events: none;
-        }
-
         .task-checkbox:checked {
             background: var(--accent);
             border-color: var(--accent);
@@ -7097,13 +7091,13 @@
                 }
 
                 container.innerHTML = tasks.map(task => `
-                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
+                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
                         <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}
-                            style="margin-top: 4px;">
-                        <div class="task-title-input" contenteditable="true" 
+                            >
+                        <input type="text" class="task-title-input" value="${this.escapeHtml(task.text)}"
                             placeholder="Task..."
-                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'}; min-height: 20px;">${task.text}</div>
-                        <button class="task-delete" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; opacity: 0; transition: opacity 0.2s; margin-top: 2px;">
+                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'}; padding: 0;">
+                        <button class="task-delete" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; opacity: 0; transition: opacity 0.2s;">
                             <i class="ph ph-trash"></i>
                         </button>
                     </div>
@@ -7117,24 +7111,20 @@
                     const deleteBtn = item.querySelector('.task-delete');
 
                     checkbox.addEventListener('change', () => this.toggleTask(taskId));
-                    titleInput.addEventListener('input', () => this.updateTaskTitle(taskId, titleInput.innerHTML));
+                    titleInput.addEventListener('input', (e) => this.updateTaskTitle(taskId, e.target.value));
                     deleteBtn.addEventListener('click', () => this.deleteTask(taskId));
 
-                    // Return key creates new task (only if cursor at end)
+                    // Return key creates new task
                     titleInput.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
+                        if (e.key === 'Enter') {
                             e.preventDefault();
                             this.addTask();
                         }
                     });
 
                     // Show delete button on hover
-                    item.addEventListener('mouseenter', () => {
-                        deleteBtn.style.opacity = '1';
-                    });
-                    item.addEventListener('mouseleave', () => {
-                        deleteBtn.style.opacity = '0';
-                    });
+                    item.addEventListener('mouseenter', () => deleteBtn.style.opacity = '1');
+                    item.addEventListener('mouseleave', () => deleteBtn.style.opacity = '0');
                 });
             }
 
@@ -7150,46 +7140,42 @@
                         const selection = window.getSelection();
                         const text = selection.toString().trim();
 
-                        if (text.length > 0) {
-                            const isInEditor = editor.contains(selection.anchorNode);
-                            const isInTask = selection.anchorNode?.parentElement?.closest('.task-title-input');
-                            
-                            if (isInEditor || isInTask) {
-                                currentSelection = text;
-                                currentRange = selection.getRangeAt(0).cloneRange();
+                        if (text.length > 0 && editor.contains(selection.anchorNode)) {
+                            currentSelection = text;
+                            currentRange = selection.getRangeAt(0).cloneRange();
 
-                                // Get selection coordinates using getBoundingClientRect for viewport positioning
-                                const rect = currentRange.getBoundingClientRect();
-                                
-                                // Make toolbar visible to get dimensions
-                                toolbar.style.display = 'flex';
-                                toolbar.style.visibility = 'hidden';
-                                const toolbarRect = toolbar.getBoundingClientRect();
-                                
-                                // Calculate position - above the selection using viewport coordinates
-                                let top = rect.top - toolbarRect.height - 8;
-                                let left = rect.left;
-                                
-                                // If too close to top, show below selection
-                                if (top < 0) {
-                                    top = rect.bottom + 8;
-                                }
-                                
-                                // Keep within viewport horizontally
-                                if (left + toolbarRect.width > window.innerWidth) {
-                                    left = window.innerWidth - toolbarRect.width - 16;
-                                }
-                                
-                                // Apply fixed positioning
-                                toolbar.style.position = 'fixed';
-                                toolbar.style.top = top + 'px';
-                                toolbar.style.left = left + 'px';
-                                toolbar.style.visibility = 'visible';
-                                toolbar.classList.add('visible');
-                            } else {
-                                toolbar.classList.remove('visible');
-                                toolbar.style.display = 'none';
+                            // Get selection coordinates using getBoundingClientRect for viewport positioning
+                            const rect = currentRange.getBoundingClientRect();
+                            
+                            // Make toolbar visible to get dimensions
+                            toolbar.style.display = 'flex';
+                            toolbar.style.visibility = 'hidden';
+                            const toolbarRect = toolbar.getBoundingClientRect();
+                            
+                            // Calculate position - above the selection using viewport coordinates
+                            let top = rect.top - toolbarRect.height - 8;
+                            let left = rect.left;
+                            
+                            // If too close to top, show below selection
+                            if (top < 0) {
+                                top = rect.bottom + 8;
                             }
+                            
+                            // Keep within viewport horizontally
+                            if (left + toolbarRect.width > window.innerWidth) {
+                                left = window.innerWidth - toolbarRect.width - 16;
+                            }
+                            
+                            // Apply fixed positioning
+                            toolbar.style.position = 'fixed';
+                            toolbar.style.top = top + 'px';
+                            toolbar.style.left = left + 'px';
+                            toolbar.style.visibility = 'visible';
+                            toolbar.classList.add('visible');
+                        } else {
+                            toolbar.classList.remove('visible');
+                            toolbar.style.display = 'none';
+                        }
                     }, 0);
                 });
 
