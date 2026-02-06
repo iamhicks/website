@@ -5997,6 +5997,7 @@
 
                 function showAutocomplete(matches) {
                     const rect = tagInput.getBoundingClientRect();
+                    console.log('SHOW AUTOCOMPLETE:', matches, 'rect:', rect);
                     tagAutocomplete.innerHTML = matches.map((tag, index) => `
                         <div class="tag-autocomplete-item ${index === 0 ? 'active' : ''}" data-tag="${tag}">
                             <i class="ph ph-tag"></i>
@@ -6032,17 +6033,20 @@
 
                 tagInput.addEventListener('input', (e) => {
                     const value = e.target.value.trim().toLowerCase();
+                    console.log('TAG INPUT:', value);
                     if (value.length === 0) {
                         tagAutocomplete.style.display = 'none';
                         return;
                     }
                     
                     const existingTags = this.getAllTags();
+                    console.log('EXISTING TAGS:', existingTags);
                     const currentNoteTags = this.currentNote?.tags || [];
                     const matches = existingTags.filter(tag => 
                         tag.toLowerCase().includes(value) && 
                         !currentNoteTags.includes(tag)
                     ).slice(0, 5);
+                    console.log('MATCHES:', matches);
                     
                     if (matches.length > 0) {
                         showAutocomplete(matches);
