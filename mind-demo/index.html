@@ -1540,8 +1540,8 @@
             border-radius: 3px;
             background: transparent;
             cursor: pointer;
-            margin-top: 2px;
             position: relative;
+            flex-shrink: 0;
         }
 
         .task-checkbox:checked {
@@ -7080,12 +7080,12 @@
                 }
 
                 container.innerHTML = tasks.map(task => `
-                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
-                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
-                            class="task-checkbox" ${task.completed ? 'checked' : ''}>
-                        <input type="text" class="task-title-input" value="${this.escapeHtml(task.text)}" 
+                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}
+                            >
+                        <input type="text" class="task-title-input" value="${this.escapeHtml(task.text)}"
                             placeholder="Task..."
-                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'};">
+                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'}; padding: 0;">
                         <button class="task-delete" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; opacity: 0; transition: opacity 0.2s;">
                             <i class="ph ph-trash"></i>
                         </button>
