@@ -3502,7 +3502,12 @@
 
                         const header = li.querySelector('.folder-header');
                         header.addEventListener('click', (e) => {
-                            if (e.target.classList.contains('folder-action-btn') || e.target.closest('.folder-dropdown')) return;
+                            // Don't select folder if clicking toggle, action buttons, or dropdown
+                            if (e.target.closest('.folder-toggle') || 
+                                e.target.classList.contains('folder-action-btn') || 
+                                e.target.closest('.folder-dropdown')) {
+                                return;
+                            }
                             this.selectFolder(folder.id);
                         });
 
