@@ -2128,6 +2128,11 @@
             to { transform: rotate(360deg); }
         }
 
+        .animate-spin {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
         .toast.success {
             border-left: 4px solid var(--success);
         }
@@ -2772,6 +2777,9 @@
                                     <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
                                     <div class="tag-autocomplete" id="tagAutocomplete" style="display: none;"></div>
                                 </div>
+                                <button class="btn btn-secondary" id="suggestTagsBtn" title="AI Suggest Tags" style="padding: 4px 8px; font-size: 11px; margin-left: 4px;">
+                                    <i class="ph ph-sparkle"></i> Suggest
+                                </button>
                             </div>
                         </div>
                         <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
@@ -4295,6 +4303,157 @@
                     note.tags.forEach(tag => tags.add(tag));
                 });
                 return Array.from(tags).sort();
+            }
+
+            // ==================== AI TAG SUGGESTIONS ====================
+            
+            async suggestTagsWithAi() {
+                if (!this.currentNote) {
+                    this.showToast('Open a note first to suggest tags', 'error');
+                    return;
+                }
+
+                const content = document.getElementById('wysiwygEditor').innerText.trim();
+                if (!content || content.length < 10) {
+                    this.showToast('Note needs more content for tag suggestions', 'error');
+                    return;
+                }
+
+                // Show loading
+                const btn = document.getElementById('suggestTagsBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Analyzing...';
+                btn.disabled = true;
+
+                try {
+                    // Get AI provider
+                    const provider = document.querySelector('input[name="aiProvider"]:checked')?.value || 'webllm';
+                    
+                    // Build prompt
+                    const existingTags = this.getAllTags();
+                    const prompt = `Based on this note content, suggest 3-5 relevant tags. 
+Existing tags in knowledge base: ${existingTags.join(', ') || 'none'}
+
+Note content (first 500 chars):
+${content.substring(0, 500)}
+
+Respond with ONLY a JSON array of tag strings, like: ["tag1", "tag2", "tag3"]`;
+
+                    let suggestions = [];
+
+                    // Demo mode - simulate AI response
+                    if (provider === 'webllm' || provider === 'ollama' || provider === 'cloud') {
+                        // For demo, generate contextual suggestions based on content
+                        suggestions = this.generateDemoTagSuggestions(content, existingTags);
+                    }
+
+                    if (suggestions.length === 0) {
+                        this.showToast('No tag suggestions found', 'info');
+                        return;
+                    }
+
+                    // Show suggestions modal
+                    this.showTagSuggestionsModal(suggestions);
+
+                } catch (error) {
+                    console.error('Tag suggestion error:', error);
+                    this.showToast('Failed to get tag suggestions', 'error');
+                } finally {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }
+
+            generateDemoTagSuggestions(content, existingTags) {
+                const text = content.toLowerCase();
+                const suggestions = [];
+                
+                // Content-based keyword matching
+                const keywords = {
+                    'trading': ['trading', 'trade', 'market', 'buy', 'sell', 'position'],
+                    'psychology': ['psychology', 'mental', 'mindset', 'emotion', 'fear', 'greed', 'discipline'],
+                    'analysis': ['analysis', 'analyze', 'chart', 'pattern', 'trend', 'support', 'resistance'],
+                    'strategy': ['strategy', 'plan', 'system', 'method', 'approach'],
+                    'risk-management': ['risk', 'stop loss', 'stop-loss', 'position size', 'money management'],
+                    'journal': ['journal', 'log', 'record', 'track', 'review'],
+                    'learning': ['learn', 'study', 'education', 'course', 'book', 'video'],
+                    'tools': ['tool', 'software', 'app', 'platform', 'indicator'],
+                    'crypto': ['crypto', 'bitcoin', 'btc', 'ethereum', 'eth', 'altcoin'],
+                    'forex': ['forex', 'currency', 'eurusd', 'gbpusd', 'usd'],
+                    'stocks': ['stock', 'equity', 'shares', 'nasdaq', 'nyse', 'sp500'],
+                    'gold': ['gold', 'xauusd', 'xau', 'precious metal'],
+                    'silver': ['silver', 'xagusd', 'xag'],
+                    'indicies': ['index', 'indices', 'us100', 'us500', 'us30', 'nas100'],
+                    'tutorial': ['tutorial', 'guide', 'how to', 'lesson', 'step'],
+                    'research': ['research', 'investigate', 'study', 'data', 'backtest'],
+                    'ideas': ['idea', 'concept', 'thought', 'insight', 'theory'],
+                    'workflow': ['workflow', 'process', 'routine', 'habit', 'daily'],
+                    'review': ['review', 'retrospective', 'summary', 'week', 'month', 'quarter'],
+                    'goals': ['goal', 'target', 'objective', 'aim', 'plan', 'vision']
+                };
+
+                for (const [tag, words] of Object.entries(keywords)) {
+                    if (words.some(w => text.includes(w)) && !existingTags.includes(tag)) {
+                        suggestions.push(tag);
+                    }
+                }
+
+                // Add some generic suggestions if no matches
+                if (suggestions.length === 0) {
+                    suggestions.push('notes', 'ideas', 'review');
+                }
+
+                return [...new Set(suggestions)].slice(0, 5);
+            }
+
+            showTagSuggestionsModal(suggestions) {
+                // Create modal if not exists
+                let modal = document.getElementById('tagSuggestionsModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'tagSuggestionsModal';
+                    modal.className = 'modal-overlay';
+                    modal.innerHTML = `
+                        <div class="modal" style="max-width: 400px;">
+                            <div class="modal-header">
+                                <div class="modal-title"><i class="ph ph-sparkle"></i> AI Suggested Tags</div>
+                                <button class="modal-close" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 13px;">Click tags to add them to this note:</p>
+                                <div id="tagSuggestionsList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">Close</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+
+                // Populate suggestions
+                const list = document.getElementById('tagSuggestionsList');
+                list.innerHTML = suggestions.map(tag => `
+                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" data-tag="${tag}">
+                        <i class="ph ph-plus"></i> ${tag}
+                    </button>
+                `).join('');
+
+                // Add click handlers
+                list.querySelectorAll('button').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const tag = btn.dataset.tag;
+                        if (this.currentNote) {
+                            this.addTagToNote(this.currentNote.id, tag);
+                            btn.style.opacity = '0.5';
+                            btn.disabled = true;
+                            btn.innerHTML = `<i class="ph ph-check"></i> ${tag}`;
+                        }
+                    });
+                });
+
+                // Show modal
+                modal.classList.add('active');
             }
 
             // ==================== RENDERING ====================
@@ -6122,6 +6281,9 @@
                         tagAutocomplete.style.display = 'none';
                     }
                 });
+
+                // AI Suggest Tags button
+                document.getElementById('suggestTagsBtn').addEventListener('click', () => this.suggestTagsWithAi());
 
                 // Context menu
                 document.getElementById('ctxRename').addEventListener('click', () => {
