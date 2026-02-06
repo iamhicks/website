@@ -171,6 +171,7 @@
         .sidebar-search {
             padding: 12px 16px;
             border-bottom: 1px solid var(--border);
+            position: relative;
         }
 
         .search-input {
@@ -5328,8 +5329,6 @@
             // ==================== SEARCH ====================
 
             search(query) {
-                console.log('Search called with:', query);
-                console.log('Notes count:', this.data.notes.length);
                 if (!query.trim()) {
                     document.getElementById('searchResults').classList.remove('active');
                     return;
@@ -5341,8 +5340,6 @@
                            note.content.toLowerCase().includes(q) ||
                            note.tags.some(t => t.toLowerCase().includes(q));
                 }).slice(0, 10);
-                
-                console.log('Found results:', results.length);
 
                 const resultsEl = document.getElementById('searchResults');
 
@@ -6052,7 +6049,6 @@
 
                 // Search
                 document.getElementById('searchInput').addEventListener('input', (e) => {
-                    console.log('Search input event fired:', e.target.value);
                     this.search(e.target.value);
                 });
 
