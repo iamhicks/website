@@ -6521,26 +6521,17 @@
                             currentSelection = text;
                             currentRange = selection.getRangeAt(0).cloneRange();
 
-                            // Get the start of the selection (first line)
-                            const rect = currentRange.getBoundingClientRect();
-                            const contentRect = editorContent.getBoundingClientRect();
-
-                            // Create a range at the very start of the selection for precise positioning
+                            // Get the start of the selection
                             const startRange = document.createRange();
                             try {
                                 startRange.setStart(currentRange.startContainer, currentRange.startOffset);
                                 startRange.setEnd(currentRange.startContainer, currentRange.startOffset);
                             } catch (e) {
-                                // Fallback if range manipulation fails
                                 startRange.selectNodeContents(editor);
                                 startRange.collapse(true);
                             }
                             const startRect = startRange.getBoundingClientRect();
-
-                            // Position toolbar at the start of the line, above the text
-                            // Position relative to editor-content which is the toolbar's positioned parent
-                            let left = startRect.left - contentRect.left;
-                            let top = startRect.top - contentRect.top - 48; // 48px above the line
+                            const contentRect = editorContent.getBoundingClientRect();
 
                             // Get toolbar dimensions
                             toolbar.style.visibility = 'hidden';
@@ -6549,15 +6540,17 @@
                             toolbar.style.display = '';
                             toolbar.style.visibility = '';
 
-                            // Keep within editor bounds horizontally
-                            if (left + toolbarRect.width > contentRect.width - 20) {
-                                left = contentRect.width - toolbarRect.width - 20;
-                            }
-                            left = Math.max(10, left);
+                            // Position: directly above the selection start, aligned left
+                            let left = startRect.left - contentRect.left;
+                            let top = startRect.top - contentRect.top - toolbarRect.height - 8;
 
-                            // If too close to top of editor, show below instead
-                            if (top < 10) {
-                                top = rect.bottom - contentRect.top + 10;
+                            // Ensure toolbar stays within editor-content bounds
+                            const maxLeft = contentRect.width - toolbarRect.width - 16;
+                            left = Math.max(8, Math.min(left, maxLeft));
+
+                            // If too close to top, show below the selection
+                            if (top < 0) {
+                                top = startRect.bottom - contentRect.top + 8;
                             }
 
                             toolbar.style.left = left + 'px';
