@@ -7135,10 +7135,6 @@
                     item.addEventListener('mouseleave', () => {
                         deleteBtn.style.opacity = '0';
                     });
-
-                    // Show delete button on hover
-                    item.addEventListener('mouseenter', () => deleteBtn.style.opacity = '1');
-                    item.addEventListener('mouseleave', () => deleteBtn.style.opacity = '0');
                 });
             }
 
@@ -7162,38 +7158,38 @@
                                 currentSelection = text;
                                 currentRange = selection.getRangeAt(0).cloneRange();
 
-                            // Get selection coordinates using getBoundingClientRect for viewport positioning
-                            const rect = currentRange.getBoundingClientRect();
-                            
-                            // Make toolbar visible to get dimensions
-                            toolbar.style.display = 'flex';
-                            toolbar.style.visibility = 'hidden';
-                            const toolbarRect = toolbar.getBoundingClientRect();
-                            
-                            // Calculate position - above the selection using viewport coordinates
-                            let top = rect.top - toolbarRect.height - 8;
-                            let left = rect.left;
-                            
-                            // If too close to top, show below selection
-                            if (top < 0) {
-                                top = rect.bottom + 8;
+                                // Get selection coordinates using getBoundingClientRect for viewport positioning
+                                const rect = currentRange.getBoundingClientRect();
+                                
+                                // Make toolbar visible to get dimensions
+                                toolbar.style.display = 'flex';
+                                toolbar.style.visibility = 'hidden';
+                                const toolbarRect = toolbar.getBoundingClientRect();
+                                
+                                // Calculate position - above the selection using viewport coordinates
+                                let top = rect.top - toolbarRect.height - 8;
+                                let left = rect.left;
+                                
+                                // If too close to top, show below selection
+                                if (top < 0) {
+                                    top = rect.bottom + 8;
+                                }
+                                
+                                // Keep within viewport horizontally
+                                if (left + toolbarRect.width > window.innerWidth) {
+                                    left = window.innerWidth - toolbarRect.width - 16;
+                                }
+                                
+                                // Apply fixed positioning
+                                toolbar.style.position = 'fixed';
+                                toolbar.style.top = top + 'px';
+                                toolbar.style.left = left + 'px';
+                                toolbar.style.visibility = 'visible';
+                                toolbar.classList.add('visible');
+                            } else {
+                                toolbar.classList.remove('visible');
+                                toolbar.style.display = 'none';
                             }
-                            
-                            // Keep within viewport horizontally
-                            if (left + toolbarRect.width > window.innerWidth) {
-                                left = window.innerWidth - toolbarRect.width - 16;
-                            }
-                            
-                            // Apply fixed positioning
-                            toolbar.style.position = 'fixed';
-                            toolbar.style.top = top + 'px';
-                            toolbar.style.left = left + 'px';
-                            toolbar.style.visibility = 'visible';
-                            toolbar.classList.add('visible');
-                        } else {
-                            toolbar.classList.remove('visible');
-                            toolbar.style.display = 'none';
-                        }
                     }, 0);
                 });
 
