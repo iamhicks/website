@@ -5918,20 +5918,12 @@
                 
                 // Add custom templates
                 customTemplates.forEach(t => {
-                    html += `<option value="${t.id}">${this.escapeHtml(t.name)} (delete)</option>`;
+                    html += `<option value="${t.id}">${this.escapeHtml(t.name)} 🗑</option>`;
                 });
                 
                 html += `<option value="save-current">+ Save as Template</option>`;
                 
                 select.innerHTML = html;
-            }
-
-            deleteCustomTemplate(templateId) {
-                if (!confirm('Delete this template?')) return;
-                this.data.customTemplates = this.data.customTemplates.filter(t => t.id !== templateId);
-                this.saveData();
-                this.updateTemplateDropdown();
-                this.showToast('Template deleted', 'success');
             }
 
             toggleFocusMode() {
@@ -6959,7 +6951,11 @@
                 if (customTemplate) {
                     const action = confirm(`Template: ${customTemplate.name}\n\nClick OK to APPLY this template\nClick Cancel to DELETE this template`);
                     if (!action) {
-                        // Delete
+                        // Delete with confirmation
+                        if (!confirm(`Delete template "${customTemplate.name}"?\n\nThis action cannot be undone.`)) {
+                            document.getElementById('templateSelect').value = '';
+                            return;
+                        }
                         this.data.customTemplates = this.data.customTemplates.filter(t => t.id !== templateId);
                         this.saveData();
                         this.updateTemplateDropdown();
