@@ -2883,6 +2883,13 @@
                             <i class="ph ph-list-numbers"></i>
                         </button>
                         <span class="selection-toolbar-divider"></span>
+                        <button class="selection-toolbar-btn" id="toolbarLinkBtn" title="Insert Link">
+                            <i class="ph ph-link"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" id="toolbarImageBtn" title="Insert Image">
+                            <i class="ph ph-image"></i>
+                        </button>
+                        <span class="selection-toolbar-divider"></span>
                         <button class="selection-toolbar-btn ai" id="askAiSelectionBtn" title="Ask AI">
                             <i class="ph ph-sparkle"></i> Ask AI
                         </button>
@@ -7197,6 +7204,28 @@
                         document.execCommand(command, false, value);
                         toolbar.classList.remove('visible');
                     });
+                });
+
+                // Link button
+                document.getElementById('toolbarLinkBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const url = prompt('Enter URL:');
+                    if (url) {
+                        document.execCommand('createLink', false, url);
+                    }
+                    toolbar.classList.remove('visible');
+                });
+
+                // Image button
+                document.getElementById('toolbarImageBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const url = prompt('Enter image URL:');
+                    if (url) {
+                        document.execCommand('insertImage', false, url);
+                    }
+                    toolbar.classList.remove('visible');
                 });
 
                 // Ask AI button
