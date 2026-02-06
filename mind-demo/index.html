@@ -1507,10 +1507,7 @@
         }
 
         .tag-autocomplete {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
+            position: fixed;
             background: var(--bg-primary);
             border: 1px solid var(--accent);
             border-radius: var(--radius-sm);
@@ -1519,6 +1516,9 @@
             overflow-y: auto;
             z-index: 10000;
             margin-top: 4px;
+            min-width: 120px;
+            width: auto;
+            white-space: nowrap;
         }
 
         .tag-autocomplete-item {
