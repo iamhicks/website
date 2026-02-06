@@ -1364,14 +1364,14 @@
 
         /* Selection Toolbar */
         .selection-toolbar {
-            position: absolute;
+            position: fixed;
             display: none;
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 6px 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
+            z-index: 10000;
             gap: 2px;
             align-items: center;
         }
@@ -6598,40 +6598,33 @@
                             currentSelection = text;
                             currentRange = selection.getRangeAt(0).cloneRange();
 
-                            // Get the start of the selection
-                            const startRange = document.createRange();
-                            try {
-                                startRange.setStart(currentRange.startContainer, currentRange.startOffset);
-                                startRange.setEnd(currentRange.startContainer, currentRange.startOffset);
-                            } catch (e) {
-                                startRange.selectNodeContents(editor);
-                                startRange.collapse(true);
-                            }
-                            const startRect = startRange.getBoundingClientRect();
-                            const contentRect = editorContent.getBoundingClientRect();
-
-                            // Get toolbar dimensions
-                            toolbar.style.visibility = 'hidden';
+                            // Get selection coordinates
+                            const rect = currentRange.getBoundingClientRect();
+                            
+                            // Make toolbar visible to get dimensions
                             toolbar.style.display = 'flex';
+                            toolbar.style.visibility = 'hidden';
                             const toolbarRect = toolbar.getBoundingClientRect();
-                            toolbar.style.display = '';
-                            toolbar.style.visibility = '';
-
-                            // Position: directly above the selection start, aligned left
-                            let left = startRect.left - contentRect.left;
-                            let top = startRect.top - contentRect.top - toolbarRect.height - 8;
-
-                            // Ensure toolbar stays within editor-content bounds
-                            const maxLeft = contentRect.width - toolbarRect.width - 16;
-                            left = Math.max(8, Math.min(left, maxLeft));
-
-                            // If too close to top, show below the selection
+                            
+                            // Calculate position - above the selection
+                            let top = rect.top - toolbarRect.height - 8;
+                            let left = rect.left;
+                            
+                            // If too close to top, show below
                             if (top < 0) {
-                                top = startRect.bottom - contentRect.top + 8;
+                                top = rect.bottom + 8;
                             }
-
-                            toolbar.style.left = left + 'px';
+                            
+                            // Keep within viewport horizontally
+                            if (left + toolbarRect.width > window.innerWidth) {
+                                left = window.innerWidth - toolbarRect.width - 16;
+                            }
+                            
+                            // Convert to fixed positioning (relative to viewport)
+                            toolbar.style.position = 'fixed';
                             toolbar.style.top = top + 'px';
+                            toolbar.style.left = left + 'px';
+                            toolbar.style.visibility = 'visible';
                             toolbar.classList.add('visible');
                         } else {
                             toolbar.classList.remove('visible');
