@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mind — Demo Mode</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/all.css">
     <style>
         /* ==================== NOTION-INSPIRED THEME ==================== */
         :root {
@@ -126,38 +126,7 @@
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 12px;
-        }
-
-        .sidebar-resize-handle {
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            cursor: col-resize;
-            background: transparent;
-            z-index: 101;
-        }
-
-        .sidebar-resize-handle:hover,
-        .sidebar-resize-handle.resizing {
-            background: var(--accent);
-        }
-
-        .sidebar-collapse-btn {
-            padding: 4px 8px;
-            font-size: 12px;
-            opacity: 0.6;
-        }
-
-        .sidebar-collapse-btn:hover {
-            opacity: 1;
-        }
-
-        .sidebar.collapsed .sidebar-collapse-btn i {
-            transform: rotate(180deg);
         }
 
         .logo {
@@ -237,23 +206,6 @@
             display: none;
         }
 
-        .folder-header:hover .folder-actions {
-            display: flex !important;
-        }
-
-        .folder-actions .btn {
-            opacity: 0.6;
-        }
-
-        .folder-actions .btn:hover {
-            opacity: 1;
-            background: var(--bg-tertiary);
-        }
-
-        .folder-header.active .folder-actions .btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
         /* ==================== FOLDER TREE ==================== */
         .folder-tree, .bookmark-list {
             list-style: none;
@@ -280,12 +232,6 @@
         .folder-header.active {
             background: var(--accent);
             color: white;
-        }
-
-        .folder-header.drag-over {
-            background: var(--accent);
-            color: white;
-            opacity: 0.8;
         }
 
         .folder-toggle {
@@ -353,9 +299,6 @@
             background: var(--accent);
             color: white;
             border-color: var(--accent);
-        }
-
-        .sidebar-actions .btn-primary {
             flex: 1;
         }
 
@@ -408,7 +351,6 @@
         .editor-container {
             flex: 1;
             display: flex;
-            flex-direction: column;
             overflow: hidden;
         }
 
@@ -434,11 +376,6 @@
             font-weight: 600;
             margin-bottom: 8px;
             color: var(--text-primary);
-        }
-
-        .empty-state .btn {
-            align-self: center;
-            margin-top: 24px;
         }
 
         /* ==================== TABS BAR ==================== */
@@ -841,58 +778,16 @@
         @media (min-width: 769px) {
             .hide-desktop { display: none !important; }
         }
-
-        /* Focus Mode */
-        body.focus-mode .sidebar {
-            display: none;
-        }
-
-        body.focus-mode .tabs-bar {
-            display: none !important;
-        }
-
-        body.focus-mode .main-header {
-            opacity: 0.3;
-            transition: opacity 0.3s;
-        }
-
-        body.focus-mode .main-header:hover {
-            opacity: 1;
-        }
-
-        /* Sidebar Expand Button */
-        .sidebar-expand-btn {
-            position: fixed;
-            left: 0;
-            top: 60px;
-            width: 32px;
-            height: 32px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-left: none;
-            border-radius: 0 4px 4px 0;
-            color: var(--text-secondary);
-            cursor: pointer;
-            z-index: 99;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .sidebar-expand-btn:hover {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
     </style>
 </head>
 <body>
     <!-- Demo Banner -->
     <div class="demo-banner">
         <div class="demo-banner-content">
-            <i class="fa-solid fa-clock"></i>
+            <i class="ph ph-clock"></i>
             <span>Demo Mode — Resets every hour</span>
             <span class="demo-reset-timer" id="demoResetTimer"></span>
-            <a href="/" class="demo-banner-link"><i class="fa-solid fa-arrow-left"></i> Back to Website</a>
+            <a href="/" class="demo-banner-link"><i class="ph ph-arrow-left"></i> Back to Website</a>
         </div>
     </div>
 
@@ -901,22 +796,13 @@
         <!-- Sidebar Overlay -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <!-- Sidebar Toggle (when collapsed) -->
-        <button class="sidebar-expand-btn" id="sidebarExpandBtn" title="Expand sidebar" style="display: none;">
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-resize-handle" id="sidebarResizeHandle"></div>
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
+                    <div class="logo-icon"><i class="ph ph-brain"></i></div>
                     <span>Mind</span>
                 </div>
-                <button class="btn btn-icon sidebar-collapse-btn" id="sidebarCollapseBtn" title="Collapse sidebar">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </button>
             </div>
 
             <div class="sidebar-search">
@@ -929,10 +815,10 @@
 
             <div class="sidebar-actions">
                 <button class="btn btn-primary" id="newNoteBtn">
-                    <i class="fa-solid fa-plus"></i> New Note
+                    <i class="ph ph-plus"></i> New Note
                 </button>
                 <button class="btn btn-icon" id="settingsBtn">
-                    <i class="fa-solid fa-gear"></i>
+                    <i class="ph ph-gear"></i>
                 </button>
             </div>
         </aside>
@@ -942,19 +828,19 @@
             <!-- Tabs Bar -->
             <div class="tabs-bar hidden" id="tabsBar">
                 <div class="sidebar-toggle-tab" id="sidebarToggleTab">
-                    <i class="fa-solid fa-columns"></i>
-                </div>
-                <div class="new-tab-btn" id="newTabBtn">
-                    <i class="fa-solid fa-plus"></i>
+                    <i class="ph ph-sidebar"></i>
                 </div>
                 <div class="tabs-container" id="tabsContainer"></div>
+                <div class="new-tab-btn" id="newTabBtn">
+                    <i class="ph ph-plus"></i>
+                </div>
             </div>
 
             <!-- Header -->
             <header class="main-header">
                 <div class="header-left">
                     <button class="btn btn-icon hide-desktop" id="menuBtn">
-                        <i class="fa-solid fa-list"></i>
+                        <i class="ph ph-list"></i>
                     </button>
                     <div class="breadcrumb" id="breadcrumb">
                         <span>All Notes</span>
@@ -963,13 +849,13 @@
                 <div class="header-right">
                     <span class="header-title" id="headerTitle">Select a note</span>
                     <button class="btn btn-icon" id="themeBtn" title="Toggle theme">
-                        <i class="fa-solid fa-moon"></i>
+                        <i class="ph ph-moon"></i>
                     </button>
                     <button class="btn btn-icon hide-mobile" id="focusBtn" title="Focus mode">
-                        <i class="fa-solid fa-expand"></i>
+                        <i class="ph ph-corners-out"></i>
                     </button>
                     <button class="btn btn-icon" id="moreBtn" title="More options">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                        <i class="ph ph-dots-three"></i>
                     </button>
                 </div>
             </header>
@@ -978,23 +864,23 @@
             <div class="editor-container" id="editorContainer">
                 <!-- Empty State -->
                 <div class="empty-state" id="emptyState">
-                    <div class="empty-state-icon"><i class="fa-solid fa-brain"></i></div>
+                    <div class="empty-state-icon"><i class="ph ph-brain"></i></div>
                     <div class="empty-state-title">Welcome to Mind</div>
                     <div class="empty-state-desc">
                         Your private, offline knowledge base.<br>
                         Create your first note to get started.
                     </div>
                     <button class="btn btn-primary" id="emptyNewNoteBtn">
-                        <i class="fa-solid fa-plus"></i> Create First Note
+                        <i class="ph ph-plus"></i> Create First Note
                     </button>
                 </div>
 
                 <!-- Editor Toolbar -->
                 <div class="editor-toolbar hidden" id="editorToolbar">
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-command="bold" title="Bold"><i class="fa-solid fa-bold"></i></button>
-                        <button class="toolbar-btn" data-command="italic" title="Italic"><i class="fa-solid fa-italic"></i></button>
-                        <button class="toolbar-btn" data-command="underline" title="Underline"><i class="fa-solid fa-underline"></i></button>
+                        <button class="toolbar-btn" data-command="bold" title="Bold"><i class="ph ph-text-b"></i></button>
+                        <button class="toolbar-btn" data-command="italic" title="Italic"><i class="ph ph-text-italic"></i></button>
+                        <button class="toolbar-btn" data-command="underline" title="Underline"><i class="ph ph-text-underline"></i></button>
                     </div>
                     <div class="toolbar-group">
                         <button class="toolbar-btn" data-command="formatBlock" data-value="H1" title="Heading 1">H1</button>
@@ -1002,16 +888,16 @@
                         <button class="toolbar-btn" data-command="formatBlock" data-value="H3" title="Heading 3">H3</button>
                     </div>
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet list"><i class="fa-solid fa-list-ul"></i></button>
-                        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered list"><i class="fa-solid fa-list-ol"></i></button>
+                        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet list"><i class="ph ph-list-bullets"></i></button>
+                        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered list"><i class="ph ph-list-numbers"></i></button>
                     </div>
                     <div class="toolbar-group">
                         <button class="toolbar-btn ai-btn" id="aiAssistBtn">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI
+                            <i class="ph ph-sparkle"></i> AI
                         </button>
                     </div>
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" id="moreOptionsBtn" title="More"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        <button class="toolbar-btn" id="moreOptionsBtn" title="More"><i class="ph ph-dots-three"></i></button>
                     </div>
                 </div>
 
@@ -1021,11 +907,11 @@
                         <input type="text" class="note-title-input" id="noteTitle" placeholder="Note Title">
                         <div class="note-meta">
                             <div class="note-meta-item">
-                                <i class="fa-solid fa-calendar"></i>
+                                <i class="ph ph-calendar-blank"></i>
                                 <span id="noteDate">Created today</span>
                             </div>
                             <div class="note-meta-item">
-                                <i class="fa-solid fa-tag"></i>
+                                <i class="ph ph-tag"></i>
                                 <div class="note-tags-input" id="noteTagsInput">
                                     <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
                                 </div>
@@ -1042,19 +928,19 @@
     <nav class="mobile-nav">
         <div class="mobile-nav-items">
             <div class="mobile-nav-item active" data-view="notes">
-                <div class="mobile-nav-icon"><i class="fa-solid fa-book"></i></div>
+                <div class="mobile-nav-icon"><i class="ph ph-notebook"></i></div>
                 <span>Notes</span>
             </div>
             <div class="mobile-nav-item" data-view="folders">
-                <div class="mobile-nav-icon"><i class="fa-solid fa-folder"></i></div>
+                <div class="mobile-nav-icon"><i class="ph ph-folder"></i></div>
                 <span>Folders</span>
             </div>
             <div class="mobile-nav-item" data-view="tags">
-                <div class="mobile-nav-icon"><i class="fa-solid fa-tag"></i></div>
+                <div class="mobile-nav-icon"><i class="ph ph-tag"></i></div>
                 <span>Tags</span>
             </div>
             <div class="mobile-nav-item" data-view="search">
-                <div class="mobile-nav-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div class="mobile-nav-icon"><i class="ph ph-magnifying-glass"></i></div>
                 <span>Search</span>
             </div>
         </div>
@@ -1080,84 +966,6 @@
             <div class="modal-footer">
                 <button class="btn" id="cancelNewNote">Cancel</button>
                 <button class="btn btn-primary" id="confirmNewNote">Create</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Assistant Modal -->
-    <div class="modal-overlay" id="aiModal">
-        <div class="modal" style="max-width: 500px;">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Mind AI</div>
-                <button class="modal-close" id="closeAiModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">AI Provider</label>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <label style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--accent); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
-                            <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; margin-bottom: 4px;">🚀 WebLLM (Recommended)</div>
-                                <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. No installation. Private & offline.</div>
-                            </div>
-                        </label>
-                        <label style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
-                            <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; margin-bottom: 4px;">⚡ Ollama Desktop</div>
-                                <div style="font-size: 13px; color: var(--text-secondary);">Better performance. Requires app install.</div>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group" id="aiFeatures">
-                    <label class="form-label">AI Features</label>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <button class="btn" id="aiSummarizeBtn" style="justify-content: flex-start; text-align: left;">
-                            <i class="fa-solid fa-font"></i> Summarize Note
-                        </button>
-                        <button class="btn" id="aiSuggestTagsBtn" style="justify-content: flex-start; text-align: left;">
-                            <i class="fa-solid fa-tag"></i> Suggest Tags
-                        </button>
-                        <button class="btn" id="aiContinueBtn" style="justify-content: flex-start; text-align: left;">
-                            <i class="fa-solid fa-pen"></i> Continue Writing
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" id="closeAiModalBtn">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Import Modal -->
-    <div class="modal-overlay" id="importModal">
-        <div class="modal" style="max-width: 500px;">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fa-solid fa-upload"></i> Import from Notion/Obsidian</div>
-                <button class="modal-close" id="closeImportModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">How to Export</label>
-                    <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; font-size: 13px;">
-                        <p style="margin-bottom: 8px;"><strong>Notion:</strong> Settings → Export → Markdown & CSV → Include subpages</p>
-                        <p><strong>Obsidian:</strong> Your vault is already Markdown. Just zip it.</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Upload ZIP File</label>
-                    <div id="dropZone" style="border: 2px dashed var(--border); border-radius: 8px; padding: 32px; text-align: center; cursor: pointer;">
-                        <i class="fa-solid fa-cloud-upload" style="font-size: 32px; color: var(--accent); margin-bottom: 8px;"></i>
-                        <p style="color: var(--text-secondary);">Drop ZIP file here or click to browse</p>
-                        <input type="file" id="importFileInput" accept=".zip" style="display: none;">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" id="closeImportModalBtn">Close</button>
             </div>
         </div>
     </div>
@@ -1192,7 +1000,6 @@
                 this.setupEventListeners();
                 this.render();
                 this.applyTheme();
-                this.restoreSidebarState();
                 this.setupAutoSave();
             }
             
@@ -1244,22 +1051,10 @@
                 // Theme
                 document.getElementById('themeBtn')?.addEventListener('click', () => this.toggleTheme());
                 
-                // Focus mode
-                document.getElementById('focusBtn')?.addEventListener('click', () => this.toggleFocusMode());
-                
                 // Mobile menu
                 document.getElementById('menuBtn')?.addEventListener('click', () => this.toggleSidebar());
                 document.getElementById('sidebarOverlay')?.addEventListener('click', () => this.closeSidebar());
                 document.getElementById('sidebarToggleTab')?.addEventListener('click', () => this.toggleSidebar());
-                
-                // Sidebar collapse button
-                document.getElementById('sidebarCollapseBtn')?.addEventListener('click', () => this.toggleSidebarCollapse());
-                
-                // Sidebar expand button
-                document.getElementById('sidebarExpandBtn')?.addEventListener('click', () => this.toggleSidebarCollapse());
-                
-                // Sidebar resize
-                this.setupSidebarResize();
                 
                 // Tag input
                 document.getElementById('tagInput')?.addEventListener('keydown', (e) => {
@@ -1272,52 +1067,6 @@
                 
                 // Search
                 document.getElementById('searchInput')?.addEventListener('input', (e) => this.handleSearch(e.target.value));
-                
-                // AI Assistant
-                document.getElementById('aiAssistBtn')?.addEventListener('click', () => this.openAiModal());
-                document.getElementById('closeAiModal')?.addEventListener('click', () => this.closeModal('aiModal'));
-                document.getElementById('closeAiModalBtn')?.addEventListener('click', () => this.closeModal('aiModal'));
-                document.getElementById('aiSummarizeBtn')?.addEventListener('click', () => this.aiSummarize());
-                document.getElementById('aiSuggestTagsBtn')?.addEventListener('click', () => this.aiSuggestTags());
-                document.getElementById('aiContinueBtn')?.addEventListener('click', () => this.aiContinue());
-                
-                // Import
-                document.getElementById('closeImportModal')?.addEventListener('click', () => this.closeModal('importModal'));
-                document.getElementById('closeImportModalBtn')?.addEventListener('click', () => this.closeModal('importModal'));
-                
-                // Drop zone for import
-                const dropZone = document.getElementById('dropZone');
-                if (dropZone) {
-                    dropZone.addEventListener('click', () => document.getElementById('importFileInput')?.click());
-                    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; });
-                    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'var(--border)'; });
-                    dropZone.addEventListener('drop', (e) => {
-                        e.preventDefault();
-                        dropZone.style.borderColor = 'var(--border)';
-                        const file = e.dataTransfer.files[0];
-                        if (file) this.handleImport(file);
-                    });
-                }
-                
-                document.getElementById('importFileInput')?.addEventListener('change', (e) => {
-                    if (e.target.files[0]) this.handleImport(e.target.files[0]);
-                });
-                
-                // Settings button
-                document.getElementById('settingsBtn')?.addEventListener('click', () => this.showSettingsMenu());
-                
-                // New Tab button
-                document.getElementById('newTabBtn')?.addEventListener('click', () => this.openNewNoteModal());
-                
-                // Toolbar formatting buttons
-                document.querySelectorAll('.toolbar-btn[data-command]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const command = btn.dataset.command;
-                        const value = btn.dataset.value || null;
-                        document.execCommand(command, false, value);
-                        document.getElementById('wysiwygEditor').focus();
-                    });
-                });
             }
             
             openNewNoteModal() {
@@ -1414,9 +1163,9 @@
                     if (!note) return '';
                     const isActive = noteId === this.activeTabId;
                     return `
-                        <div class="tab ${isActive ? 'active' : ''}" data-note-id="${noteId}" draggable="true">
+                        <div class="tab ${isActive ? 'active' : ''}" data-note-id="${noteId}">
                             <span>${this.escapeHtml(note.title || 'Untitled')}</span>
-                            <i class="fa-solid fa-x tab-close" data-note-id="${noteId}"></i>
+                            <i class="ph ph-x tab-close" data-note-id="${noteId}"></i>
                         </div>
                     `;
                 }).join('');
@@ -1430,18 +1179,6 @@
                         } else {
                             this.openNote(tab.dataset.noteId);
                         }
-                    });
-                    
-                    // Tab drag handlers
-                    tab.addEventListener('dragstart', (e) => {
-                        e.dataTransfer.setData('type', 'note');
-                        e.dataTransfer.setData('noteId', tab.dataset.noteId);
-                        e.dataTransfer.effectAllowed = 'move';
-                        tab.style.opacity = '0.5';
-                    });
-                    
-                    tab.addEventListener('dragend', () => {
-                        tab.style.opacity = '1';
                     });
                 });
             }
@@ -1480,7 +1217,7 @@
                     this.currentNote.tags.forEach(tag => {
                         const tagEl = document.createElement('span');
                         tagEl.className = 'tag';
-                        tagEl.innerHTML = `${this.escapeHtml(tag)} <i class="fa-solid fa-xmark" data-tag="${tag}"></i>`;
+                        tagEl.innerHTML = `${this.escapeHtml(tag)} <i class="ph ph-x" data-tag="${tag}"></i>`;
                         container.insertBefore(tagEl, input);
                         
                         tagEl.querySelector('i').addEventListener('click', () => this.removeTag(tag));
@@ -1515,52 +1252,6 @@
                 
                 let html = '';
                 
-                // Bookmarks section
-                const bookmarkedNotes = this.data.notes.filter(n => n.bookmarked);
-                if (bookmarkedNotes.length > 0) {
-                    html += `
-                        <div class="sidebar-section">
-                            <div class="section-header" data-section="bookmarks">
-                                <span>Bookmarks</span>
-                                <span class="section-toggle">▼</span>
-                            </div>
-                            <div class="section-content" id="bookmarksSection">
-                                <ul class="bookmark-list" style="list-style: none; padding: 4px 0;">
-                                    ${bookmarkedNotes.map(note => `
-                                        <li class="bookmark-item" data-note-id="${note.id}" style="padding: 6px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                                            <i class="fa-solid fa-bookmark" style="color: var(--accent);"></i>
-                                            <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(note.title || 'Untitled')}</span>
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                // Clipped pages section
-                const clippedNotes = this.data.notes.filter(n => n.clippedFrom);
-                if (clippedNotes.length > 0) {
-                    html += `
-                        <div class="sidebar-section">
-                            <div class="section-header" data-section="clipped">
-                                <span>Clipped Pages</span>
-                                <span class="section-toggle">▼</span>
-                            </div>
-                            <div class="section-content" id="clippedSection">
-                                <ul class="bookmark-list" style="list-style: none; padding: 4px 0;">
-                                    ${clippedNotes.map(note => `
-                                        <li class="bookmark-item" data-note-id="${note.id}" style="padding: 6px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                                            <i class="fa-solid fa-globe" style="color: var(--accent);"></i>
-                                            <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(note.title || 'Clipped Page')}</span>
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                            </div>
-                        </div>
-                    `;
-                }
-                
                 // Favorites section
                 if (this.data.settings.favoriteFolders?.length > 0) {
                     html += `
@@ -1576,7 +1267,7 @@
                                         return folder ? `
                                             <li class="folder-item">
                                                 <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}" data-folder="${folder.id}">
-                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="ph ph-star"></i>
                                                     <span class="folder-name">${this.escapeHtml(folder.name)}</span>
                                                 </div>
                                             </li>
@@ -1595,7 +1286,7 @@
                             <span>Folders</span>
                             <div class="section-actions">
                                 <button class="btn btn-icon" id="addFolderBtn" style="padding: 2px 6px; font-size: 12px;">
-                                    <i class="fa-solid fa-plus"></i>
+                                    <i class="ph ph-plus"></i>
                                 </button>
                                 <span class="section-toggle">▼</span>
                             </div>
@@ -1606,39 +1297,19 @@
                     </div>
                 `;
                 
-                // Tags section - alphabetical groups
-                const allTags = [...new Set(this.data.notes.flatMap(n => n.tags))].sort();
+                // Tags section
+                const allTags = [...new Set(this.data.notes.flatMap(n => n.tags))];
                 if (allTags.length > 0) {
-                    // Group tags by first letter
-                    const groupedTags = {};
-                    allTags.forEach(tag => {
-                        const firstLetter = tag.charAt(0).toUpperCase();
-                        if (!groupedTags[firstLetter]) groupedTags[firstLetter] = [];
-                        groupedTags[firstLetter].push(tag);
-                    });
-                    
                     html += `
                         <div class="sidebar-section">
                             <div class="section-header" data-section="tags">
                                 <span>Tags</span>
                                 <span class="section-toggle">▼</span>
                             </div>
-                            <div class="section-content collapsed" id="tagsSection">
-                                <div class="tags-alphabetical" style="padding: 4px 0;">
-                                    ${Object.keys(groupedTags).sort().map(letter => `
-                                        <div class="tag-letter-group" style="margin-bottom: 4px;">
-                                            <div class="tag-letter-header" data-letter="${letter}" style="padding: 4px 16px; font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
-                                                <span>${letter}</span>
-                                                <span style="font-size: 10px;">${groupedTags[letter].length}</span>
-                                            </div>
-                                            <div class="tag-letter-tags collapsed" id="tags-${letter}" style="padding-left: 16px;">
-                                                ${groupedTags[letter].map(tag => `
-                                                    <div class="tag-item" data-tag="${tag}" style="padding: 3px 16px; font-size: 13px; cursor: pointer; color: var(--text-secondary);">
-                                                        ${this.escapeHtml(tag)}
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
+                            <div class="section-content" id="tagsSection">
+                                <div class="tags-cloud" style="padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px;">
+                                    ${allTags.map(tag => `
+                                        <span class="tag" style="cursor: pointer;" data-tag="${tag}">${this.escapeHtml(tag)}</span>
                                     `).join('')}
                                 </div>
                             </div>
@@ -1665,31 +1336,6 @@
                     });
                 });
                 
-                // Bookmark click handlers
-                content.querySelectorAll('.bookmark-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        this.openNote(item.dataset.noteId);
-                    });
-                });
-                
-                // Tag letter group toggle handlers
-                content.querySelectorAll('.tag-letter-header').forEach(header => {
-                    header.addEventListener('click', () => {
-                        const letter = header.dataset.letter;
-                        const tagsContainer = document.getElementById(`tags-${letter}`);
-                        if (tagsContainer) {
-                            tagsContainer.classList.toggle('collapsed');
-                        }
-                    });
-                });
-                
-                // Tag click handlers
-                content.querySelectorAll('.tag-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        this.filterByTag(item.dataset.tag);
-                    });
-                });
-                
                 // Add folder button
                 document.getElementById('addFolderBtn')?.addEventListener('click', () => this.createFolder());
             }
@@ -1708,23 +1354,14 @@
                         const isCollapsed = this.data.settings.sidebarCollapsed?.[folder.id];
                         
                         return `
-                            <li class="folder-item" data-folder-id="${folder.id}">
+                            <li class="folder-item">
                                 <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}" 
                                      data-folder="${folder.id}"
-                                     draggable="true"
                                      style="padding-left: ${8 + level * 16}px">
                                     ${hasChildren ? `<span class="folder-toggle ${isCollapsed ? 'collapsed' : ''}">▼</span>` : '<span class="folder-toggle" style="visibility: hidden;">▼</span>'}
-                                    <i class="fa-solid fa-folder"></i>
+                                    <i class="ph ph-folder"></i>
                                     <span class="folder-name">${this.escapeHtml(folder.name)}</span>
                                     ${noteCount > 0 ? `<span class="folder-count">${noteCount}</span>` : ''}
-                                    <div class="folder-actions" style="display: none; margin-left: auto; gap: 4px;">
-                                        <button class="btn btn-icon folder-add-btn" data-folder="${folder.id}" title="Add a page inside" style="padding: 2px 6px; font-size: 11px;">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </button>
-                                        <button class="btn btn-icon folder-menu-btn" data-folder="${folder.id}" title="More options" style="padding: 2px 6px; font-size: 11px;">
-                                            <i class="fa-solid fa-ellipsis"></i>
-                                        </button>
-                                    </div>
                                 </div>
                                 ${hasChildren && !isCollapsed ? `
                                     <ul class="folder-tree" style="padding-left: 16px;">
@@ -1756,111 +1393,6 @@
                         }
                     });
                 });
-                
-                // Folder add button handlers (+)
-                tree.querySelectorAll('.folder-add-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        this.createNoteInFolder(btn.dataset.folder);
-                    });
-                });
-                
-                // Folder menu button handlers (...)
-                tree.querySelectorAll('.folder-menu-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        this.showFolderMenu(btn.dataset.folder);
-                    });
-                });
-                
-                // Setup drag and drop
-                this.setupFolderDragDrop();
-            }
-            
-            setupFolderDragDrop() {
-                const tree = document.getElementById('folderTree');
-                if (!tree) return;
-                
-                // Make notes draggable
-                this.data.notes.forEach(note => {
-                    // Will be set up in render
-                });
-                
-                // Folder drag handlers
-                tree.querySelectorAll('.folder-header').forEach(header => {
-                    const folderId = header.dataset.folder;
-                    
-                    header.addEventListener('dragstart', (e) => {
-                        this.draggedFolder = folderId;
-                        e.dataTransfer.setData('type', 'folder');
-                        e.dataTransfer.setData('folderId', folderId);
-                        e.dataTransfer.effectAllowed = 'move';
-                        header.style.opacity = '0.5';
-                    });
-                    
-                    header.addEventListener('dragend', () => {
-                        this.draggedFolder = null;
-                        header.style.opacity = '1';
-                        tree.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-                    });
-                    
-                    header.addEventListener('dragover', (e) => {
-                        e.preventDefault();
-                        e.dataTransfer.dropEffect = 'move';
-                        header.classList.add('drag-over');
-                    });
-                    
-                    header.addEventListener('dragleave', () => {
-                        header.classList.remove('drag-over');
-                    });
-                    
-                    header.addEventListener('drop', (e) => {
-                        e.preventDefault();
-                        header.classList.remove('drag-over');
-                        
-                        const dropTargetId = header.dataset.folder;
-                        const draggedType = e.dataTransfer.getData('type');
-                        
-                        if (draggedType === 'folder') {
-                            const draggedFolderId = e.dataTransfer.getData('folderId');
-                            this.moveFolder(draggedFolderId, dropTargetId);
-                        } else if (draggedType === 'note') {
-                            const draggedNoteId = e.dataTransfer.getData('noteId');
-                            this.moveNoteToFolder(draggedNoteId, dropTargetId);
-                        }
-                    });
-                });
-            }
-            
-            moveFolder(folderId, newParentId) {
-                if (folderId === newParentId) return; // Can't drop on self
-                if (this.isDescendant(folderId, newParentId)) return; // Can't drop on descendant
-                
-                const folder = this.data.folders.find(f => f.id === folderId);
-                if (folder) {
-                    folder.parentId = newParentId === 'root' ? null : newParentId;
-                    this.saveData();
-                    this.render();
-                }
-            }
-            
-            moveNoteToFolder(noteId, folderId) {
-                const note = this.data.notes.find(n => n.id === noteId);
-                if (note) {
-                    note.folderId = folderId;
-                    this.saveData();
-                    this.render();
-                }
-            }
-            
-            isDescendant(folderId, potentialParentId) {
-                // Check if potentialParentId is a descendant of folderId
-                let current = this.data.folders.find(f => f.id === potentialParentId);
-                while (current && current.parentId) {
-                    if (current.parentId === folderId) return true;
-                    current = this.data.folders.find(f => f.id === current.parentId);
-                }
-                return false;
             }
             
             selectFolder(folderId) {
@@ -1888,183 +1420,6 @@
                 this.render();
             }
             
-            createNoteInFolder(folderId) {
-                const title = prompt('Note title:');
-                if (!title?.trim()) return;
-                
-                const note = {
-                    id: 'note_' + Date.now(),
-                    title: title.trim(),
-                    content: '',
-                    folderId: folderId,
-                    tags: [],
-                    createdAt: Date.now(),
-                    updatedAt: Date.now(),
-                    versions: []
-                };
-                
-                this.data.notes.push(note);
-                this.saveData();
-                this.openNote(note.id);
-                this.render();
-            }
-            
-            showFolderMenu(folderId) {
-                const folder = this.data.folders.find(f => f.id === folderId);
-                if (!folder) return;
-                
-                const isFavorite = this.data.settings.favoriteFolders?.includes(folderId);
-                
-                const actions = [
-                    isFavorite ? '⭐️ Remove from Favorites' : '⭐️ Add to Favorites',
-                    '📋 Duplicate',
-                    '✏️ Rename',
-                    '🗑 Move to Trash'
-                ];
-                
-                const choice = prompt(`Folder: ${folder.name}\n\n${actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}`);
-                if (!choice) return;
-                
-                switch(choice.trim()) {
-                    case '1':
-                        this.toggleFolderFavorite(folderId);
-                        break;
-                    case '2':
-                        this.duplicateFolder(folderId);
-                        break;
-                    case '3':
-                        this.renameFolder(folderId);
-                        break;
-                    case '4':
-                        if (confirm(`Move "${folder.name}" to trash?`)) {
-                            this.deleteFolder(folderId);
-                        }
-                        break;
-                }
-            }
-            
-            toggleFolderFavorite(folderId) {
-                if (!this.data.settings.favoriteFolders) {
-                    this.data.settings.favoriteFolders = [];
-                }
-                
-                const index = this.data.settings.favoriteFolders.indexOf(folderId);
-                if (index > -1) {
-                    this.data.settings.favoriteFolders.splice(index, 1);
-                } else {
-                    this.data.settings.favoriteFolders.push(folderId);
-                }
-                
-                this.saveData();
-                this.render();
-            }
-            
-            duplicateFolder(folderId) {
-                const folder = this.data.folders.find(f => f.id === folderId);
-                if (!folder) return;
-                
-                const newFolder = {
-                    id: 'folder_' + Date.now(),
-                    name: folder.name + ' (Copy)',
-                    parentId: folder.parentId,
-                    createdAt: Date.now()
-                };
-                
-                this.data.folders.push(newFolder);
-                
-                // Duplicate notes in this folder
-                const notesToDuplicate = this.data.notes.filter(n => n.folderId === folderId);
-                notesToDuplicate.forEach(note => {
-                    this.data.notes.push({
-                        id: 'note_' + Date.now() + Math.random(),
-                        title: note.title,
-                        content: note.content,
-                        folderId: newFolder.id,
-                        tags: [...note.tags],
-                        createdAt: Date.now(),
-                        updatedAt: Date.now(),
-                        versions: []
-                    });
-                });
-                
-                // Recursively duplicate subfolders
-                const duplicateChildren = (oldParentId, newParentId) => {
-                    const children = this.data.folders.filter(f => f.parentId === oldParentId);
-                    children.forEach(child => {
-                        const childCopy = {
-                            id: 'folder_' + Date.now() + Math.random(),
-                            name: child.name,
-                            parentId: newParentId,
-                            createdAt: Date.now()
-                        };
-                        this.data.folders.push(childCopy);
-                        
-                        const childNotes = this.data.notes.filter(n => n.folderId === child.id);
-                        childNotes.forEach(note => {
-                            this.data.notes.push({
-                                id: 'note_' + Date.now() + Math.random(),
-                                title: note.title,
-                                content: note.content,
-                                folderId: childCopy.id,
-                                tags: [...note.tags],
-                                createdAt: Date.now(),
-                                updatedAt: Date.now(),
-                                versions: []
-                            });
-                        });
-                        
-                        duplicateChildren(child.id, childCopy.id);
-                    });
-                };
-                duplicateChildren(folderId, newFolder.id);
-                
-                this.saveData();
-                this.render();
-            }
-            
-            renameFolder(folderId) {
-                const folder = this.data.folders.find(f => f.id === folderId);
-                if (!folder) return;
-                
-                const newName = prompt('New folder name:', folder.name);
-                if (newName?.trim()) {
-                    folder.name = newName.trim();
-                    this.saveData();
-                    this.render();
-                }
-            }
-            
-            deleteFolder(folderId) {
-                // Delete all notes in this folder
-                this.data.notes = this.data.notes.filter(n => n.folderId !== folderId);
-                
-                // Remove from favorites if present
-                if (this.data.settings.favoriteFolders) {
-                    this.data.settings.favoriteFolders = this.data.settings.favoriteFolders.filter(id => id !== folderId);
-                }
-                
-                // Recursively delete subfolders
-                const deleteSubfolders = (parentId) => {
-                    const children = this.data.folders.filter(f => f.parentId === parentId);
-                    children.forEach(child => {
-                        this.data.notes = this.data.notes.filter(n => n.folderId !== child.id);
-                        // Remove child from favorites too
-                        if (this.data.settings.favoriteFolders) {
-                            this.data.settings.favoriteFolders = this.data.settings.favoriteFolders.filter(id => id !== child.id);
-                        }
-                        deleteSubfolders(child.id);
-                    });
-                    this.data.folders = this.data.folders.filter(f => f.parentId !== parentId);
-                };
-                deleteSubfolders(folderId);
-                
-                // Delete the folder itself
-                this.data.folders = this.data.folders.filter(f => f.id !== folderId);
-                
-                this.saveData();
-                this.render();
-            }
-            
             updateActiveStates() {
                 // Update folder active states
                 document.querySelectorAll('.folder-header').forEach(el => {
@@ -2082,69 +1437,6 @@
                 document.getElementById('sidebarOverlay').classList.remove('active');
             }
             
-            toggleSidebarCollapse() {
-                const sidebar = document.getElementById('sidebar');
-                const expandBtn = document.getElementById('sidebarExpandBtn');
-                const isCollapsed = sidebar.classList.toggle('collapsed');
-                
-                // On desktop, collapsed means width 0, not hidden
-                if (window.innerWidth > 768) {
-                    if (isCollapsed) {
-                        sidebar.style.width = '0';
-                        sidebar.style.minWidth = '0';
-                        sidebar.style.overflow = 'hidden';
-                        sidebar.style.padding = '0';
-                        if (expandBtn) expandBtn.style.display = 'flex';
-                    } else {
-                        sidebar.style.width = (this.data.settings.sidebarWidth || 280) + 'px';
-                        sidebar.style.minWidth = '';
-                        sidebar.style.overflow = '';
-                        sidebar.style.padding = '';
-                        if (expandBtn) expandBtn.style.display = 'none';
-                    }
-                }
-                
-                this.data.settings.sidebarCollapsed = isCollapsed;
-                this.saveData();
-            }
-            
-            setupSidebarResize() {
-                const handle = document.getElementById('sidebarResizeHandle');
-                const sidebar = document.getElementById('sidebar');
-                if (!handle || !sidebar) return;
-                
-                let isResizing = false;
-                let startX, startWidth;
-                
-                handle.addEventListener('mousedown', (e) => {
-                    isResizing = true;
-                    startX = e.clientX;
-                    startWidth = parseInt(document.defaultView.getComputedStyle(sidebar).width, 10);
-                    handle.classList.add('resizing');
-                    document.body.style.cursor = 'col-resize';
-                    document.body.style.userSelect = 'none';
-                });
-                
-                document.addEventListener('mousemove', (e) => {
-                    if (!isResizing) return;
-                    const width = startWidth + e.clientX - startX;
-                    if (width >= 200 && width <= 500) {
-                        sidebar.style.width = width + 'px';
-                        this.data.settings.sidebarWidth = width;
-                    }
-                });
-                
-                document.addEventListener('mouseup', () => {
-                    if (isResizing) {
-                        isResizing = false;
-                        handle.classList.remove('resizing');
-                        document.body.style.cursor = '';
-                        document.body.style.userSelect = '';
-                        this.saveData();
-                    }
-                });
-            }
-            
             toggleTheme() {
                 const themes = ['light', 'dark', 'auto'];
                 const current = this.data.settings.theme;
@@ -2156,38 +1448,10 @@
             
             applyTheme() {
                 const theme = this.data.settings.theme;
-                const themeBtn = document.getElementById('themeBtn');
-                
                 if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.setAttribute('data-theme', 'dark');
-                    if (themeBtn) themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
                 } else {
                     document.documentElement.removeAttribute('data-theme');
-                    if (themeBtn) themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
-                }
-            }
-            
-            restoreSidebarState() {
-                const sidebar = document.getElementById('sidebar');
-                const expandBtn = document.getElementById('sidebarExpandBtn');
-                if (!sidebar) return;
-                
-                // Restore width
-                const width = this.data.settings.sidebarWidth;
-                if (width && width >= 200 && width <= 500) {
-                    sidebar.style.width = width + 'px';
-                }
-                
-                // Restore collapsed state
-                if (this.data.settings.sidebarCollapsed) {
-                    sidebar.classList.add('collapsed');
-                    if (window.innerWidth > 768) {
-                        sidebar.style.width = '0';
-                        sidebar.style.minWidth = '0';
-                        sidebar.style.overflow = 'hidden';
-                        sidebar.style.padding = '0';
-                        if (expandBtn) expandBtn.style.display = 'flex';
-                    }
                 }
             }
             
@@ -2206,13 +1470,6 @@
                 
                 // Could show search results in a dropdown
                 console.log('Search results:', matchingNotes);
-            }
-            
-            filterByTag(tag) {
-                const matchingNotes = this.data.notes.filter(n => n.tags.includes(tag));
-                // For now, just log — could show filtered view
-                console.log('Notes with tag', tag, ':', matchingNotes);
-                // Could highlight or filter the sidebar
             }
             
             setupAutoSave() {
@@ -2284,246 +1541,6 @@
                 this.saveData();
             }
             
-            // ==================== AI ASSISTANT ====================
-            openAiModal() {
-                document.getElementById('aiModal').classList.add('active');
-            }
-            
-            aiSummarize() {
-                if (!this.currentNote) return;
-                const content = document.getElementById('wysiwygEditor').innerText;
-                if (content.length < 50) {
-                    alert('Note is too short to summarize');
-                    return;
-                }
-                
-                // Simulate AI response in demo mode
-                const summary = `<p><strong>Summary:</strong> ${content.substring(0, 100)}...</p>`;
-                document.getElementById('wysiwygEditor').innerHTML += '<hr>' + summary;
-                this.closeModal('aiModal');
-            }
-            
-            aiSuggestTags() {
-                if (!this.currentNote) return;
-                const content = document.getElementById('wysiwygEditor').innerText.toLowerCase();
-                
-                // Simple keyword extraction for demo
-                const keywords = ['project', 'meeting', 'idea', 'research', 'todo', 'important', 'idea'];
-                const suggested = keywords.filter(k => content.includes(k));
-                
-                if (suggested.length > 0) {
-                    suggested.forEach(tag => {
-                        if (!this.currentNote.tags.includes(tag)) {
-                            this.currentNote.tags.push(tag);
-                        }
-                    });
-                    this.saveData();
-                    this.renderTags();
-                }
-                this.closeModal('aiModal');
-            }
-            
-            aiContinue() {
-                if (!this.currentNote) return;
-                const content = document.getElementById('wysiwygEditor').innerText;
-                
-                // Simulate continuation
-                const continuation = '\n\n<p><em>[AI continues writing...]</em> Building on your ideas, consider exploring related concepts, adding specific examples, or connecting this to other notes in your knowledge base.</p>';
-                document.getElementById('wysiwygEditor').innerHTML += continuation;
-                this.closeModal('aiModal');
-            }
-            
-            // ==================== IMPORT ====================
-            openImportModal() {
-                document.getElementById('importModal').classList.add('active');
-            }
-            
-            async handleImport(file) {
-                if (!file.name.endsWith('.zip')) {
-                    alert('Please upload a ZIP file');
-                    return;
-                }
-                
-                try {
-                    // In a real implementation, we'd use JSZip to extract
-                    // For demo, show success message
-                    alert('Import feature: ' + file.name + ' would be processed here.\n\nIn the full version, this extracts Markdown files and creates notes/folders.');
-                    this.closeModal('importModal');
-                } catch (err) {
-                    alert('Import failed: ' + err.message);
-                }
-            }
-            
-            showMoreMenu() {
-                if (!this.currentNote) return;
-                
-                const actions = [
-                    '📋 Duplicate',
-                    '✂️ Move to Trash',
-                    '───────────────',
-                    this.currentNote.bookmarked ? '🔖 Remove Bookmark' : '🔖 Add to Favorites',
-                    '🌐 Clip Web Page',
-                    '───────────────',
-                    '📊 Version History',
-                    '📥 Import',
-                    '📤 Export'
-                ];
-                
-                const choice = prompt('Note Options:\n\n' + actions.map((a, i) => a.startsWith('─') ? a : `${i + 1}. ${a}`).join('\n'));
-                if (!choice) return;
-                
-                // Handle numeric choices
-                const numChoice = parseInt(choice.trim());
-                
-                switch(numChoice) {
-                    case 1:
-                        this.duplicateCurrentNote();
-                        break;
-                    case 2:
-                        if (confirm('Move this note to trash?')) {
-                            this.deleteNote(this.currentNote?.id);
-                        }
-                        break;
-                    case 3:
-                        // Skip separator
-                        break;
-                    case 4:
-                        this.toggleBookmark();
-                        break;
-                    case 5:
-                        const url = prompt('Enter URL to clip:');
-                        if (url) this.clipWebpage(url);
-                        break;
-                    case 6:
-                        // Skip separator
-                        break;
-                    case 7:
-                        this.showVersionHistory();
-                        break;
-                    case 8:
-                        this.openImportModal();
-                        break;
-                    case 9:
-                        this.exportData();
-                        break;
-                }
-            }
-            
-            duplicateCurrentNote() {
-                if (!this.currentNote) return;
-                
-                const newNote = {
-                    id: 'note_' + Date.now(),
-                    title: this.currentNote.title + ' (Copy)',
-                    content: this.currentNote.content,
-                    folderId: this.currentNote.folderId,
-                    tags: [...this.currentNote.tags],
-                    createdAt: Date.now(),
-                    updatedAt: Date.now(),
-                    versions: []
-                };
-                
-                this.data.notes.push(newNote);
-                this.saveData();
-                this.openNote(newNote.id);
-                this.render();
-            }
-            
-            showSettingsMenu() {
-                const actions = [
-                    'Import from Notion/Obsidian',
-                    'Toggle Theme (Light/Dark)',
-                    'Export All Data',
-                    'Clear All Data'
-                ];
-                
-                const choice = prompt('Settings:\n' + actions.map((a, i) => `${i + 1}. ${a}`).join('\n'));
-                if (!choice) return;
-                
-                switch(choice.trim()) {
-                    case '1':
-                        this.openImportModal();
-                        break;
-                    case '2':
-                        this.toggleTheme();
-                        break;
-                    case '3':
-                        this.exportData();
-                        break;
-                    case '4':
-                        if (confirm('Delete ALL data? This cannot be undone.')) {
-                            localStorage.removeItem('mind_data');
-                            location.reload();
-                        }
-                        break;
-                }
-            }
-            
-            toggleFocusMode() {
-                document.body.classList.toggle('focus-mode');
-                const sidebar = document.getElementById('sidebar');
-                const tabsBar = document.getElementById('tabsBar');
-                const isFocus = document.body.classList.contains('focus-mode');
-                
-                if (isFocus) {
-                    sidebar.classList.add('collapsed');
-                    tabsBar.classList.add('hidden');
-                    document.getElementById('focusBtn').innerHTML = '<i class="fa-solid fa-compress"></i>';
-                } else {
-                    sidebar.classList.remove('collapsed');
-                    if (this.openTabs.length > 0) {
-                        tabsBar.classList.remove('hidden');
-                    }
-                    document.getElementById('focusBtn').innerHTML = '<i class="fa-solid fa-expand"></i>';
-                }
-            }
-            
-            exportData() {
-                const data = JSON.stringify(this.data, null, 2);
-                const blob = new Blob([data], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `mind-backup-${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
-            
-            showVersionHistory() {
-                if (!this.currentNote || !this.currentNote.versions?.length) {
-                    alert('No version history available');
-                    return;
-                }
-                
-                const versions = this.currentNote.versions.map((v, i) => 
-                    `${i + 1}. ${new Date(v.timestamp).toLocaleString()}`
-                ).join('\n');
-                
-                const choice = prompt('Select version to restore:\n' + versions);
-                if (choice) {
-                    const index = parseInt(choice) - 1;
-                    if (!isNaN(index) && this.currentNote.versions[index]) {
-                        this.restoreVersion(index);
-                    }
-                }
-            }
-            
-            deleteNote(noteId) {
-                if (!noteId) return;
-                this.data.notes = this.data.notes.filter(n => n.id !== noteId);
-                this.openTabs = this.openTabs.filter(id => id !== noteId);
-                if (this.activeTabId === noteId) {
-                    this.activeTabId = this.openTabs[this.openTabs.length - 1] || null;
-                    if (this.activeTabId) {
-                        this.openNote(this.activeTabId);
-                    } else {
-                        this.showEmptyState();
-                    }
-                }
-                this.saveData();
-                this.render();
-            }
-            
             // ==================== BOOKMARKS ====================
             toggleBookmark() {
                 if (!this.currentNote) return;
@@ -2573,44 +1590,6 @@
         
         // ==================== INITIALIZE ====================
         const app = new KnowledgeBase();
-        
-        // ==================== DEMO RESET TIMER ====================
-        (function() {
-            const DEMO_RESET_INTERVAL = 60 * 60 * 1000; // 1 hour
-            const lastReset = localStorage.getItem('mind_demo_last_reset');
-            const now = Date.now();
-            
-            function updateTimer() {
-                const last = parseInt(localStorage.getItem('mind_demo_last_reset') || now);
-                const elapsed = Date.now() - last;
-                const remaining = Math.max(0, DEMO_RESET_INTERVAL - elapsed);
-                const minutes = Math.floor(remaining / 60000);
-                const seconds = Math.floor((remaining % 60000) / 1000);
-                const el = document.getElementById('demoResetTimer');
-                if (el) {
-                    el.textContent = `${minutes}:${seconds.toString().padStart(2, '0')} until reset`;
-                }
-            }
-            
-            function resetDemo() {
-                localStorage.removeItem('mind_data');
-                localStorage.setItem('mind_demo_last_reset', Date.now());
-                location.reload();
-            }
-            
-            // Check if reset needed
-            if (!lastReset || (now - parseInt(lastReset)) > DEMO_RESET_INTERVAL) {
-                resetDemo();
-            }
-            
-            // Update timer every second
-            setInterval(updateTimer, 1000);
-            updateTimer();
-            
-            // Schedule next reset
-            const nextReset = parseInt(lastReset) + DEMO_RESET_INTERVAL - now;
-            setTimeout(resetDemo, Math.max(0, nextReset));
-        })();
     </script>
 </body>
 </html>
