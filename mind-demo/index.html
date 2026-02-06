@@ -1462,6 +1462,7 @@
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
+            position: relative;
         }
 
         .note-tag {
@@ -1496,6 +1497,41 @@
 
         .tag-input::placeholder {
             color: var(--text-tertiary);
+        }
+
+        .tag-autocomplete {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            box-shadow: 0 4px 12px var(--shadow);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            margin-top: 4px;
+        }
+
+        .tag-autocomplete-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-autocomplete-item:hover,
+        .tag-autocomplete-item.active {
+            background: var(--bg-hover);
+        }
+
+        .tag-autocomplete-item i {
+            color: var(--text-tertiary);
+            font-size: 14px;
         }
 
         /* WYSIWYG Editor */
@@ -2726,6 +2762,7 @@
                                 <span><i class="ph ph-tag"></i></span>
                                 <div class="note-tags-input" id="noteTagsInput">
                                     <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
+                                    <div class="tag-autocomplete" id="tagAutocomplete" style="display: none;"></div>
                                 </div>
                             </div>
                         </div>
@@ -5833,15 +5870,108 @@
                     }
                 });
 
-                // Tags input
-                document.getElementById('tagInput').addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ',') {
+                // Tags input with autocomplete
+                const tagInput = document.getElementById('tagInput');
+                const tagAutocomplete = document.getElementById('tagAutocomplete');
+                let activeAutocompleteIndex = -1;
+
+                tagInput.addEventListener('input', (e) => {
+                    const value = e.target.value.trim().toLowerCase();
+                    
+                    if (value.length === 0) {
+                        tagAutocomplete.style.display = 'none';
+                        return;
+                    }
+                    
+                    // Get all existing tags that match and aren't already on this note
+                    const existingTags = this.getAllTags();
+                    const currentNoteTags = this.currentNote?.tags || [];
+                    const matches = existingTags.filter(tag => 
+                        tag.toLowerCase().includes(value) && 
+                        !currentNoteTags.includes(tag)
+                    ).slice(0, 5); // Max 5 suggestions
+                    
+                    if (matches.length > 0) {
+                        tagAutocomplete.innerHTML = matches.map((tag, index) => `
+                            <div class="tag-autocomplete-item ${index === 0 ? 'active' : ''}" data-tag="${this.escapeHtml(tag)}" data-index="${index}">
+                                <i class="ph ph-tag"></i>
+                                ${this.escapeHtml(tag)}
+                            </div>
+                        `).join('');
+                        
+                        tagAutocomplete.style.display = 'block';
+                        activeAutocompleteIndex = 0;
+                        
+                        // Add click handlers
+                        tagAutocomplete.querySelectorAll('.tag-autocomplete-item').forEach(item => {
+                            item.addEventListener('click', () => {
+                                if (this.currentNote) {
+                                    this.addTagToNote(this.currentNote.id, item.dataset.tag);
+                                    tagInput.value = '';
+                                    tagAutocomplete.style.display = 'none';
+                                }
+                            });
+                        });
+                    } else {
+                        tagAutocomplete.style.display = 'none';
+                    }
+                });
+
+                tagInput.addEventListener('keydown', (e) => {
+                    const items = tagAutocomplete.querySelectorAll('.tag-autocomplete-item');
+                    
+                    if (e.key === 'ArrowDown') {
                         e.preventDefault();
-                        const tag = e.target.value.trim();
-                        if (tag && this.currentNote) {
-                            this.addTagToNote(this.currentNote.id, tag);
-                            e.target.value = '';
+                        if (items.length > 0) {
+                            items[activeAutocompleteIndex]?.classList.remove('active');
+                            activeAutocompleteIndex = (activeAutocompleteIndex + 1) % items.length;
+                            items[activeAutocompleteIndex]?.classList.add('active');
                         }
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (items.length > 0) {
+                            items[activeAutocompleteIndex]?.classList.remove('active');
+                            activeAutocompleteIndex = activeAutocompleteIndex <= 0 ? items.length - 1 : activeAutocompleteIndex - 1;
+                            items[activeAutocompleteIndex]?.classList.add('active');
+                        }
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const activeItem = items[activeAutocompleteIndex];
+                        if (activeItem && tagAutocomplete.style.display !== 'none') {
+                            // Use the suggested tag
+                            if (this.currentNote) {
+                                this.addTagToNote(this.currentNote.id, activeItem.dataset.tag);
+                                tagInput.value = '';
+                                tagAutocomplete.style.display = 'none';
+                            }
+                        } else {
+                            // Add new tag from input
+                            const tag = tagInput.value.trim();
+                            if (tag && this.currentNote) {
+                                this.addTagToNote(this.currentNote.id, tag);
+                                tagInput.value = '';
+                            }
+                        }
+                    } else if (e.key === ',' || e.key === ' ') {
+                        // Allow comma to add tag
+                        if (e.key === ',') {
+                            e.preventDefault();
+                            const tag = tagInput.value.trim();
+                            if (tag && this.currentNote) {
+                                this.addTagToNote(this.currentNote.id, tag);
+                                tagInput.value = '';
+                                tagAutocomplete.style.display = 'none';
+                            }
+                        }
+                    } else if (e.key === 'Escape') {
+                        tagAutocomplete.style.display = 'none';
+                    }
+                });
+
+                // Hide autocomplete when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.note-tags-input')) {
+                        tagAutocomplete.style.display = 'none';
                     }
                 });
 
