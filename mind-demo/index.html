@@ -126,7 +126,38 @@
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 12px;
+        }
+
+        .sidebar-resize-handle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            cursor: col-resize;
+            background: transparent;
+            z-index: 101;
+        }
+
+        .sidebar-resize-handle:hover,
+        .sidebar-resize-handle.resizing {
+            background: var(--accent);
+        }
+
+        .sidebar-collapse-btn {
+            padding: 4px 8px;
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .sidebar-collapse-btn:hover {
+            opacity: 1;
+        }
+
+        .sidebar.collapsed .sidebar-collapse-btn i {
+            transform: rotate(180deg);
         }
 
         .logo {
@@ -831,11 +862,15 @@
 
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
+            <div class="sidebar-resize-handle" id="sidebarResizeHandle"></div>
             <div class="sidebar-header">
                 <div class="logo">
                     <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
                     <span>Mind</span>
                 </div>
+                <button class="btn btn-icon sidebar-collapse-btn" id="sidebarCollapseBtn" title="Collapse sidebar">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
             </div>
 
             <div class="sidebar-search">
@@ -1111,6 +1146,7 @@
                 this.setupEventListeners();
                 this.render();
                 this.applyTheme();
+                this.restoreSidebarState();
                 this.setupAutoSave();
             }
             
@@ -1169,6 +1205,12 @@
                 document.getElementById('menuBtn')?.addEventListener('click', () => this.toggleSidebar());
                 document.getElementById('sidebarOverlay')?.addEventListener('click', () => this.closeSidebar());
                 document.getElementById('sidebarToggleTab')?.addEventListener('click', () => this.toggleSidebar());
+                
+                // Sidebar collapse button
+                document.getElementById('sidebarCollapseBtn')?.addEventListener('click', () => this.toggleSidebarCollapse());
+                
+                // Sidebar resize
+                this.setupSidebarResize();
                 
                 // Tag input
                 document.getElementById('tagInput')?.addEventListener('keydown', (e) => {
@@ -1790,6 +1832,65 @@
                 document.getElementById('sidebarOverlay').classList.remove('active');
             }
             
+            toggleSidebarCollapse() {
+                const sidebar = document.getElementById('sidebar');
+                const main = document.querySelector('.main');
+                const isCollapsed = sidebar.classList.toggle('collapsed');
+                
+                // On desktop, collapsed means width 0, not hidden
+                if (window.innerWidth > 768) {
+                    if (isCollapsed) {
+                        sidebar.style.width = '0';
+                        sidebar.style.minWidth = '0';
+                        sidebar.style.overflow = 'hidden';
+                    } else {
+                        sidebar.style.width = (this.data.settings.sidebarWidth || 280) + 'px';
+                        sidebar.style.minWidth = '';
+                        sidebar.style.overflow = '';
+                    }
+                }
+                
+                this.data.settings.sidebarCollapsed = isCollapsed;
+                this.saveData();
+            }
+            
+            setupSidebarResize() {
+                const handle = document.getElementById('sidebarResizeHandle');
+                const sidebar = document.getElementById('sidebar');
+                if (!handle || !sidebar) return;
+                
+                let isResizing = false;
+                let startX, startWidth;
+                
+                handle.addEventListener('mousedown', (e) => {
+                    isResizing = true;
+                    startX = e.clientX;
+                    startWidth = parseInt(document.defaultView.getComputedStyle(sidebar).width, 10);
+                    handle.classList.add('resizing');
+                    document.body.style.cursor = 'col-resize';
+                    document.body.style.userSelect = 'none';
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (!isResizing) return;
+                    const width = startWidth + e.clientX - startX;
+                    if (width >= 200 && width <= 500) {
+                        sidebar.style.width = width + 'px';
+                        this.data.settings.sidebarWidth = width;
+                    }
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    if (isResizing) {
+                        isResizing = false;
+                        handle.classList.remove('resizing');
+                        document.body.style.cursor = '';
+                        document.body.style.userSelect = '';
+                        this.saveData();
+                    }
+                });
+            }
+            
             toggleTheme() {
                 const themes = ['light', 'dark', 'auto'];
                 const current = this.data.settings.theme;
@@ -1809,6 +1910,27 @@
                 } else {
                     document.documentElement.removeAttribute('data-theme');
                     if (themeBtn) themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+                }
+            }
+            
+            restoreSidebarState() {
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar) return;
+                
+                // Restore width
+                const width = this.data.settings.sidebarWidth;
+                if (width && width >= 200 && width <= 500) {
+                    sidebar.style.width = width + 'px';
+                }
+                
+                // Restore collapsed state
+                if (this.data.settings.sidebarCollapsed) {
+                    sidebar.classList.add('collapsed');
+                    if (window.innerWidth > 768) {
+                        sidebar.style.width = '0';
+                        sidebar.style.minWidth = '0';
+                        sidebar.style.overflow = 'hidden';
+                    }
                 }
             }
             
