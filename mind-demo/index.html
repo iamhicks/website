@@ -6055,6 +6055,7 @@
                     ).slice(0, 5);
                     
                     if (matches.length > 0) {
+                        const rect = tagInput.getBoundingClientRect();
                         tagAutocomplete.innerHTML = matches.map((tag, index) => `
                             <div class="tag-autocomplete-item ${index === 0 ? 'active' : ''}" data-tag="${this.escapeHtml(tag)}" data-index="${index}">
                                 <i class="ph ph-tag"></i>
