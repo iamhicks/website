@@ -1479,11 +1479,15 @@
                 
                 const save = () => {
                     if (!this.currentNote) return;
+                    
+                    // Save version before updating
+                    this.saveVersion();
+                    
                     this.currentNote.content = editor.innerHTML;
                     this.currentNote.title = titleInput.value;
                     this.currentNote.updatedAt = Date.now();
                     this.saveData();
-                    this.renderTabs(); // Update tab title
+                    this.renderTabs();
                 };
                 
                 editor?.addEventListener('input', () => {
@@ -1495,6 +1499,86 @@
                     clearTimeout(timeout);
                     timeout = setTimeout(save, 500);
                 });
+            }
+            
+            // ==================== VERSION HISTORY ====================
+            saveVersion() {
+                if (!this.currentNote) return;
+                
+                if (!this.currentNote.versions) {
+                    this.currentNote.versions = [];
+                }
+                
+                // Only save if content changed
+                const lastVersion = this.currentNote.versions[this.currentNote.versions.length - 1];
+                if (lastVersion && lastVersion.content === this.currentNote.content) {
+                    return;
+                }
+                
+                this.currentNote.versions.push({
+                    content: this.currentNote.content,
+                    title: this.currentNote.title,
+                    timestamp: Date.now()
+                });
+                
+                // Keep only last 50 versions
+                if (this.currentNote.versions.length > 50) {
+                    this.currentNote.versions.shift();
+                }
+            }
+            
+            restoreVersion(index) {
+                if (!this.currentNote || !this.currentNote.versions[index]) return;
+                
+                const version = this.currentNote.versions[index];
+                this.currentNote.content = version.content;
+                this.currentNote.title = version.title;
+                this.currentNote.updatedAt = Date.now();
+                
+                document.getElementById('noteTitle').value = version.title;
+                document.getElementById('wysiwygEditor').innerHTML = version.content;
+                
+                this.saveData();
+            }
+            
+            // ==================== BOOKMARKS ====================
+            toggleBookmark() {
+                if (!this.currentNote) return;
+                this.currentNote.bookmarked = !this.currentNote.bookmarked;
+                this.saveData();
+                this.render();
+                return this.currentNote.bookmarked;
+            }
+            
+            // ==================== CLIP WEBPAGE ====================
+            async clipWebpage(url) {
+                try {
+                    const response = await fetch(`https://r.jina.ai/http://${url.replace(/^https?:\/\//, '')}`);
+                    if (!response.ok) throw new Error('Failed to fetch');
+                    
+                    const text = await response.text();
+                    
+                    const note = {
+                        id: 'note_' + Date.now(),
+                        title: 'Clipped: ' + url,
+                        content: `<h1>${url}</h1><p><em>Clipped from: <a href="${url}" target="_blank">${url}</a></em></p><hr>${text.replace(/\n/g, '<br>')}`,
+                        folderId: this.currentFolder || 'root',
+                        tags: ['clipped'],
+                        clippedFrom: url,
+                        createdAt: Date.now(),
+                        updatedAt: Date.now(),
+                        versions: []
+                    };
+                    
+                    this.data.notes.push(note);
+                    this.saveData();
+                    this.openNote(note.id);
+                    this.render();
+                    
+                    return { success: true, note };
+                } catch (err) {
+                    return { success: false, error: err.message };
+                }
             }
             
             escapeHtml(text) {
