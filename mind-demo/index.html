@@ -6024,8 +6024,21 @@
 
                 // Tags input with autocomplete
                 const tagInput = document.getElementById('tagInput');
-                const tagAutocomplete = document.getElementById('tagAutocomplete');
+                let tagAutocomplete = document.getElementById('tagAutocomplete');
                 let activeAutocompleteIndex = -1;
+
+                // Move autocomplete to body for proper positioning
+                if (tagAutocomplete) {
+                    document.body.appendChild(tagAutocomplete);
+                }
+
+                function positionAutocomplete() {
+                    if (!tagAutocomplete || tagAutocomplete.style.display === 'none') return;
+                    const rect = tagInput.getBoundingClientRect();
+                    tagAutocomplete.style.left = rect.left + 'px';
+                    tagAutocomplete.style.top = (rect.bottom + 4) + 'px';
+                    tagAutocomplete.style.width = rect.width + 'px';
+                }
 
                 tagInput.addEventListener('input', (e) => {
                     const value = e.target.value.trim().toLowerCase();
@@ -6035,13 +6048,12 @@
                         return;
                     }
                     
-                    // Get all existing tags that match and aren't already on this note
                     const existingTags = this.getAllTags();
                     const currentNoteTags = this.currentNote?.tags || [];
                     const matches = existingTags.filter(tag => 
                         tag.toLowerCase().includes(value) && 
                         !currentNoteTags.includes(tag)
-                    ).slice(0, 5); // Max 5 suggestions
+                    ).slice(0, 5);
                     
                     if (matches.length > 0) {
                         tagAutocomplete.innerHTML = matches.map((tag, index) => `
@@ -6051,10 +6063,20 @@
                             </div>
                         `).join('');
                         
-                        tagAutocomplete.style.display = 'block';
+                        tagAutocomplete.style.cssText = `
+                            display: block !important;
+                            position: fixed;
+                            z-index: 99999;
+                            background: var(--bg-primary);
+                            border: 1px solid var(--accent);
+                            border-radius: 4px;
+                            max-height: 200px;
+                            overflow-y: auto;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                        `;
+                        positionAutocomplete();
                         activeAutocompleteIndex = 0;
                         
-                        // Add click handlers
                         tagAutocomplete.querySelectorAll('.tag-autocomplete-item').forEach(item => {
                             item.addEventListener('click', () => {
                                 if (this.currentNote) {
@@ -6068,6 +6090,10 @@
                         tagAutocomplete.style.display = 'none';
                     }
                 });
+
+                // Reposition on scroll/resize
+                window.addEventListener('scroll', positionAutocomplete);
+                window.addEventListener('resize', positionAutocomplete);
 
                 tagInput.addEventListener('keydown', (e) => {
                     const items = tagAutocomplete.querySelectorAll('.tag-autocomplete-item');
