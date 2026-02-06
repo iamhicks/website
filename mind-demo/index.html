@@ -3188,6 +3188,11 @@
                 favoritesContainer.style.display = 'block';
                 favoritesTree.innerHTML = '';
 
+                // Track expanded state in favorites separately
+                if (!this.data.settings.favoritesExpanded) {
+                    this.data.settings.favoritesExpanded = {};
+                }
+
                 favoriteIds.forEach(folderId => {
                     const folder = this.data.folders.find(f => f.id === folderId);
                     if (folder) {
@@ -3195,11 +3200,14 @@
                         li.className = 'folder-item';
 
                         const noteCount = this.data.notes.filter(n => n.folderId === folderId).length;
+                        const hasChildren = this.data.folders.some(f => f.parentId === folder.id);
+                        const isExpanded = this.data.settings.favoritesExpanded[folder.id];
 
                         li.innerHTML = `
                             <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}"
                                  data-folder="${folder.id}"
                                  style="padding-left: 8px;">
+                                ${hasChildren ? `<span class="folder-toggle ${isExpanded ? '' : 'collapsed'}">${isExpanded ? '▼' : '▶'}</span>` : '<span class="folder-toggle" style="visibility: hidden;">▼</span>'}
                                 <span class="folder-icon"><i class="ph ph-star"></i></span>
                                 <span class="folder-name">${this.escapeHtml(folder.name)}</span>
                                 <span class="folder-count">${noteCount}</span>
@@ -3226,9 +3234,20 @@
 
                         const header = li.querySelector('.folder-header');
                         header.addEventListener('click', (e) => {
-                            if (e.target.classList.contains('folder-action-btn')) return;
+                            if (e.target.classList.contains('folder-action-btn') || e.target.closest('.folder-dropdown')) return;
                             this.selectFolder(folder.id);
                         });
+
+                        // Toggle expand/collapse
+                        const toggle = li.querySelector('.folder-toggle');
+                        if (toggle && hasChildren) {
+                            toggle.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                this.data.settings.favoritesExpanded[folder.id] = !isExpanded;
+                                this.saveData();
+                                this.renderFavorites();
+                            });
+                        }
 
                         // More menu button
                         const moreMenuBtn = li.querySelector('.folder-action-btn.more-menu');
@@ -3264,9 +3283,73 @@
                             });
                         }
 
+                        // Render children if expanded
+                        if (isExpanded && hasChildren) {
+                            const childrenUl = this.renderFolderChildren(folder.id, 1);
+                            if (childrenUl) {
+                                li.appendChild(childrenUl);
+                            }
+                        }
+
                         favoritesTree.appendChild(li);
                     }
                 });
+            }
+
+            renderFolderChildren(parentId, level = 0) {
+                const folders = this.data.folders.filter(f => f.parentId === parentId);
+                if (folders.length === 0) return null;
+
+                const ul = document.createElement('ul');
+                ul.className = 'folder-children';
+                ul.style.paddingLeft = '12px';
+
+                folders.forEach(folder => {
+                    const li = document.createElement('li');
+                    li.className = 'folder-item';
+
+                    const noteCount = this.data.notes.filter(n => n.folderId === folder.id).length;
+                    const hasChildren = this.data.folders.some(f => f.parentId === folder.id);
+                    const isCollapsed = this.data.settings.sidebarCollapsed?.[folder.id];
+
+                    li.innerHTML = `
+                        <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}"
+                             data-folder="${folder.id}"
+                             style="padding-left: ${8 + level * 4}px;">
+                            ${hasChildren ? `<span class="folder-toggle ${isCollapsed ? 'collapsed' : ''}">${isCollapsed ? '▶' : '▼'}</span>` : '<span class="folder-toggle" style="visibility: hidden;">▼</span>'}
+                            <span class="folder-icon"><i class="ph ph-folder"></i></span>
+                            <span class="folder-name">${this.escapeHtml(folder.name)}</span>
+                            <span class="folder-count">${noteCount}</span>
+                        </div>
+                    `;
+
+                    const header = li.querySelector('.folder-header');
+                    header.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('folder-toggle')) {
+                            // Toggle collapse
+                            if (!this.data.settings.sidebarCollapsed) {
+                                this.data.settings.sidebarCollapsed = {};
+                            }
+                            this.data.settings.sidebarCollapsed[folder.id] = !isCollapsed;
+                            this.saveData();
+                            this.renderFavorites();
+                        } else {
+                            this.selectFolder(folder.id);
+                        }
+                    });
+
+                    // Recursively render children
+                    if (hasChildren && !isCollapsed) {
+                        const childrenUl = this.renderFolderChildren(folder.id, level + 1);
+                        if (childrenUl) {
+                            li.appendChild(childrenUl);
+                        }
+                    }
+
+                    ul.appendChild(li);
+                });
+
+                return ul;
             }
 
             removeFolderFromFavorites(id) {
