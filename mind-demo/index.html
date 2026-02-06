@@ -2255,7 +2255,7 @@
                     </div>
                 </div>
                 <div class="header-right">
-                    <span class="header-title" id="headerTitle">Select a note</span>
+                    <span class="header-title" id="headerTitle"></span>
                     <button class="btn btn-icon" id="themeBtn" title="Toggle Theme" style="color: var(--text-secondary);"><i class="ph ph-moon"></i></button>
                 </div>
             </header>
@@ -3778,7 +3778,7 @@
                 document.getElementById('tabsBar').classList.add('hidden');
                 document.getElementById('editorContentWrapper').classList.add('hidden');
                 document.getElementById('backlinksPanel').classList.add('hidden');
-                document.getElementById('headerTitle').textContent = 'Select a note';
+                document.getElementById('headerTitle').textContent = '';
             }
 
             // ==================== TAG OPERATIONS ====================
@@ -4632,7 +4632,7 @@
 
                 // Update header title
                 const folder = this.data.folders.find(f => f.id === folderId);
-                document.getElementById('headerTitle').textContent = folder?.name || 'Select a note';
+                document.getElementById('headerTitle').textContent = folder?.name || '';
             }
 
             filterByTag(tag) {
