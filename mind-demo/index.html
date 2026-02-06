@@ -6700,6 +6700,12 @@
             }
 
             suggestTagsWithAi() {
+                // Check if AI is configured
+                if (!this.data.settings?.aiProvider) {
+                    document.getElementById('aiPanelModal').classList.add('active');
+                    return;
+                }
+
                 if (!this.currentNote) {
                     this.showToast('Open a note first', 'error');
                     return;
@@ -6809,6 +6815,12 @@
             }
 
             summarizeNote() {
+                // Check if AI is configured
+                if (!this.data.settings?.aiProvider) {
+                    document.getElementById('aiPanelModal').classList.add('active');
+                    return;
+                }
+
                 if (!this.currentNote) {
                     this.showToast('Open a note first', 'error');
                     return;
