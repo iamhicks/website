@@ -2779,11 +2779,6 @@
                         <span>Version History</span>
                     </div>
                     <div class="note-menu-divider"></div>
-                    <div class="note-menu-item" id="manageTemplatesBtn">
-                        <span class="note-menu-icon"><i class="ph ph-files"></i></span>
-                        <span>Manage Templates</span>
-                    </div>
-                    <div class="note-menu-divider"></div>
                     <div class="note-menu-item delete" data-action="delete">
                         <span class="note-menu-icon"><i class="ph ph-trash"></i></span>
                         <span>Move to Trash</span>
@@ -2826,7 +2821,6 @@
                                     <option value="daily-review">Daily Review</option>
                                     <option value="strategy">Strategy Plan</option>
                                     <option value="meeting">Meeting Notes</option>
-                                    <option value="create-new">+ Create Template...</option>
                                 </select>
                             </div>
                             <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
@@ -3177,58 +3171,6 @@
         </div>
     </div>
 
-    <!-- Template Management Modal -->
-    <div class="modal-overlay" id="templateManagerModal">
-        <div class="modal" style="max-width: 600px;">
-            <div class="modal-header">
-                <div class="modal-title"><i class="ph ph-files"></i> Manage Templates</div>
-                <button class="modal-close" id="closeTemplateManager">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="templateList" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
-                    <!-- Templates will be rendered here -->
-                </div>
-                <div class="note-menu-divider" style="margin: 16px 0;"></div>
-                <div id="createTemplateForm" style="display: none;">
-                    <div class="form-group">
-                        <label class="form-label">Template Name</label>
-                        <input type="text" id="newTemplateName" class="form-input" placeholder="e.g., Project Brief">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Template Content</label>
-                        <textarea id="newTemplateContent" class="form-textarea" rows="8" placeholder="Enter template content here..."></textarea>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-primary" id="saveTemplateBtn"><i class="ph ph-check"></i> Save Template</button>
-                        <button class="btn btn-secondary" id="cancelCreateTemplate"><i class="ph ph-x"></i> Cancel</button>
-                    </div>
-                </div>
-                <button class="btn btn-secondary" id="showCreateTemplateForm" style="width: 100%;"><i class="ph ph-plus"></i> Create New Template</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Template from Current Note Modal -->
-    <div class="modal-overlay" id="createTemplateFromNoteModal">
-        <div class="modal" style="max-width: 500px;">
-            <div class="modal-header">
-                <div class="modal-title"><i class="ph ph-file-plus"></i> Create Template from Note</div>
-                <button class="modal-close" id="closeCreateTemplateFromNote">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="color: var(--text-secondary); margin-bottom: 16px;">Save the current note as a reusable template.</p>
-                <div class="form-group">
-                    <label class="form-label">Template Name</label>
-                    <input type="text" id="templateFromNoteName" class="form-input" placeholder="e.g., Meeting Notes">
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-primary" id="saveTemplateFromNoteBtn"><i class="ph ph-check"></i> Create Template</button>
-                    <button class="btn btn-secondary" id="cancelTemplateFromNote"><i class="ph ph-x"></i> Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Context Menu -->
     <div class="context-menu" id="contextMenu">
         <div class="context-menu-item" id="ctxRename"><i class="ph ph-pencil-simple"></i> Rename</div>
@@ -3258,13 +3200,6 @@
                     ],
                     notes: [],
                     tags: [],
-                    templates: [
-                        { id: 'blank', name: 'Blank', content: '' },
-                        { id: 'trading-journal', name: 'Trading Journal', content: '<h2>Trading Journal Entry</h2><p><strong>Date:</strong> </p><p><strong>Instrument:</strong> </p><p><strong>Setup:</strong> </p><p><strong>Entry:</strong> </p><p><strong>Stop Loss:</strong> </p><p><strong>Target:</strong> </p><p><strong>Risk:</strong> </p><p><strong>Outcome:</strong> </p><p><strong>Lessons:</strong> </p>' },
-                        { id: 'daily-review', name: 'Daily Review', content: '<h2>Daily Review</h2><p><strong>Date:</strong> </p><p><strong>Market Conditions:</strong> </p><p><strong>Trades Taken:</strong> </p><p><strong>Mistakes:</strong> </p><p><strong>Wins:</strong> </p><p><strong>Lessons Learned:</strong> </p><p><strong>Focus for Tomorrow:</strong> </p>' },
-                        { id: 'strategy', name: 'Strategy Plan', content: '<h2>Strategy Plan</h2><p><strong>Strategy Name:</strong> </p><p><strong>Timeframe:</strong> </p><p><strong>Entry Rules:</strong></p><ul><li></li></ul><p><strong>Exit Rules:</strong></p><ul><li></li></ul><p><strong>Risk Management:</strong> </p><p><strong>Backtest Results:</strong> </p>' },
-                        { id: 'meeting', name: 'Meeting Notes', content: '<h2>Meeting Notes</h2><p><strong>Date:</strong> </p><p><strong>Attendees:</strong> </p><p><strong>Agenda:</strong></p><ul><li></li></ul><p><strong>Key Points:</strong></p><ul><li></li></ul><p><strong>Action Items:</strong></p><ul><li></li></ul>' }
-                    ],
                     settings: {
                         theme: 'auto',
                         sidebarCollapsed: {}
@@ -4076,11 +4011,6 @@
                 return path;
             }
 
-            getFolderName(folderId) {
-                const folder = this.data.folders.find(f => f.id === folderId);
-                return folder ? folder.name : 'Unknown';
-            }
-
             // ==================== NOTE OPERATIONS ====================
 
             createNote(title, folderId = 'root') {
@@ -4274,15 +4204,6 @@
                 document.getElementById('tabsBar').classList.remove('hidden');
                 document.getElementById('editorContentWrapper').classList.remove('hidden');
                 document.getElementById('backlinksPanel').classList.remove('hidden');
-
-                // Hide tag results if showing
-                const tagResults = document.getElementById('tagResultsContainer');
-                if (tagResults) tagResults.style.display = 'none';
-
-                // Show editor and note elements
-                document.getElementById('wysiwygEditor').style.display = 'block';
-                document.getElementById('noteMeta').style.display = 'flex';
-                document.getElementById('noteTitle').style.display = 'block';
 
                 // Populate fields
                 document.getElementById('noteTitle').value = note.title;
@@ -5363,82 +5284,20 @@
                 this.currentTagFilter = tag;
                 this.currentFolder = 'tag:' + tag;
                 this.currentNote = null;
+                this.showEmptyState();
 
                 // Update UI
                 document.querySelectorAll('.tag-item-small').forEach(el => {
                     el.classList.toggle('active', el.dataset.tag === tag);
                 });
 
-                document.getElementById('headerTitle').textContent = `#${tag}`;
+                document.getElementById('headerTitle').textContent = `Tag: ${tag}`;
 
                 // Re-render tags to show active state
                 this.renderTagsCloud();
 
-                // Show tag results in main content
-                this.renderTagResults(tag);
-            }
-
-            renderTagResults(tag) {
-                const notes = this.data.notes.filter(n => n.tags.includes(tag));
-                const editor = document.getElementById('wysiwygEditor');
-                const noteTitle = document.getElementById('noteTitle');
-                const noteMeta = document.getElementById('noteMeta');
-                
-                // Hide editor and note meta
-                editor.style.display = 'none';
-                noteMeta.style.display = 'none';
-                if (noteTitle) noteTitle.style.display = 'none';
-
-                // Create or update tag results container
-                let resultsContainer = document.getElementById('tagResultsContainer');
-                if (!resultsContainer) {
-                    resultsContainer = document.createElement('div');
-                    resultsContainer.id = 'tagResultsContainer';
-                    editor.parentNode.insertBefore(resultsContainer, editor);
-                }
-                
-                resultsContainer.style.display = 'block';
-                resultsContainer.innerHTML = `
-                    <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
-                        <div style="margin-bottom: 24px;">
-                            <h2 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0;">
-                                <i class="ph ph-tag" style="color: #fbbf24; margin-right: 8px;"></i>Notes tagged with #${this.escapeHtml(tag)}
-                            </h2>
-                            <p style="color: var(--text-secondary); margin: 0;">${notes.length} note${notes.length !== 1 ? 's' : ''}</p>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            ${notes.map(note => `
-                                <div class="tag-result-card" data-note-id="${note.id}" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: all 0.2s;"
-                                    onmouseover="this.style.borderColor='var(--accent)'" 
-                                    onmouseout="this.style.borderColor='var(--border)'"
-                                >
-                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        <i class="ph ph-file-text" style="color: var(--text-secondary);"></i>
-                                        <span style="font-weight: 500; color: var(--text-primary);">${this.escapeHtml(note.title) || 'Untitled'}</span>
-                                    </div>
-                                    <div style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
-                                        ${this.escapeHtml(this.stripHtml(note.content).substring(0, 150))}${this.stripHtml(note.content).length > 150 ? '...' : ''}
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                                            ${note.tags.map(t => `<span style="background: var(--bg-primary); color: var(--text-secondary); padding: 2px 8px; border-radius: 12px; font-size: 12px;">#${this.escapeHtml(t)}</span>`).join('')}
-                                        </div>
-                                        <span style="color: var(--text-tertiary); font-size: 12px;">
-                                            <i class="ph ph-folder" style="margin-right: 4px;"></i>${this.getFolderName(note.folderId)}
-                                        </span>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-
-                // Add click handlers
-                resultsContainer.querySelectorAll('.tag-result-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        this.selectNote(card.dataset.noteId);
-                    });
-                });
+                // Re-render folder tree to show filtered notes
+                this.renderFolderTreeForTag(tag);
             }
 
             renderFolderTreeForTag(tag) {
@@ -6789,9 +6648,6 @@
                 // AI Panel setup (for the panel itself, not the button)
                 this.setupAiPanelListeners();
 
-                // Template Management
-                this.setupTemplateListeners();
-
                 // Handle link clicks
                 document.getElementById('wysiwygEditor').addEventListener('click', (e) => {
                     if (e.target.tagName === 'A') {
@@ -7052,14 +6908,6 @@
             applyTemplate(templateId) {
                 if (!templateId || !this.currentNote) return;
                 
-                // Handle "Create Template" option
-                if (templateId === 'create-new') {
-                    document.getElementById('createTemplateFromNoteModal').classList.add('active');
-                    document.getElementById('templateFromNoteName').value = this.currentNote.title || '';
-                    document.getElementById('templateSelect').value = '';
-                    return;
-                }
-                
                 const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
                 if (currentContent.length > 50) {
                     if (!confirm('This will replace your current note content. Continue?')) {
@@ -7068,17 +6916,53 @@
                     }
                 }
                 
-                const template = this.data.templates.find(t => t.id === templateId);
-                if (template) {
-                    document.getElementById('wysiwygEditor').innerHTML = template.content;
-                    this.currentNote.content = template.content;
-                    this.currentNote.template = templateId;
-                    this.saveData();
-                    this.showToast(`Applied template: ${template.name}`, 'success');
-                }
-                
-                document.getElementById('templateSelect').value = '';
-            }
+                const templates = {
+                    'blank': '',
+                    'trading-journal': `<h2>Trade Setup</h2>
+<p><strong>Instrument:</strong> </p>
+<p><strong>Timeframe:</strong> </p>
+<p><strong>Direction:</strong> Long / Short</p>
+<p><strong>Entry:</strong> </p>
+<p><strong>Stop Loss:</strong> </p>
+<p><strong>Target:</strong> </p>
+<p><strong>Risk:Reward:</strong> </p>
+
+<h2>Analysis</h2>
+<p>Market structure / Key levels / Confluences:</p>
+
+<h2>Psychology</h2>
+<p>Emotional state / Confidence level:</p>
+
+<h2>Outcome</h2>
+<p>Result / Lessons learned:</p>`,
+                    'daily-review': `<h2>Market Overview</h2>
+<p>Key moves / Economic events:</p>
+
+<h2>My Trades</h2>
+<ul>
+<li>Trade 1:</li>
+<li>Trade 2:</li>
+</ul>
+
+<h2>What Worked</h2>
+<p></p>
+
+<h2>What Didn't</h2>
+<p></p>
+
+<h2>Tomorrow's Focus</h2>
+<p></p>`,
+                    'strategy': `<h2>Strategy Name</h2>
+<p></p>
+
+<h2>Setup Criteria</h2>
+<ul>
+<li>Criterion 1:</li>
+<li>Criterion 2:</li>
+<li>Criterion 3:</li>
+</ul>
+
+<h2>Entry Rules</h2>
 <p></p>
 
 <h2>Exit Rules</h2>
@@ -7768,171 +7652,6 @@
                     document.getElementById('aiPanelModal').classList.remove('active');
                     alert('AI settings saved! AI features are ready to use in demo mode.');
                 });
-            }
-
-            // ==================== TEMPLATE MANAGEMENT ====================
-
-            setupTemplateListeners() {
-                // Manage Templates button in 3 dots menu
-                document.getElementById('manageTemplatesBtn')?.addEventListener('click', () => {
-                    document.getElementById('noteMenuDropdown').classList.remove('show');
-                    this.openTemplateManager();
-                });
-
-                // Close template manager
-                document.getElementById('closeTemplateManager')?.addEventListener('click', () => {
-                    document.getElementById('templateManagerModal').classList.remove('active');
-                });
-
-                // Close create template from note modal
-                document.getElementById('closeCreateTemplateFromNote')?.addEventListener('click', () => {
-                    document.getElementById('createTemplateFromNoteModal').classList.remove('active');
-                });
-
-                document.getElementById('cancelTemplateFromNote')?.addEventListener('click', () => {
-                    document.getElementById('createTemplateFromNoteModal').classList.remove('active');
-                });
-
-                // Show create template form
-                document.getElementById('showCreateTemplateForm')?.addEventListener('click', () => {
-                    document.getElementById('createTemplateForm').style.display = 'block';
-                    document.getElementById('showCreateTemplateForm').style.display = 'none';
-                });
-
-                // Cancel create template
-                document.getElementById('cancelCreateTemplate')?.addEventListener('click', () => {
-                    document.getElementById('createTemplateForm').style.display = 'none';
-                    document.getElementById('showCreateTemplateForm').style.display = 'block';
-                    document.getElementById('newTemplateName').value = '';
-                    document.getElementById('newTemplateContent').value = '';
-                });
-
-                // Save new template
-                document.getElementById('saveTemplateBtn')?.addEventListener('click', () => {
-                    const name = document.getElementById('newTemplateName').value.trim();
-                    const content = document.getElementById('newTemplateContent').value.trim();
-                    if (name && content) {
-                        this.createTemplate(name, content);
-                        document.getElementById('newTemplateName').value = '';
-                        document.getElementById('newTemplateContent').value = '';
-                        document.getElementById('createTemplateForm').style.display = 'none';
-                        document.getElementById('showCreateTemplateForm').style.display = 'block';
-                    }
-                });
-
-                // Save template from current note
-                document.getElementById('saveTemplateFromNoteBtn')?.addEventListener('click', () => {
-                    const name = document.getElementById('templateFromNoteName').value.trim();
-                    if (name && this.currentNote) {
-                        this.createTemplate(name, this.currentNote.content);
-                        document.getElementById('createTemplateFromNoteModal').classList.remove('active');
-                        document.getElementById('templateSelect').value = '';
-                    }
-                });
-            }
-
-            openTemplateManager() {
-                this.renderTemplateList();
-                document.getElementById('templateManagerModal').classList.add('active');
-            }
-
-            renderTemplateList() {
-                const list = document.getElementById('templateList');
-                const builtInIds = ['blank', 'trading-journal', 'daily-review', 'strategy', 'meeting'];
-                
-                list.innerHTML = this.data.templates.map(template => {
-                    const isBuiltIn = builtInIds.includes(template.id);
-                    return `
-                        <div class="template-list-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm);" data-template-id="${template.id}">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <i class="ph ph-file-text" style="color: var(--text-secondary);"></i>
-                                <span style="font-weight: 500;">${this.escapeHtml(template.name)}</span>
-                                ${isBuiltIn ? '<span style="font-size: 11px; color: var(--text-tertiary); background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">Built-in</span>' : ''}
-                            </div>
-                            <div style="display: flex; gap: 8px;">
-                                ${!isBuiltIn ? `
-                                    <button class="btn btn-icon edit-template" style="padding: 4px 8px; font-size: 12px;" title="Edit">
-                                        <i class="ph ph-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-icon delete-template" style="padding: 4px 8px; font-size: 12px; color: var(--danger);" title="Delete">
-                                        <i class="ph ph-trash"></i>
-                                    </button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                // Add event listeners for edit/delete
-                list.querySelectorAll('.edit-template').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const templateId = e.target.closest('.template-list-item').dataset.templateId;
-                        this.editTemplate(templateId);
-                    });
-                });
-
-                list.querySelectorAll('.delete-template').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const templateId = e.target.closest('.template-list-item').dataset.templateId;
-                        this.deleteTemplate(templateId);
-                    });
-                });
-            }
-
-            createTemplate(name, content) {
-                const id = 'template_' + Date.now();
-                this.data.templates.push({ id, name, content });
-                this.saveData();
-                this.renderTemplateList();
-                this.updateTemplateDropdown();
-                this.showToast('Template created!', 'success');
-            }
-
-            editTemplate(templateId) {
-                const template = this.data.templates.find(t => t.id === templateId);
-                if (!template) return;
-
-                const newName = prompt('Template name:', template.name);
-                if (newName === null) return;
-
-                const newContent = prompt('Template content (HTML allowed):', template.content);
-                if (newContent === null) return;
-
-                template.name = newName.trim() || template.name;
-                template.content = newContent.trim();
-                this.saveData();
-                this.renderTemplateList();
-                this.updateTemplateDropdown();
-                this.showToast('Template updated!', 'success');
-            }
-
-            deleteTemplate(templateId) {
-                if (!confirm('Delete this template?')) return;
-                this.data.templates = this.data.templates.filter(t => t.id !== templateId);
-                this.saveData();
-                this.renderTemplateList();
-                this.updateTemplateDropdown();
-                this.showToast('Template deleted!', 'success');
-            }
-
-            updateTemplateDropdown() {
-                const select = document.getElementById('templateSelect');
-                const builtInIds = ['blank', 'trading-journal', 'daily-review', 'strategy', 'meeting'];
-                
-                // Keep first option (Template) and last option (Create Template)
-                const customTemplates = this.data.templates.filter(t => !builtInIds.includes(t.id));
-                
-                // Rebuild options
-                select.innerHTML = `
-                    <option value="">Template</option>
-                    <option value="blank">Blank</option>
-                    <option value="trading-journal">Trading Journal</option>
-                    <option value="daily-review">Daily Review</option>
-                    <option value="strategy">Strategy Plan</option>
-                    <option value="meeting">Meeting Notes</option>
-                    ${customTemplates.map(t => `<option value="${t.id}">${this.escapeHtml(t.name)}</option>`).join('')}
-                    <option value="create-new">+ Create Template...</option>
-                `;
             }
         }
 
