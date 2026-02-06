@@ -5986,6 +5986,7 @@
                 const tagInput = document.getElementById('tagInput');
                 let tagAutocomplete = document.getElementById('tagAutocomplete');
                 let activeAutocompleteIndex = -1;
+                const self = this; // Capture this for use in nested functions
 
                 // Remove old autocomplete if exists (we'll create fresh one in body)
                 if (tagAutocomplete) {
@@ -5997,11 +5998,9 @@
                 tagAutocomplete.id = 'tagAutocomplete';
                 tagAutocomplete.className = 'tag-autocomplete';
                 document.body.appendChild(tagAutocomplete);
-                console.log('Created autocomplete in body:', tagAutocomplete, 'parent:', tagAutocomplete.parentNode.tagName);
 
                 function showAutocomplete(matches) {
                     const rect = tagInput.getBoundingClientRect();
-                    console.log('SHOW AUTOCOMPLETE:', matches, 'rect:', rect);
                     tagAutocomplete.innerHTML = matches.map((tag, index) => `
                         <div class="tag-autocomplete-item ${index === 0 ? 'active' : ''}" data-tag="${tag}">
                             <i class="ph ph-tag"></i>
@@ -6018,25 +6017,22 @@
                         top: ${rect.bottom + 8}px;
                         width: ${rect.width}px;
                         z-index: 999999;
-                        background: #ff0000 !important;
-                        border: 3px solid #00ff00;
+                        background: var(--bg-primary);
+                        border: 1px solid var(--accent);
                         border-radius: 4px;
                         max-height: 200px;
                         overflow-y: auto;
                         box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-                        color: white;
+                        color: var(--text-primary);
                         font-size: 14px;
-                        padding: 8px;
+                        padding: 4px 0;
                     `;
                     tagAutocomplete.style.cssText = styles;
-                    console.log('Styles applied:', styles);
-                    console.log('Element display:', tagAutocomplete.style.display);
-                    console.log('Element offsetHeight:', tagAutocomplete.offsetHeight);
                     
                     tagAutocomplete.querySelectorAll('.tag-autocomplete-item').forEach(item => {
                         item.addEventListener('click', () => {
-                            if (this.currentNote) {
-                                this.addTagToNote(this.currentNote.id, item.dataset.tag);
+                            if (self.currentNote) {
+                                self.addTagToNote(self.currentNote.id, item.dataset.tag);
                                 tagInput.value = '';
                                 tagAutocomplete.style.display = 'none';
                             }
@@ -6046,20 +6042,17 @@
 
                 tagInput.addEventListener('input', (e) => {
                     const value = e.target.value.trim().toLowerCase();
-                    console.log('TAG INPUT:', value);
                     if (value.length === 0) {
                         tagAutocomplete.style.display = 'none';
                         return;
                     }
                     
                     const existingTags = this.getAllTags();
-                    console.log('EXISTING TAGS:', existingTags);
                     const currentNoteTags = this.currentNote?.tags || [];
                     const matches = existingTags.filter(tag => 
                         tag.toLowerCase().includes(value) && 
                         !currentNoteTags.includes(tag)
                     ).slice(0, 5);
-                    console.log('MATCHES:', matches);
                     
                     if (matches.length > 0) {
                         showAutocomplete(matches);
