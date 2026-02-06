@@ -859,6 +859,30 @@
         body.focus-mode .main-header:hover {
             opacity: 1;
         }
+
+        /* Sidebar Expand Button */
+        .sidebar-expand-btn {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 32px;
+            height: 32px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-expand-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
     </style>
 </head>
 <body>
@@ -876,6 +900,11 @@
     <div id="app">
         <!-- Sidebar Overlay -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Toggle (when collapsed) -->
+        <button class="sidebar-expand-btn" id="sidebarExpandBtn" title="Expand sidebar" style="display: none;">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
 
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
@@ -1225,6 +1254,9 @@
                 
                 // Sidebar collapse button
                 document.getElementById('sidebarCollapseBtn')?.addEventListener('click', () => this.toggleSidebarCollapse());
+                
+                // Sidebar expand button
+                document.getElementById('sidebarExpandBtn')?.addEventListener('click', () => this.toggleSidebarCollapse());
                 
                 // Sidebar resize
                 this.setupSidebarResize();
@@ -1982,7 +2014,7 @@
             
             toggleSidebarCollapse() {
                 const sidebar = document.getElementById('sidebar');
-                const main = document.querySelector('.main');
+                const expandBtn = document.getElementById('sidebarExpandBtn');
                 const isCollapsed = sidebar.classList.toggle('collapsed');
                 
                 // On desktop, collapsed means width 0, not hidden
@@ -1991,10 +2023,14 @@
                         sidebar.style.width = '0';
                         sidebar.style.minWidth = '0';
                         sidebar.style.overflow = 'hidden';
+                        sidebar.style.padding = '0';
+                        if (expandBtn) expandBtn.style.display = 'flex';
                     } else {
                         sidebar.style.width = (this.data.settings.sidebarWidth || 280) + 'px';
                         sidebar.style.minWidth = '';
                         sidebar.style.overflow = '';
+                        sidebar.style.padding = '';
+                        if (expandBtn) expandBtn.style.display = 'none';
                     }
                 }
                 
@@ -2063,6 +2099,7 @@
             
             restoreSidebarState() {
                 const sidebar = document.getElementById('sidebar');
+                const expandBtn = document.getElementById('sidebarExpandBtn');
                 if (!sidebar) return;
                 
                 // Restore width
@@ -2078,6 +2115,8 @@
                         sidebar.style.width = '0';
                         sidebar.style.minWidth = '0';
                         sidebar.style.overflow = 'hidden';
+                        sidebar.style.padding = '0';
+                        if (expandBtn) expandBtn.style.display = 'flex';
                     }
                 }
             }
