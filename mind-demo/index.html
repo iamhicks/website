@@ -6051,6 +6051,13 @@
                     this.search(e.target.value);
                 });
 
+                document.getElementById('searchInput').addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.search(e.target.value);
+                    }
+                });
+
                 document.addEventListener('click', (e) => {
                     if (!e.target.closest('.sidebar-search')) {
                         document.getElementById('searchResults').classList.remove('active');
