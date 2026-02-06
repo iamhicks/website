@@ -1529,6 +1529,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .tag-autocomplete-item:hover,
@@ -6015,7 +6016,8 @@
                         position: fixed;
                         left: ${rect.left}px;
                         top: ${rect.bottom + 8}px;
-                        width: ${rect.width}px;
+                        min-width: ${rect.width}px;
+                        width: auto;
                         z-index: 999999;
                         background: var(--bg-primary);
                         border: 1px solid var(--accent);
@@ -6026,6 +6028,7 @@
                         color: var(--text-primary);
                         font-size: 14px;
                         padding: 4px 0;
+                        white-space: nowrap;
                     `;
                     tagAutocomplete.style.cssText = styles;
                     
