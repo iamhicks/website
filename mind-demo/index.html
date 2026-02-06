@@ -6522,10 +6522,21 @@
                             const rect = currentRange.getBoundingClientRect();
                             const editorRect = editor.getBoundingClientRect();
 
+                            // Create a range at the very start of the selection for precise positioning
+                            const startRange = document.createRange();
+                            try {
+                                startRange.setStart(currentRange.startContainer, currentRange.startOffset);
+                                startRange.setEnd(currentRange.startContainer, currentRange.startOffset);
+                            } catch (e) {
+                                // Fallback if range manipulation fails
+                                startRange.selectNodeContents(editor);
+                                startRange.collapse(true);
+                            }
+                            const startRect = startRange.getBoundingClientRect();
+
                             // Position toolbar at the start of the line, above the text
-                            // Similar to Notion - inline at the beginning of the selection
-                            let left = rect.left - editorRect.left;
-                            let top = rect.top - editorRect.top - 45; // Just above the line
+                            let left = startRect.left - editorRect.left;
+                            let top = startRect.top - editorRect.top - 48; // 48px above the line
 
                             // Get toolbar dimensions
                             toolbar.style.visibility = 'hidden';
@@ -6535,13 +6546,13 @@
                             toolbar.style.visibility = '';
 
                             // Keep within editor bounds horizontally
-                            if (left + toolbarRect.width > editorRect.width - 10) {
-                                left = editorRect.width - toolbarRect.width - 10;
+                            if (left + toolbarRect.width > editorRect.width - 20) {
+                                left = editorRect.width - toolbarRect.width - 20;
                             }
-                            left = Math.max(0, left);
+                            left = Math.max(10, left);
 
                             // If too close to top of editor, show below instead
-                            if (top < 5) {
+                            if (top < 10) {
                                 top = rect.bottom - editorRect.top + 10;
                             }
 
