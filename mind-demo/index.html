@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Mind</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -2816,11 +2819,7 @@
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                                 <select id="templateSelect" style="background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
                                     <option value="">Template</option>
-                                    <option value="blank">Blank</option>
-                                    <option value="trading-journal">Trading Journal</option>
-                                    <option value="daily-review">Daily Review</option>
-                                    <option value="strategy">Strategy Plan</option>
-                                    <option value="meeting">Meeting Notes</option>
+                                    <option value="save-current">+ Save as Template</option>
                                 </select>
                             </div>
                             <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
@@ -3189,6 +3188,18 @@
     <input type="file" id="importInput" accept=".json,.md,.markdown" hidden>
 
     <script>
+        // ==================== EMERGENCY CLEANUP ====================
+        // Clear old backups first to prevent quota errors on startup
+        (function() {
+            try {
+                localStorage.removeItem('kb_data_backup');
+                localStorage.removeItem('kb_backup_date');
+                console.log('Emergency cleanup: cleared old backups');
+            } catch (e) {
+                console.warn('Cleanup failed:', e);
+            }
+        })();
+
         // ==================== KNOWLEDGE BASE APP ====================
 
         class KnowledgeBase {
@@ -3200,6 +3211,7 @@
                     ],
                     notes: [],
                     tags: [],
+                    customTemplates: [],
                     settings: {
                         theme: 'auto',
                         sidebarCollapsed: {}
@@ -3214,11 +3226,6 @@
                 this.db = null;
                 this.openTabs = []; // Array of note IDs
                 this.activeTabId = null;
-                
-                // AI Integration
-                this.ollamaUrl = 'http://localhost:11434';
-                this.ollamaModel = 'llama3.2';
-                this.ollamaReady = false;
 
                 this.init();
             }
@@ -3227,7 +3234,7 @@
                 try {
                     await this.initIndexedDB();
                     this.loadData();
-                    this.autoBackup(); // Create backup on startup if data exists
+                    // this.autoBackup(); // DISABLED: Temporarily disabled to fix quota error
                     this.setupEventListeners();
                     this.setupMobileGestures();
                     this.applyTheme();
@@ -3250,11 +3257,20 @@
 
             autoBackup() {
                 // Silently create a backup if we have data
-                const data = localStorage.getItem('kb_data');
-                if (data && data.length > 100) { // Only backup if substantial data exists
-                    localStorage.setItem('kb_data_backup', data);
-                    localStorage.setItem('kb_backup_date', new Date().toISOString());
-                    console.log('Auto-backup created');
+                try {
+                    const data = localStorage.getItem('kb_data');
+                    if (data && data.length > 100) { // Only backup if substantial data exists
+                        // Clear old backup first to free up space
+                        localStorage.removeItem('kb_data_backup');
+                        localStorage.removeItem('kb_backup_date');
+                        // Then save new backup
+                        localStorage.setItem('kb_data_backup', data);
+                        localStorage.setItem('kb_backup_date', new Date().toISOString());
+                        console.log('Auto-backup created');
+                    }
+                } catch (e) {
+                    // Quota exceeded or other error - silently skip backup
+                    console.warn('Auto-backup skipped:', e.message);
                 }
             }
 
@@ -3373,14 +3389,24 @@
             }
 
             saveData() {
-                localStorage.setItem('kb_data', JSON.stringify(this.data));
+                try {
+                    localStorage.setItem('kb_data', JSON.stringify(this.data));
+                } catch (e) {
+                    if (e.name === 'QuotaExceededError' || e.message.includes('quota')) {
+                        console.error('Storage quota exceeded. Try deleting some notes or images.');
+                        alert('Storage is full. Please delete some notes or images to save new data.');
+                    } else {
+                        console.error('Failed to save data:', e);
+                    }
+                    throw e;
+                }
             }
 
             // ==================== THEME ====================
 
             applyTheme() {
-                const theme = this.data.settings.theme;
-                const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                const theme = this.data.settings.theme || 'dark';
+                const isDark = theme === 'dark';
                 
                 if (isDark) {
                     document.documentElement.setAttribute('data-theme', 'dark');
@@ -3388,25 +3414,18 @@
                     document.documentElement.removeAttribute('data-theme');
                 }
                 
-                // Update theme select dropdown
-                const themeSelect = document.getElementById('themeSelect');
-                if (themeSelect) {
-                    themeSelect.value = theme;
-                }
-                
                 // Update theme button icon
                 const themeBtn = document.getElementById('themeBtn');
                 if (themeBtn) {
                     themeBtn.innerHTML = isDark ? '<i class="ph ph-sun"></i>' : '<i class="ph ph-moon"></i>';
                     themeBtn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-                    themeBtn.style.color = 'var(--text-secondary)';
                 }
             }
 
             toggleTheme() {
-                const themes = ['light', 'dark', 'auto'];
                 const current = this.data.settings.theme;
-                const next = themes[(themes.indexOf(current) + 1) % themes.length];
+                // Toggle between light and dark only (no auto)
+                const next = current === 'dark' ? 'light' : 'dark';
                 this.data.settings.theme = next;
                 this.applyTheme();
                 this.saveData();
@@ -4209,6 +4228,10 @@
                 document.getElementById('tabsBar').classList.remove('hidden');
                 document.getElementById('editorContentWrapper').classList.remove('hidden');
                 document.getElementById('backlinksPanel').classList.remove('hidden');
+
+                // Hide tag results if showing
+                const tagResults = document.getElementById('tagResultsContainer');
+                if (tagResults) tagResults.style.display = 'none';
 
                 // Populate fields
                 document.getElementById('noteTitle').value = note.title;
@@ -5277,11 +5300,21 @@
             }
 
             filterByTag(tag) {
-                // Toggle off if already filtering by this tag
+                // If already filtering by this tag and viewing a note, show results again
                 if (this.currentTagFilter === tag) {
-                    this.currentTagFilter = null;
-                    this.currentFolder = 'root';
-                    this.render();
+                    if (this.currentNote) {
+                        // We're viewing a note, go back to tag results
+                        this.currentNote = null;
+                        this.showEmptyState();
+                        this.renderTagResults(tag);
+                    } else {
+                        // Already viewing results, toggle off
+                        this.currentTagFilter = null;
+                        this.currentFolder = 'root';
+                        const tagResults = document.getElementById('tagResultsContainer');
+                        if (tagResults) tagResults.style.display = 'none';
+                        this.render();
+                    }
                     return;
                 }
 
@@ -5289,46 +5322,101 @@
                 this.currentTagFilter = tag;
                 this.currentFolder = 'tag:' + tag;
                 this.currentNote = null;
-                this.showEmptyState();
 
                 // Update UI
                 document.querySelectorAll('.tag-item-small').forEach(el => {
                     el.classList.toggle('active', el.dataset.tag === tag);
                 });
 
-                document.getElementById('headerTitle').textContent = `Tag: ${tag}`;
+                document.getElementById('headerTitle').textContent = `#${tag}`;
 
                 // Re-render tags to show active state
                 this.renderTagsCloud();
 
-                // Re-render folder tree to show filtered notes
-                this.renderFolderTreeForTag(tag);
+                // Show tag results in main content
+                this.renderTagResults(tag);
             }
 
-            renderFolderTreeForTag(tag) {
-                const tree = document.getElementById('folderTree');
-                tree.innerHTML = '';
-
+            renderTagResults(tag) {
                 const notes = this.data.notes.filter(n => n.tags.includes(tag));
-
-                const ul = document.createElement('ul');
-                ul.className = 'folder-tree';
-
-                notes.forEach(note => {
-                    const li = document.createElement('li');
-                    li.className = 'folder-item';
-                    li.innerHTML = `
-                        <div class="note-item" data-note-id="${note.id}" style="padding-left: 8px;">
-                            <span class="note-icon"><i class="ph ph-file-text"></i></span>
-                            <span class="note-title">${this.escapeHtml(note.title)}</span>
+                
+                // Hide normal editor content and empty state
+                document.getElementById('emptyState').classList.add('hidden');
+                document.getElementById('editorToolbar').classList.add('hidden');
+                document.getElementById('tabsBar').classList.add('hidden');
+                document.getElementById('editorContentWrapper').classList.add('hidden');
+                
+                // Create or get tag results container
+                let resultsContainer = document.getElementById('tagResultsContainer');
+                if (!resultsContainer) {
+                    resultsContainer = document.createElement('div');
+                    resultsContainer.id = 'tagResultsContainer';
+                    resultsContainer.className = 'tag-results-view';
+                    resultsContainer.style.position = 'absolute';
+                    resultsContainer.style.top = '0';
+                    resultsContainer.style.left = '0';
+                    resultsContainer.style.right = '0';
+                    resultsContainer.style.bottom = '0';
+                    resultsContainer.style.overflowY = 'auto';
+                    resultsContainer.style.zIndex = '10';
+                    resultsContainer.style.background = 'var(--bg-primary)';
+                    document.querySelector('.main').appendChild(resultsContainer);
+                }
+                
+                // Clear previous and show
+                resultsContainer.style.display = 'block';
+                resultsContainer.innerHTML = `
+                    <div style="padding: 24px; max-width: 900px; margin: 0 auto;">
+                        <div style="margin-bottom: 24px;">
+                            <h2 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
+                                <i class="ph ph-tag" style="color: #fbbf24;"></i>
+                                ${this.escapeHtml(tag)}
+                            </h2>
+                            <p style="color: var(--text-secondary); margin: 0;">${notes.length} note${notes.length !== 1 ? 's' : ''}</p>
                         </div>
-                    `;
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            ${notes.map(note => `
+                                <div class="tag-result-card" data-note-id="${note.id}" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s;">
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                        <i class="ph ph-file-text" style="color: var(--text-secondary);"></i>
+                                        <span style="font-weight: 500; color: var(--text-primary);">${this.escapeHtml(note.title) || 'Untitled'}</span>
+                                    </div>
+                                    <div style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
+                                        ${this.escapeHtml(this.stripHtml(note.content).substring(0, 200))}${this.stripHtml(note.content).length > 200 ? '...' : ''}
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                            ${note.tags.map(t => `<span style="background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 12px; font-size: 12px;">#${this.escapeHtml(t)}</span>`).join('')}
+                                        </div>
+                                        <span style="color: var(--text-tertiary); font-size: 12px; display: flex; align-items: center; gap: 4px;">
+                                            <i class="ph ph-folder"></i>
+                                            ${this.getFolderName(note.folderId)}
+                                        </span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
 
-                    li.querySelector('.note-item').addEventListener('click', () => this.selectNote(note.id));
-                    ul.appendChild(li);
+                // Add hover effect and click handlers
+                resultsContainer.querySelectorAll('.tag-result-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        card.style.borderColor = 'var(--accent)';
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.borderColor = 'var(--border)';
+                    });
+                    card.addEventListener('click', () => {
+                        resultsContainer.style.display = 'none';
+                        this.selectNote(card.dataset.noteId);
+                    });
                 });
+            }
 
-                tree.appendChild(ul);
+            getFolderName(folderId) {
+                const folder = this.data.folders.find(f => f.id === folderId);
+                return folder ? folder.name : 'Unknown';
             }
 
             // ==================== SEARCH ====================
@@ -5826,14 +5914,24 @@
             }
 
             createBackup() {
-                const data = localStorage.getItem('kb_data');
-                if (data) {
-                    localStorage.setItem('kb_data_backup', data);
-                    localStorage.setItem('kb_backup_date', new Date().toISOString());
-                    document.getElementById('backupStatus').textContent = 'Backup created at ' + new Date().toLocaleString();
-                    this.showToast('Backup created successfully', 'success');
-                } else {
-                    document.getElementById('backupStatus').textContent = 'No data to backup';
+                try {
+                    const data = localStorage.getItem('kb_data');
+                    if (data) {
+                        // Clear old backup first to free space
+                        localStorage.removeItem('kb_data_backup');
+                        localStorage.removeItem('kb_backup_date');
+                        // Save new backup
+                        localStorage.setItem('kb_data_backup', data);
+                        localStorage.setItem('kb_backup_date', new Date().toISOString());
+                        document.getElementById('backupStatus').textContent = 'Backup created at ' + new Date().toLocaleString();
+                        this.showToast('Backup created successfully', 'success');
+                    } else {
+                        document.getElementById('backupStatus').textContent = 'No data to backup';
+                    }
+                } catch (e) {
+                    console.error('Backup failed:', e);
+                    document.getElementById('backupStatus').textContent = 'Backup failed: ' + e.message;
+                    this.showToast('Backup failed: ' + e.message, 'error');
                 }
             }
 
@@ -5913,6 +6011,25 @@
                 });
 
                 setTimeout(() => toast.remove(), 4000);
+            }
+
+            updateTemplateDropdown() {
+                const select = document.getElementById('templateSelect');
+                const customTemplates = this.data.customTemplates || [];
+                
+                // Build options - only custom templates + save option
+                let html = `
+                    <option value="">Template</option>
+                `;
+                
+                // Add custom templates
+                customTemplates.forEach(t => {
+                    html += `<option value="${t.id}">${this.escapeHtml(t.name)} 🗑</option>`;
+                });
+                
+                html += `<option value="save-current">+ Save as Template</option>`;
+                
+                select.innerHTML = html;
             }
 
             toggleFocusMode() {
@@ -6705,9 +6822,6 @@
 
                 // Selection Toolbar
                 this.setupSelectionToolbar();
-                
-                // Image paste and drop
-                this.setupImagePasteAndDrop();
 
                 // Note Tabs
                 document.querySelectorAll('.note-tab').forEach(tab => {
@@ -6914,116 +7028,65 @@
             }
 
             applyTemplate(templateId) {
-                if (!templateId || !this.currentNote) return;
+                if (!templateId || !this.currentNote) {
+                    document.getElementById('templateSelect').value = '';
+                    return;
+                }
                 
-                const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
-                if (currentContent.length > 50) {
-                    if (!confirm('This will replace your current note content. Continue?')) {
+                // Handle save current note as template
+                if (templateId === 'save-current') {
+                    const name = prompt('Template name:', this.currentNote.title || 'New Template');
+                    if (name && name.trim()) {
+                        const content = document.getElementById('wysiwygEditor').innerHTML;
+                        if (!this.data.customTemplates) this.data.customTemplates = [];
+                        this.data.customTemplates.push({
+                            id: 'custom_' + Date.now(),
+                            name: name.trim(),
+                            content: content
+                        });
+                        this.saveData();
+                        this.updateTemplateDropdown();
+                        this.showToast('Template saved!', 'success');
+                    }
+                    document.getElementById('templateSelect').value = '';
+                    return;
+                }
+                
+                // Check for custom template - ask apply or delete
+                const customTemplate = this.data.customTemplates?.find(t => t.id === templateId);
+                if (customTemplate) {
+                    const action = confirm(`Template: ${customTemplate.name}\n\nClick OK to APPLY this template\nClick Cancel to DELETE this template`);
+                    if (!action) {
+                        // Delete with confirmation
+                        if (!confirm(`Delete template "${customTemplate.name}"?\n\nThis action cannot be undone.`)) {
+                            document.getElementById('templateSelect').value = '';
+                            return;
+                        }
+                        this.data.customTemplates = this.data.customTemplates.filter(t => t.id !== templateId);
+                        this.saveData();
+                        this.updateTemplateDropdown();
+                        this.showToast('Template deleted', 'success');
                         document.getElementById('templateSelect').value = '';
                         return;
                     }
+                    // Apply
+                    const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
+                    if (currentContent.length > 50) {
+                        if (!confirm('This will replace your current note content. Continue?')) {
+                            document.getElementById('templateSelect').value = '';
+                            return;
+                        }
+                    }
+                    document.getElementById('wysiwygEditor').innerHTML = customTemplate.content;
+                    this.currentNote.content = customTemplate.content;
+                    this.saveData();
+                    document.getElementById('templateSelect').value = '';
+                    this.showToast(`Applied ${customTemplate.name} template`, 'success');
+                    return;
                 }
                 
-                const templates = {
-                    'blank': '',
-                    'trading-journal': `<h2>Trade Setup</h2>
-<p><strong>Instrument:</strong> </p>
-<p><strong>Timeframe:</strong> </p>
-<p><strong>Direction:</strong> Long / Short</p>
-<p><strong>Entry:</strong> </p>
-<p><strong>Stop Loss:</strong> </p>
-<p><strong>Target:</strong> </p>
-<p><strong>Risk:Reward:</strong> </p>
-
-<h2>Analysis</h2>
-<p>Market structure / Key levels / Confluences:</p>
-
-<h2>Psychology</h2>
-<p>Emotional state / Confidence level:</p>
-
-<h2>Outcome</h2>
-<p>Result / Lessons learned:</p>`,
-                    'daily-review': `<h2>Market Overview</h2>
-<p>Key moves / Economic events:</p>
-
-<h2>My Trades</h2>
-<ul>
-<li>Trade 1:</li>
-<li>Trade 2:</li>
-</ul>
-
-<h2>What Worked</h2>
-<p></p>
-
-<h2>What Didn't</h2>
-<p></p>
-
-<h2>Tomorrow's Focus</h2>
-<p></p>`,
-                    'strategy': `<h2>Strategy Name</h2>
-<p></p>
-
-<h2>Setup Criteria</h2>
-<ul>
-<li>Criterion 1:</li>
-<li>Criterion 2:</li>
-<li>Criterion 3:</li>
-</ul>
-
-<h2>Entry Rules</h2>
-<p></p>
-
-<h2>Exit Rules</h2>
-<p>Take profit / Stop loss:</p>
-
-<h2>Risk Management</h2>
-<p>Position sizing / Max risk per trade:</p>
-
-<h2>Backtest Results</h2>
-<p>Win rate / Expectancy / Sample size:</p>`,
-                    'meeting': `<h2>Meeting Details</h2>
-<p><strong>Date:</strong> </p>
-<p><strong>Attendees:</strong> </p>
-<p><strong>Objective:</strong> </p>
-
-<h2>Agenda</h2>
-<ul>
-<li>Item 1:</li>
-<li>Item 2:</li>
-</ul>
-
-<h2>Key Discussion Points</h2>
-<p></p>
-
-<h2>Decisions Made</h2>
-<ul>
-<li>Decision 1:</li>
-</ul>
-
-<h2>Action Items</h2>
-<ul>
-<li>[ ] Action 1 - Owner:</li>
-<li>[ ] Action 2 - Owner:</li>
-</ul>`
-                };
-                
-                const template = templates[templateId];
-                if (template === undefined) return;
-                
-                document.getElementById('wysiwygEditor').innerHTML = template;
-                this.currentNote.content = template;
-                this.saveData();
-                
+                // Unknown template - reset
                 document.getElementById('templateSelect').value = '';
-                
-                const templateNames = {
-                    'blank': 'Blank',
-                    'trading-journal': 'Trading Journal',
-                    'daily-review': 'Daily Review',
-                    'strategy': 'Strategy Plan',
-                    'meeting': 'Meeting Notes'
-                };
-                this.showToast(`Applied ${templateNames[templateId]} template`, 'success');
             }
 
             switchNoteTab(tabName) {
@@ -7640,15 +7703,15 @@
 
                 // Test Ollama connection
                 document.getElementById('testOllamaConnection')?.addEventListener('click', async () => {
-                    const statusEl = document.getElementById('ollamaStatus');
-                    statusEl.textContent = 'Testing...';
-                    const result = await this.testOllamaConnection();
-                    if (result.success) {
-                        statusEl.textContent = `✅ Connected! ${result.models.length} models available.`;
-                        statusEl.style.color = 'var(--success)';
-                    } else {
-                        statusEl.textContent = '❌ Not connected. Please install and start Ollama.';
-                        statusEl.style.color = 'var(--danger)';
+                    try {
+                        const response = await fetch('http://localhost:11434/api/tags');
+                        if (response.ok) {
+                            document.getElementById('ollamaStatus').textContent = '✅ Connected! Ollama is running.';
+                            document.getElementById('ollamaStatus').style.color = 'var(--success)';
+                        }
+                    } catch (e) {
+                        document.getElementById('ollamaStatus').textContent = '❌ Not connected. Please install and start Ollama.';
+                        document.getElementById('ollamaStatus').style.color = 'var(--danger)';
                     }
                 });
 
@@ -7659,88 +7722,6 @@
                     this.saveData();
                     document.getElementById('aiPanelModal').classList.remove('active');
                     alert('AI settings saved! AI features are ready to use in demo mode.');
-                });
-            }
-
-            // ==================== AI METHODS ====================
-            
-            async testOllamaConnection() {
-                try {
-                    const response = await fetch(`${this.ollamaUrl}/api/tags`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        this.ollamaReady = true;
-                        return { success: true, models: data.models || [] };
-                    }
-                    return { success: false, error: 'Could not connect' };
-                } catch (err) {
-                    return { success: false, error: err.message };
-                }
-            }
-
-            async generateWithOllama(prompt, systemPrompt = '') {
-                if (!this.ollamaReady) {
-                    const test = await this.testOllamaConnection();
-                    if (!test.success) return { error: test.error };
-                }
-                const model = document.getElementById('ollamaModel')?.value || this.ollamaModel;
-                try {
-                    const response = await fetch(`${this.ollamaUrl}/api/generate`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ model, prompt, system: systemPrompt, stream: false })
-                    });
-                    if (response.ok) {
-                        const data = await response.json();
-                        return { success: true, text: data.response };
-                    }
-                    return { error: 'Generation failed' };
-                } catch (err) {
-                    return { error: err.message };
-                }
-            }
-
-            // ==================== IMAGE HANDLING ====================
-            
-            async insertImageFile(file) {
-                if (!file || !file.type.startsWith('image/')) return;
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                    const base64 = event.target.result;
-                    this.execCommand('insertImage', base64);
-                    this.showToast('Image inserted!', 'success');
-                };
-                reader.readAsDataURL(file);
-            }
-
-            setupImagePasteAndDrop() {
-                const editor = document.getElementById('wysiwygEditor');
-                if (!editor) return;
-                
-                // Paste handler
-                editor.addEventListener('paste', async (e) => {
-                    const items = e.clipboardData?.items;
-                    if (!items) return;
-                    for (const item of items) {
-                        if (item.type.startsWith('image/')) {
-                            e.preventDefault();
-                            const file = item.getAsFile();
-                            if (file) await this.insertImageFile(file);
-                            break;
-                        }
-                    }
-                });
-
-                // Drag and drop handlers
-                editor.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'copy';
-                });
-                editor.addEventListener('drop', async (e) => {
-                    e.preventDefault();
-                    for (const file of e.dataTransfer.files) {
-                        if (file.type.startsWith('image/')) await this.insertImageFile(file);
-                    }
                 });
             }
         }
