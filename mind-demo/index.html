@@ -5,16 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mind</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script type="module">
-        try {
-            const webllm = await import('https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/lib/index.js');
-            window.webllm = webllm;
-            console.log('WebLLM loaded successfully:', webllm);
-        } catch (err) {
-            console.error('Failed to load WebLLM:', err);
-            window.webllmLoadError = err;
-        }
-    </script>
     <style>
         /* ==================== CSS VARIABLES & RESET ==================== */
         :root {
@@ -2583,25 +2573,25 @@
                         <button class="modal-close" id="closeAiPanel">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <div style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; font-size: 13px;" id="aiStatusMessage">
-                            <strong style="color: var(--accent);"><i class="ph ph-info"></i> Setup:</strong> Choose an AI provider below.
+                        <div style="padding: 12px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: var(--radius); margin-bottom: 20px; font-size: 13px;">
+                            <strong style="color: var(--accent);"><i class="ph ph-lightning"></i> Demo Mode:</strong> AI features are simulated. Connect a provider for real AI.
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label">AI Provider</label>
                             <div style="display: flex; flex-direction: column; gap: 12px;">
-                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
-                                    <input type="radio" name="aiProvider" value="webllm" style="margin-top: 2px;">
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--accent); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
                                     <div style="flex: 1;">
-                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-rocket"></i> WebLLM (Browser)</div>
-                                        <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. One-time download. ⚠️ May fail if browser storage is full.</div>
+                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-rocket"></i> WebLLM (Recommended)</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. No installation. One-time 1.9GB download.</div>
                                     </div>
                                 </label>
-                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--accent); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
-                                    <input type="radio" name="aiProvider" value="ollama" checked style="margin-top: 2px;">
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
                                     <div style="flex: 1;">
-                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-lightning"></i> Ollama Desktop ⭐ Recommended</div>
-                                        <div style="font-size: 13px; color: var(--text-secondary);">Best performance. No browser storage needed. Requires free Ollama app.</div>
+                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-lightning"></i> Ollama Desktop</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">Better performance. Requires desktop app.</div>
                                     </div>
                                 </label>
                                 <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
@@ -2618,14 +2608,10 @@
                             <div class="form-group">
                                 <label class="form-label">Model Size</label>
                                 <select class="form-select" id="webllmModel">
-                                    <option value="gemma-2b-it-q4f16_1-MLC" selected>Gemma 2B - Smallest, 0.5GB ✅</option>
-                                    <option value="Phi-3-mini-4k-instruct-q4f16_1-MLC">Phi-3 Mini - Fast, 1.2GB</option>
-                                    <option value="Phi-3-mini-4k-instruct-q4f32_1-MLC">Phi-3 Mini - Balanced, 1.8GB</option>
-                                    <option value="Llama-3-8B-Instruct-q4f16_1-MLC">Llama 3 8B - Best quality, 3.5GB</option>
+                                    <option value="tiny">Tiny (1B) - Fast, basic quality</option>
+                                    <option value="small" selected>Small (3B) - Balanced (1.9GB)</option>
+                                    <option value="medium">Medium (14B) - Better quality</option>
                                 </select>
-                                <small style="color: var(--text-tertiary); font-size: 12px;">
-                                    Using WebLLM prebuilt models. Download once, use forever.
-                                </small>
                             </div>
                             <button class="btn btn-primary" id="downloadWebllmModel" style="width: 100%;">
                                 <i class="ph ph-download"></i> Download Model
@@ -2633,17 +2619,6 @@
                         </div>
                         
                         <div id="ollamaSection" style="display: none;">
-                            <div class="form-group">
-                                <label class="form-label">Model</label>
-                                <select class="form-select" id="ollamaModel">
-                                    <option value="llama3.2">Llama 3.2 (Recommended)</option>
-                                    <option value="llama3.1">Llama 3.1</option>
-                                    <option value="mistral">Mistral</option>
-                                    <option value="phi3">Phi-3</option>
-                                    <option value="gemma2">Gemma 2</option>
-                                </select>
-                                <small style="color: var(--text-tertiary); font-size: 12px;">Run 'ollama pull llama3.2' in terminal to install</small>
-                            </div>
                             <div class="form-group">
                                 <label class="form-label">Ollama Status</label>
                                 <div id="ollamaStatus" style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 13px;">
@@ -2841,7 +2816,11 @@
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                                 <select id="templateSelect" style="background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
                                     <option value="">Template</option>
-                                    <option value="save-current">+ Save as Template</option>
+                                    <option value="blank">Blank</option>
+                                    <option value="trading-journal">Trading Journal</option>
+                                    <option value="daily-review">Daily Review</option>
+                                    <option value="strategy">Strategy Plan</option>
+                                    <option value="meeting">Meeting Notes</option>
                                 </select>
                             </div>
                             <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
@@ -3221,7 +3200,6 @@
                     ],
                     notes: [],
                     tags: [],
-                    customTemplates: [],
                     settings: {
                         theme: 'auto',
                         sidebarCollapsed: {}
@@ -3396,8 +3374,8 @@
             // ==================== THEME ====================
 
             applyTheme() {
-                const theme = this.data.settings.theme || 'dark';
-                const isDark = theme === 'dark';
+                const theme = this.data.settings.theme;
+                const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
                 
                 if (isDark) {
                     document.documentElement.setAttribute('data-theme', 'dark');
@@ -3405,18 +3383,25 @@
                     document.documentElement.removeAttribute('data-theme');
                 }
                 
+                // Update theme select dropdown
+                const themeSelect = document.getElementById('themeSelect');
+                if (themeSelect) {
+                    themeSelect.value = theme;
+                }
+                
                 // Update theme button icon
                 const themeBtn = document.getElementById('themeBtn');
                 if (themeBtn) {
                     themeBtn.innerHTML = isDark ? '<i class="ph ph-sun"></i>' : '<i class="ph ph-moon"></i>';
                     themeBtn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+                    themeBtn.style.color = 'var(--text-secondary)';
                 }
             }
 
             toggleTheme() {
+                const themes = ['light', 'dark', 'auto'];
                 const current = this.data.settings.theme;
-                // Toggle between light and dark only (no auto)
-                const next = current === 'dark' ? 'light' : 'dark';
+                const next = themes[(themes.indexOf(current) + 1) % themes.length];
                 this.data.settings.theme = next;
                 this.applyTheme();
                 this.saveData();
@@ -4219,10 +4204,6 @@
                 document.getElementById('tabsBar').classList.remove('hidden');
                 document.getElementById('editorContentWrapper').classList.remove('hidden');
                 document.getElementById('backlinksPanel').classList.remove('hidden');
-
-                // Hide tag results if showing
-                const tagResults = document.getElementById('tagResultsContainer');
-                if (tagResults) tagResults.style.display = 'none';
 
                 // Populate fields
                 document.getElementById('noteTitle').value = note.title;
@@ -5291,21 +5272,11 @@
             }
 
             filterByTag(tag) {
-                // If already filtering by this tag and viewing a note, show results again
+                // Toggle off if already filtering by this tag
                 if (this.currentTagFilter === tag) {
-                    if (this.currentNote) {
-                        // We're viewing a note, go back to tag results
-                        this.currentNote = null;
-                        this.showEmptyState();
-                        this.renderTagResults(tag);
-                    } else {
-                        // Already viewing results, toggle off
-                        this.currentTagFilter = null;
-                        this.currentFolder = 'root';
-                        const tagResults = document.getElementById('tagResultsContainer');
-                        if (tagResults) tagResults.style.display = 'none';
-                        this.render();
-                    }
+                    this.currentTagFilter = null;
+                    this.currentFolder = 'root';
+                    this.render();
                     return;
                 }
 
@@ -5313,101 +5284,46 @@
                 this.currentTagFilter = tag;
                 this.currentFolder = 'tag:' + tag;
                 this.currentNote = null;
+                this.showEmptyState();
 
                 // Update UI
                 document.querySelectorAll('.tag-item-small').forEach(el => {
                     el.classList.toggle('active', el.dataset.tag === tag);
                 });
 
-                document.getElementById('headerTitle').textContent = `#${tag}`;
+                document.getElementById('headerTitle').textContent = `Tag: ${tag}`;
 
                 // Re-render tags to show active state
                 this.renderTagsCloud();
 
-                // Show tag results in main content
-                this.renderTagResults(tag);
+                // Re-render folder tree to show filtered notes
+                this.renderFolderTreeForTag(tag);
             }
 
-            renderTagResults(tag) {
+            renderFolderTreeForTag(tag) {
+                const tree = document.getElementById('folderTree');
+                tree.innerHTML = '';
+
                 const notes = this.data.notes.filter(n => n.tags.includes(tag));
-                
-                // Hide normal editor content and empty state
-                document.getElementById('emptyState').classList.add('hidden');
-                document.getElementById('editorToolbar').classList.add('hidden');
-                document.getElementById('tabsBar').classList.add('hidden');
-                document.getElementById('editorContentWrapper').classList.add('hidden');
-                
-                // Create or get tag results container
-                let resultsContainer = document.getElementById('tagResultsContainer');
-                if (!resultsContainer) {
-                    resultsContainer = document.createElement('div');
-                    resultsContainer.id = 'tagResultsContainer';
-                    resultsContainer.className = 'tag-results-view';
-                    resultsContainer.style.position = 'absolute';
-                    resultsContainer.style.top = '0';
-                    resultsContainer.style.left = '0';
-                    resultsContainer.style.right = '0';
-                    resultsContainer.style.bottom = '0';
-                    resultsContainer.style.overflowY = 'auto';
-                    resultsContainer.style.zIndex = '10';
-                    resultsContainer.style.background = 'var(--bg-primary)';
-                    document.querySelector('.main').appendChild(resultsContainer);
-                }
-                
-                // Clear previous and show
-                resultsContainer.style.display = 'block';
-                resultsContainer.innerHTML = `
-                    <div style="padding: 24px; max-width: 900px; margin: 0 auto;">
-                        <div style="margin-bottom: 24px;">
-                            <h2 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
-                                <i class="ph ph-tag" style="color: #fbbf24;"></i>
-                                ${this.escapeHtml(tag)}
-                            </h2>
-                            <p style="color: var(--text-secondary); margin: 0;">${notes.length} note${notes.length !== 1 ? 's' : ''}</p>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            ${notes.map(note => `
-                                <div class="tag-result-card" data-note-id="${note.id}" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s;">
-                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        <i class="ph ph-file-text" style="color: var(--text-secondary);"></i>
-                                        <span style="font-weight: 500; color: var(--text-primary);">${this.escapeHtml(note.title) || 'Untitled'}</span>
-                                    </div>
-                                    <div style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
-                                        ${this.escapeHtml(this.stripHtml(note.content).substring(0, 200))}${this.stripHtml(note.content).length > 200 ? '...' : ''}
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                                            ${note.tags.map(t => `<span style="background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 12px; font-size: 12px;">#${this.escapeHtml(t)}</span>`).join('')}
-                                        </div>
-                                        <span style="color: var(--text-tertiary); font-size: 12px; display: flex; align-items: center; gap: 4px;">
-                                            <i class="ph ph-folder"></i>
-                                            ${this.getFolderName(note.folderId)}
-                                        </span>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
 
-                // Add hover effect and click handlers
-                resultsContainer.querySelectorAll('.tag-result-card').forEach(card => {
-                    card.addEventListener('mouseenter', () => {
-                        card.style.borderColor = 'var(--accent)';
-                    });
-                    card.addEventListener('mouseleave', () => {
-                        card.style.borderColor = 'var(--border)';
-                    });
-                    card.addEventListener('click', () => {
-                        resultsContainer.style.display = 'none';
-                        this.selectNote(card.dataset.noteId);
-                    });
+                const ul = document.createElement('ul');
+                ul.className = 'folder-tree';
+
+                notes.forEach(note => {
+                    const li = document.createElement('li');
+                    li.className = 'folder-item';
+                    li.innerHTML = `
+                        <div class="note-item" data-note-id="${note.id}" style="padding-left: 8px;">
+                            <span class="note-icon"><i class="ph ph-file-text"></i></span>
+                            <span class="note-title">${this.escapeHtml(note.title)}</span>
+                        </div>
+                    `;
+
+                    li.querySelector('.note-item').addEventListener('click', () => this.selectNote(note.id));
+                    ul.appendChild(li);
                 });
-            }
 
-            getFolderName(folderId) {
-                const folder = this.data.folders.find(f => f.id === folderId);
-                return folder ? folder.name : 'Unknown';
+                tree.appendChild(ul);
             }
 
             // ==================== SEARCH ====================
@@ -5992,25 +5908,6 @@
                 });
 
                 setTimeout(() => toast.remove(), 4000);
-            }
-
-            updateTemplateDropdown() {
-                const select = document.getElementById('templateSelect');
-                const customTemplates = this.data.customTemplates || [];
-                
-                // Build options - only custom templates + save option
-                let html = `
-                    <option value="">Template</option>
-                `;
-                
-                // Add custom templates
-                customTemplates.forEach(t => {
-                    html += `<option value="${t.id}">${this.escapeHtml(t.name)} 🗑</option>`;
-                });
-                
-                html += `<option value="save-current">+ Save as Template</option>`;
-                
-                select.innerHTML = html;
             }
 
             toggleFocusMode() {
@@ -6822,7 +6719,7 @@
                 document.getElementById('summarizeBtn')?.addEventListener('click', () => this.summarizeNote());
             }
 
-            async suggestTagsWithAi() {
+            suggestTagsWithAi() {
                 // Check if AI is configured
                 if (!this.data.settings?.aiProvider) {
                     document.getElementById('aiPanelModal').classList.add('active');
@@ -6840,51 +6737,15 @@
                     return;
                 }
 
-                // Show loading
-                const btn = document.getElementById('suggestTagsBtn');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Analyzing...';
-                btn.disabled = true;
-
-                let suggestions = [];
-                let useAI = false;
-                const provider = this.data.settings?.aiProvider;
-                
-                // Try AI provider
-                if (provider === 'webllm') {
-                    if (!this.webllmReady) {
-                        await this.initWebLLM();
-                    }
-                    useAI = this.webllmReady;
-                } else if (provider === 'ollama') {
-                    useAI = true; // Will attempt Ollama connection
-                }
-                
-                if (useAI) {
-                    const aiResponse = await this.generateWithAI(
-                        `Suggest 3-5 relevant tags for this note. Return ONLY a comma-separated list of tags, no explanation.\n\nNote content:\n${content.substring(0, 1000)}`
-                    );
-                    
-                    if (aiResponse) {
-                        suggestions = aiResponse.split(',').map(s => s.trim().toLowerCase()).filter(s => s && !this.currentNote.tags.includes(s));
-                    }
-                }
-                
-                // Fallback to demo mode if AI failed
-                if (suggestions.length === 0) {
-                    suggestions = this.generateDemoTagSuggestions(content, this.currentNote.tags || []);
-                    useAI = false;
-                }
-                
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+                // Demo mode - generate suggestions based on keywords
+                const suggestions = this.generateDemoTagSuggestions(content, this.currentNote.tags || []);
                 
                 if (suggestions.length === 0) {
                     this.showToast('No tag suggestions found', 'info');
                     return;
                 }
 
-                this.showTagSuggestionsModal(suggestions, useAI);
+                this.showTagSuggestionsModal(suggestions);
             }
 
             generateDemoTagSuggestions(content, existingTags) {
@@ -6920,7 +6781,7 @@
                 return [...new Set(suggestions)].slice(0, 5);
             }
 
-            showTagSuggestionsModal(suggestions, useAI = false) {
+            showTagSuggestionsModal(suggestions) {
                 // Create modal if not exists
                 let modal = document.getElementById('tagSuggestionsModal');
                 if (!modal) {
@@ -6934,8 +6795,8 @@
                                 <button class="modal-close" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <div id="tagAiStatus" style="background: var(--bg-tertiary); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);">
-                                    <i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags suggested based on keywords.
+                                <div style="background: var(--bg-tertiary); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);">
+                                    <i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags suggested based on keywords in your note.
                                 </div>
                                 <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 13px;">Click tags to add them:</p>
                                 <div id="tagSuggestionsList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
@@ -6946,21 +6807,6 @@
                         </div>
                     `;
                     document.body.appendChild(modal);
-                }
-
-                // Update AI status message
-                const statusEl = document.getElementById('tagAiStatus');
-                if (statusEl) {
-                    if (useAI) {
-                        const providerName = this.data.settings?.aiProvider === 'ollama' ? 'Ollama' : 'WebLLM';
-                        statusEl.innerHTML = `<i class="ph ph-check-circle" style="color: #22c55e;"></i> <strong>AI powered:</strong> Tags suggested by ${providerName}.`;
-                        statusEl.style.background = 'rgba(34, 197, 94, 0.1)';
-                        statusEl.style.border = '1px solid rgba(34, 197, 94, 0.3)';
-                    } else {
-                        statusEl.innerHTML = '<i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags suggested based on keywords.';
-                        statusEl.style.background = 'var(--bg-tertiary)';
-                        statusEl.style.border = 'none';
-                    }
                 }
 
                 // Populate suggestions
@@ -6988,7 +6834,7 @@
                 modal.classList.add('active');
             }
 
-            async summarizeNote() {
+            summarizeNote() {
                 // Check if AI is configured
                 if (!this.data.settings?.aiProvider) {
                     document.getElementById('aiPanelModal').classList.add('active');
@@ -7012,41 +6858,15 @@
                 btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Summarizing...';
                 btn.disabled = true;
 
-                let summary = '';
-                let useAI = false;
-                const provider = this.data.settings?.aiProvider;
-                
-                // Try AI provider
-                if (provider === 'webllm') {
-                    if (!this.webllmReady) {
-                        await this.initWebLLM();
-                    }
-                    useAI = this.webllmReady;
-                } else if (provider === 'ollama') {
-                    useAI = true;
-                }
-                
-                if (useAI) {
-                    const aiResponse = await this.generateWithAI(
-                        `Summarize this note in 2-3 sentences. Be concise and capture the main points:\n\n${content.substring(0, 2000)}`
-                    );
+                // Simulate AI processing
+                setTimeout(() => {
+                    const summary = this.generateDemoSummary(content);
+                    this.displaySummary(summary);
                     
-                    if (aiResponse) {
-                        summary = aiResponse;
-                    }
-                }
-                
-                // Fallback to demo mode
-                if (!summary) {
-                    summary = this.generateDemoSummary(content);
-                    useAI = false;
-                }
-                
-                this.displaySummary(summary);
-                
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                this.showToast('Summary generated!', 'success');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    this.showToast('Summary generated!', 'success');
+                }, 1000);
             }
 
             generateDemoSummary(content) {
@@ -7086,65 +6906,116 @@
             }
 
             applyTemplate(templateId) {
-                if (!templateId || !this.currentNote) {
-                    document.getElementById('templateSelect').value = '';
-                    return;
-                }
+                if (!templateId || !this.currentNote) return;
                 
-                // Handle save current note as template
-                if (templateId === 'save-current') {
-                    const name = prompt('Template name:', this.currentNote.title || 'New Template');
-                    if (name && name.trim()) {
-                        const content = document.getElementById('wysiwygEditor').innerHTML;
-                        if (!this.data.customTemplates) this.data.customTemplates = [];
-                        this.data.customTemplates.push({
-                            id: 'custom_' + Date.now(),
-                            name: name.trim(),
-                            content: content
-                        });
-                        this.saveData();
-                        this.updateTemplateDropdown();
-                        this.showToast('Template saved!', 'success');
-                    }
-                    document.getElementById('templateSelect').value = '';
-                    return;
-                }
-                
-                // Check for custom template - ask apply or delete
-                const customTemplate = this.data.customTemplates?.find(t => t.id === templateId);
-                if (customTemplate) {
-                    const action = confirm(`Template: ${customTemplate.name}\n\nClick OK to APPLY this template\nClick Cancel to DELETE this template`);
-                    if (!action) {
-                        // Delete with confirmation
-                        if (!confirm(`Delete template "${customTemplate.name}"?\n\nThis action cannot be undone.`)) {
-                            document.getElementById('templateSelect').value = '';
-                            return;
-                        }
-                        this.data.customTemplates = this.data.customTemplates.filter(t => t.id !== templateId);
-                        this.saveData();
-                        this.updateTemplateDropdown();
-                        this.showToast('Template deleted', 'success');
+                const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
+                if (currentContent.length > 50) {
+                    if (!confirm('This will replace your current note content. Continue?')) {
                         document.getElementById('templateSelect').value = '';
                         return;
                     }
-                    // Apply
-                    const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
-                    if (currentContent.length > 50) {
-                        if (!confirm('This will replace your current note content. Continue?')) {
-                            document.getElementById('templateSelect').value = '';
-                            return;
-                        }
-                    }
-                    document.getElementById('wysiwygEditor').innerHTML = customTemplate.content;
-                    this.currentNote.content = customTemplate.content;
-                    this.saveData();
-                    document.getElementById('templateSelect').value = '';
-                    this.showToast(`Applied ${customTemplate.name} template`, 'success');
-                    return;
                 }
                 
-                // Unknown template - reset
+                const templates = {
+                    'blank': '',
+                    'trading-journal': `<h2>Trade Setup</h2>
+<p><strong>Instrument:</strong> </p>
+<p><strong>Timeframe:</strong> </p>
+<p><strong>Direction:</strong> Long / Short</p>
+<p><strong>Entry:</strong> </p>
+<p><strong>Stop Loss:</strong> </p>
+<p><strong>Target:</strong> </p>
+<p><strong>Risk:Reward:</strong> </p>
+
+<h2>Analysis</h2>
+<p>Market structure / Key levels / Confluences:</p>
+
+<h2>Psychology</h2>
+<p>Emotional state / Confidence level:</p>
+
+<h2>Outcome</h2>
+<p>Result / Lessons learned:</p>`,
+                    'daily-review': `<h2>Market Overview</h2>
+<p>Key moves / Economic events:</p>
+
+<h2>My Trades</h2>
+<ul>
+<li>Trade 1:</li>
+<li>Trade 2:</li>
+</ul>
+
+<h2>What Worked</h2>
+<p></p>
+
+<h2>What Didn't</h2>
+<p></p>
+
+<h2>Tomorrow's Focus</h2>
+<p></p>`,
+                    'strategy': `<h2>Strategy Name</h2>
+<p></p>
+
+<h2>Setup Criteria</h2>
+<ul>
+<li>Criterion 1:</li>
+<li>Criterion 2:</li>
+<li>Criterion 3:</li>
+</ul>
+
+<h2>Entry Rules</h2>
+<p></p>
+
+<h2>Exit Rules</h2>
+<p>Take profit / Stop loss:</p>
+
+<h2>Risk Management</h2>
+<p>Position sizing / Max risk per trade:</p>
+
+<h2>Backtest Results</h2>
+<p>Win rate / Expectancy / Sample size:</p>`,
+                    'meeting': `<h2>Meeting Details</h2>
+<p><strong>Date:</strong> </p>
+<p><strong>Attendees:</strong> </p>
+<p><strong>Objective:</strong> </p>
+
+<h2>Agenda</h2>
+<ul>
+<li>Item 1:</li>
+<li>Item 2:</li>
+</ul>
+
+<h2>Key Discussion Points</h2>
+<p></p>
+
+<h2>Decisions Made</h2>
+<ul>
+<li>Decision 1:</li>
+</ul>
+
+<h2>Action Items</h2>
+<ul>
+<li>[ ] Action 1 - Owner:</li>
+<li>[ ] Action 2 - Owner:</li>
+</ul>`
+                };
+                
+                const template = templates[templateId];
+                if (template === undefined) return;
+                
+                document.getElementById('wysiwygEditor').innerHTML = template;
+                this.currentNote.content = template;
+                this.saveData();
+                
                 document.getElementById('templateSelect').value = '';
+                
+                const templateNames = {
+                    'blank': 'Blank',
+                    'trading-journal': 'Trading Journal',
+                    'daily-review': 'Daily Review',
+                    'strategy': 'Strategy Plan',
+                    'meeting': 'Meeting Notes'
+                };
+                this.showToast(`Applied ${templateNames[templateId]} template`, 'success');
             }
 
             switchNoteTab(tabName) {
@@ -7733,146 +7604,6 @@
                 this.selectedVersionIndex = undefined;
             }
 
-            // ==================== AI ====================
-
-            async initWebLLM() {
-                if (this.webllmEngine) return; // Already initialized
-                
-                // Get selected model
-                const modelSelect = document.getElementById('webllmModel');
-                const selectedModel = modelSelect?.value || "Llama-3.2-1B-Instruct-q4f32_1-MLC";
-                
-                // Get approximate file size for display
-                const modelSizes = {
-                    "gemma-2b-it-q4f16_1-MLC": "0.5GB",
-                    "Phi-3-mini-4k-instruct-q4f16_1-MLC": "1.2GB",
-                    "Phi-3-mini-4k-instruct-q4f32_1-MLC": "1.8GB",
-                    "Llama-3-8B-Instruct-q4f16_1-MLC": "3.5GB"
-                };
-                const size = modelSizes[selectedModel] || "unknown size";
-                
-                const statusEl = document.getElementById('aiStatusMessage');
-                if (statusEl) {
-                    statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> Checking WebLLM...`;
-                }
-                
-                // Wait a moment for module to load
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
-                try {
-                    // Check if WebLLM loaded
-                    if (!window.webllm) {
-                        console.log('window.webllm not found, waiting more...');
-                        // Try waiting a bit more
-                        await new Promise(resolve => setTimeout(resolve, 3000));
-                    }
-                    
-                    if (!window.webllm) {
-                        throw new Error('WebLLM library failed to load from CDN. This may be a network issue or browser compatibility issue.');
-                    }
-                    
-                    if (!window.webllm.CreateMLCEngine) {
-                        throw new Error('WebLLM loaded but CreateMLCEngine not found. Available: ' + Object.keys(window.webllm).join(', '));
-                    }
-                    
-                    if (statusEl) {
-                        statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> Downloading ${size}, first time only`;
-                    }
-                    
-                    // Use WebLLM's prebuilt configuration to find model URLs
-                    const prebuiltModels = window.webllm.prebuiltAppConfig?.model_list || [];
-                    const modelConfig = prebuiltModels.find(m => m.model_id === selectedModel);
-                    
-                    if (!modelConfig) {
-                        const available = prebuiltModels.slice(0, 10).map(m => m.model_id).join(', ');
-                        throw new Error(`Model "${selectedModel}" not found. First 10 available: ${available}...`);
-                    }
-                    
-                    console.log('Loading model:', modelConfig.model_id);
-                    
-                    // Create engine with the specific model from prebuilt config
-                    this.webllmEngine = await window.webllm.CreateMLCEngine(
-                        selectedModel,
-                        {
-                            initProgressCallback: (progress) => {
-                                const percent = Math.round(progress.progress * 100);
-                                if (statusEl) {
-                                    statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
-                                }
-                            }
-                        }
-                    );
-                    
-                    // Save the selected model to settings
-                    this.data.settings.webllmModel = selectedModel;
-                    this.saveData();
-                    
-                    if (statusEl) {
-                        statusEl.innerHTML = '<strong style="color: #22c55e;"><i class="ph ph-check-circle"></i> AI Ready:</strong> WebLLM loaded successfully!';
-                    }
-                    this.webllmReady = true;
-                } catch (err) {
-                    console.error('WebLLM init error:', err);
-                    let errorMsg = err.message;
-                    if (err.name === 'QuotaExceededError' || errorMsg.includes('Quota')) {
-                        errorMsg = 'Browser storage full. We recommend using Ollama instead - it's already installed on your Mac and works better than WebLLM.';
-                    }
-                    if (statusEl) {
-                        statusEl.innerHTML = `<strong style="color: var(--danger);"><i class="ph ph-warning"></i> Error:</strong> ${errorMsg}`;
-                    }
-                    this.webllmReady = false;
-                }
-            }
-
-            async generateWithAI(prompt) {
-                const provider = this.data.settings?.aiProvider;
-                
-                // WebLLM provider
-                if (provider === 'webllm' && this.webllmEngine && this.webllmReady) {
-                    try {
-                        const messages = [
-                            { role: 'system', content: 'You are a helpful assistant for a note-taking app. Be concise and practical.' },
-                            { role: 'user', content: prompt }
-                        ];
-                        const response = await this.webllmEngine.chat.completions.create({ messages });
-                        return response.choices[0].message.content;
-                    } catch (err) {
-                        console.error('WebLLM error:', err);
-                        return null;
-                    }
-                }
-                
-                // Ollama provider
-                if (provider === 'ollama') {
-                    try {
-                        const model = this.data.settings?.ollamaModel || 'llama3.2';
-                        const response = await fetch('http://localhost:11434/api/generate', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                model: model,
-                                prompt: prompt,
-                                system: 'You are a helpful assistant for a note-taking app. Be concise and practical.',
-                                stream: false
-                            })
-                        });
-                        
-                        if (!response.ok) {
-                            throw new Error('Ollama not responding');
-                        }
-                        
-                        const data = await response.json();
-                        return data.response;
-                    } catch (err) {
-                        console.error('Ollama error:', err);
-                        this.showToast('Ollama not running. Start it first.', 'error');
-                        return null;
-                    }
-                }
-                
-                return null;
-            }
-
             // ==================== IMPORT WIZARD ====================
 
             setupAiPanelListeners() {
@@ -7895,8 +7626,8 @@
                 });
 
                 // Download WebLLM model
-                document.getElementById('downloadWebllmModel')?.addEventListener('click', async () => {
-                    await this.initWebLLM();
+                document.getElementById('downloadWebllmModel')?.addEventListener('click', () => {
+                    alert('In demo mode, AI features work with simulated responses. In production, this would download the 1.9GB model to your browser.');
                 });
 
                 // Test Ollama connection
@@ -7914,27 +7645,12 @@
                 });
 
                 // Save settings
-                document.getElementById('saveAiSettings')?.addEventListener('click', async () => {
+                document.getElementById('saveAiSettings')?.addEventListener('click', () => {
                     const provider = document.querySelector('input[name="aiProvider"]:checked')?.value || 'webllm';
                     this.data.settings.aiProvider = provider;
-                    
-                    // Save Ollama model selection
-                    const ollamaModel = document.getElementById('ollamaModel')?.value;
-                    if (ollamaModel) {
-                        this.data.settings.ollamaModel = ollamaModel;
-                    }
-                    
                     this.saveData();
                     document.getElementById('aiPanelModal').classList.remove('active');
-                    
-                    if (provider === 'webllm') {
-                        this.showToast('AI settings saved! Loading WebLLM model...', 'success');
-                        await this.initWebLLM();
-                    } else if (provider === 'ollama') {
-                        this.showToast('AI settings saved! Using Ollama (' + (ollamaModel || 'llama3.2') + ')', 'success');
-                    } else {
-                        this.showToast('AI settings saved!', 'success');
-                    }
+                    alert('AI settings saved! AI features are ready to use in demo mode.');
                 });
             }
         }
