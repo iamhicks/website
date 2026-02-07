@@ -2618,12 +2618,11 @@
                             <div class="form-group">
                                 <label class="form-label">Model Size</label>
                                 <select class="form-select" id="webllmModel">
-                                    <option value="Llama-3.2-1B-Instruct-q4f32_1-MLC" selected>Small (1B) - Fast, 1.2GB</option>
-                                    <option value="Qwen2.5-1.5B-Instruct-q4f32_1-MLC">Small+ (1.5B) - Fast, 1.5GB</option>
-                                    <option value="Llama-3.2-3B-Instruct-q4f32_1-MLC">Medium (3B) - Balanced, 2.0GB</option>
+                                    <option value="Llama-3.2-1B-Instruct-q4f32_1-MLC" selected>Small (1B) - Fastest, 0.6GB</option>
+                                    <option value="Llama-3.2-3B-Instruct-q4f32_1-MLC">Medium (3B) - Balanced, 1.8GB</option>
                                 </select>
                                 <small style="color: var(--text-tertiary); font-size: 12px;">
-                                    Larger = better quality but slower. Download once, use forever.
+                                    Using WebLLM prebuilt models. Download once, use forever.
                                 </small>
                             </div>
                             <button class="btn btn-primary" id="downloadWebllmModel" style="width: 100%;">
@@ -7744,7 +7743,6 @@
                 // Get approximate file size for display
                 const modelSizes = {
                     "Llama-3.2-1B-Instruct-q4f32_1-MLC": "0.6GB",
-                    "Qwen2.5-1.5B-Instruct-q4f32_1-MLC": "1.0GB",
                     "Llama-3.2-3B-Instruct-q4f32_1-MLC": "1.8GB"
                 };
                 const size = modelSizes[selectedModel] || "1.2GB";
@@ -7786,6 +7784,9 @@
                                     statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
                                 }
                             }
+                        },
+                        {
+                            appConfig: window.webllm.prebuiltAppConfig
                         }
                     );
                     
