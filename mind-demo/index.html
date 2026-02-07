@@ -7776,44 +7776,29 @@
                         statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> Downloading ${size}, first time only`;
                     }
                     
-                    // Simple approach - let WebLLM use its default config
-                    try {
-                        this.webllmEngine = await window.webllm.CreateMLCEngine(
-                            selectedModel,
-                            {
-                                initProgressCallback: (progress) => {
-                                    const percent = Math.round(progress.progress * 100);
-                                    if (statusEl) {
-                                        statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
-                                    }
+                    // Use WebLLM's prebuilt configuration to find model URLs
+                    const prebuiltModels = window.webllm.prebuiltAppConfig?.model_list || [];
+                    const modelConfig = prebuiltModels.find(m => m.model_id === selectedModel);
+                    
+                    if (!modelConfig) {
+                        const available = prebuiltModels.slice(0, 10).map(m => m.model_id).join(', ');
+                        throw new Error(`Model "${selectedModel}" not found. First 10 available: ${available}...`);
+                    }
+                    
+                    console.log('Loading model:', modelConfig.model_id);
+                    
+                    // Create engine with the specific model from prebuilt config
+                    this.webllmEngine = await window.webllm.CreateMLCEngine(
+                        selectedModel,
+                        {
+                            initProgressCallback: (progress) => {
+                                const percent = Math.round(progress.progress * 100);
+                                if (statusEl) {
+                                    statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
                                 }
                             }
-                        );
-                    } catch (engineErr) {
-                        // Try with explicit appConfig
-                        console.log("Retrying with explicit config...", engineErr);
-                        const appConfig = {
-                            model_list: [
-                                {
-                                    model: selectedModel,
-                                    model_id: selectedModel,
-                                    model_lib_url: "https://github.com/mlc-ai/binary-mlc-llm-libs/releases/download/web-llm-model-libs/" + selectedModel + "-webgpu.wasm",
-                                }
-                            ]
-                        };
-                        this.webllmEngine = await window.webllm.CreateMLCEngine(
-                            selectedModel,
-                            {
-                                initProgressCallback: (progress) => {
-                                    const percent = Math.round(progress.progress * 100);
-                                    if (statusEl) {
-                                        statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
-                                    }
-                                }
-                            },
-                            appConfig
-                        );
-                    }
+                        }
+                    );
                     
                     // Save the selected model to settings
                     this.data.settings.webllmModel = selectedModel;
