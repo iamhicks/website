@@ -962,20 +962,82 @@ body {
 }
 
 .calendar-card {
-    font-size: 11px;
-    padding: 4px 6px;
+    font-size: 12px;
+    padding: 6px 10px;
     background: var(--bg-primary);
     border: 1px solid var(--border);
-    border-radius: 3px;
-    margin-bottom: 4px;
+    border-radius: 6px;
+    margin-bottom: 6px;
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: 500;
+    box-shadow: 0 1px 3px var(--shadow);
+    transition: all var(--transition);
 }
 
 .calendar-card:hover {
     border-color: var(--accent);
+    background: var(--bg-secondary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px var(--shadow);
+}
+
+/* Calendar Tasks */
+.calendar-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.calendar-task {
+    font-size: 12px;
+    padding: 6px 10px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    box-shadow: 0 1px 3px var(--shadow);
+    transition: all var(--transition);
+    position: relative;
+    padding-left: 14px;
+}
+
+.calendar-task::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+}
+
+.calendar-task.priority-high::before {
+    background: var(--priority-high);
+}
+
+.calendar-task.priority-medium::before {
+    background: var(--priority-medium);
+}
+
+.calendar-task.priority-low::before {
+    background: var(--priority-low);
+}
+
+.calendar-task:hover {
+    border-color: var(--accent);
+    background: var(--bg-secondary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px var(--shadow);
 }
 
 /* Template Grid */
