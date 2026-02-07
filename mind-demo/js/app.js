@@ -23,6 +23,12 @@
                 this.db = null;
                 this.openTabs = []; // Array of note IDs
                 this.activeTabId = null;
+                
+                // AI Integration
+                this.ollamaUrl = 'http://localhost:11434';
+                this.ollamaModel = 'llama3.2';
+                this.ollamaReady = false;
+                this.aiProvider = 'ollama'; // 'ollama' or 'none'
 
                 this.init();
             }
