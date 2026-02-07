@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mind</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/lib/index.js"></script>
     <style>
         /* ==================== CSS VARIABLES & RESET ==================== */
         :root {
@@ -2573,8 +2574,8 @@
                         <button class="modal-close" id="closeAiPanel">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <div style="padding: 12px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: var(--radius); margin-bottom: 20px; font-size: 13px;">
-                            <strong style="color: var(--accent);"><i class="ph ph-lightning"></i> Demo Mode:</strong> AI features are simulated. Connect a provider for real AI.
+                        <div style="padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; font-size: 13px;" id="aiStatusMessage">
+                            <strong style="color: var(--accent);"><i class="ph ph-info"></i> Setup:</strong> Choose an AI provider below.
                         </div>
                         
                         <div class="form-group">
@@ -6797,7 +6798,7 @@
                 document.getElementById('summarizeBtn')?.addEventListener('click', () => this.summarizeNote());
             }
 
-            suggestTagsWithAi() {
+            async suggestTagsWithAi() {
                 // Check if AI is configured
                 if (!this.data.settings?.aiProvider) {
                     document.getElementById('aiPanelModal').classList.add('active');
@@ -6815,15 +6816,43 @@
                     return;
                 }
 
-                // Demo mode - generate suggestions based on keywords
-                const suggestions = this.generateDemoTagSuggestions(content, this.currentNote.tags || []);
+                // Show loading
+                const btn = document.getElementById('suggestTagsBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Analyzing...';
+                btn.disabled = true;
+
+                let suggestions = [];
+                
+                // Try WebLLM first
+                if (this.data.settings?.aiProvider === 'webllm') {
+                    if (!this.webllmReady) {
+                        await this.initWebLLM();
+                    }
+                    
+                    const aiResponse = await this.generateWithAI(
+                        `Suggest 3-5 relevant tags for this note. Return ONLY a comma-separated list of tags, no explanation.\n\nNote content:\n${content.substring(0, 1000)}`
+                    );
+                    
+                    if (aiResponse) {
+                        suggestions = aiResponse.split(',').map(s => s.trim().toLowerCase()).filter(s => s && !this.currentNote.tags.includes(s));
+                    }
+                }
+                
+                // Fallback to demo mode if AI failed or not configured
+                if (suggestions.length === 0) {
+                    suggestions = this.generateDemoTagSuggestions(content, this.currentNote.tags || []);
+                }
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
                 
                 if (suggestions.length === 0) {
                     this.showToast('No tag suggestions found', 'info');
                     return;
                 }
 
-                this.showTagSuggestionsModal(suggestions);
+                this.showTagSuggestionsModal(suggestions, this.webllmReady);
             }
 
             generateDemoTagSuggestions(content, existingTags) {
@@ -6859,7 +6888,7 @@
                 return [...new Set(suggestions)].slice(0, 5);
             }
 
-            showTagSuggestionsModal(suggestions) {
+            showTagSuggestionsModal(suggestions, useAI = false) {
                 // Create modal if not exists
                 let modal = document.getElementById('tagSuggestionsModal');
                 if (!modal) {
@@ -6873,8 +6902,8 @@
                                 <button class="modal-close" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <div style="background: var(--bg-tertiary); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);">
-                                    <i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags suggested based on keywords in your note.
+                                <div id="tagAiStatus" style="background: var(--bg-tertiary); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);">
+                                    <i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags suggested based on keywords.
                                 </div>
                                 <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 13px;">Click tags to add them:</p>
                                 <div id="tagSuggestionsList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
@@ -6885,6 +6914,20 @@
                         </div>
                     `;
                     document.body.appendChild(modal);
+                }
+
+                // Update AI status message
+                const statusEl = document.getElementById('tagAiStatus');
+                if (statusEl) {
+                    if (useAI && this.webllmReady) {
+                        statusEl.innerHTML = '<i class="ph ph-check-circle" style="color: #22c55e;"></i> <strong>AI powered:</strong> Tags suggested by WebLLM.';
+                        statusEl.style.background = 'rgba(34, 197, 94, 0.1)';
+                        statusEl.style.border = '1px solid rgba(34, 197, 94, 0.3)';
+                    } else {
+                        statusEl.innerHTML = '<i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags suggested based on keywords.';
+                        statusEl.style.background = 'var(--bg-tertiary)';
+                        statusEl.style.border = 'none';
+                    }
                 }
 
                 // Populate suggestions
@@ -6912,7 +6955,7 @@
                 modal.classList.add('active');
             }
 
-            summarizeNote() {
+            async summarizeNote() {
                 // Check if AI is configured
                 if (!this.data.settings?.aiProvider) {
                     document.getElementById('aiPanelModal').classList.add('active');
@@ -6936,15 +6979,33 @@
                 btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Summarizing...';
                 btn.disabled = true;
 
-                // Simulate AI processing
-                setTimeout(() => {
-                    const summary = this.generateDemoSummary(content);
-                    this.displaySummary(summary);
+                let summary = '';
+                
+                // Try WebLLM first
+                if (this.data.settings?.aiProvider === 'webllm') {
+                    if (!this.webllmReady) {
+                        await this.initWebLLM();
+                    }
                     
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    this.showToast('Summary generated!', 'success');
-                }, 1000);
+                    const aiResponse = await this.generateWithAI(
+                        `Summarize this note in 2-3 sentences. Be concise and capture the main points:\n\n${content.substring(0, 2000)}`
+                    );
+                    
+                    if (aiResponse) {
+                        summary = aiResponse;
+                    }
+                }
+                
+                // Fallback to demo mode
+                if (!summary) {
+                    summary = this.generateDemoSummary(content);
+                }
+                
+                this.displaySummary(summary);
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                this.showToast('Summary generated!', 'success');
             }
 
             generateDemoSummary(content) {
@@ -7631,6 +7692,60 @@
                 this.selectedVersionIndex = undefined;
             }
 
+            // ==================== AI ====================
+
+            async initWebLLM() {
+                if (this.webllmEngine) return; // Already initialized
+                
+                const statusEl = document.getElementById('aiStatusMessage');
+                if (statusEl) {
+                    statusEl.innerHTML = '<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> Downloading model (1.9GB, first time only)';
+                }
+                
+                try {
+                    const { CreateMLCEngine } = window.mlc; // WebLLM library
+                    this.webllmEngine = await CreateMLCEngine(
+                        "Llama-3.2-1B-Instruct-q4f32_1-MLC",
+                        {
+                            initProgressCallback: (progress) => {
+                                const percent = Math.round(progress.progress * 100);
+                                if (statusEl) {
+                                    statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
+                                }
+                            }
+                        }
+                    );
+                    
+                    if (statusEl) {
+                        statusEl.innerHTML = '<strong style="color: #22c55e;"><i class="ph ph-check-circle"></i> AI Ready:</strong> WebLLM loaded successfully!';
+                    }
+                    this.webllmReady = true;
+                } catch (err) {
+                    console.error('WebLLM init error:', err);
+                    if (statusEl) {
+                        statusEl.innerHTML = '<strong style="color: var(--danger);"><i class="ph ph-warning"></i> Error:</strong> Failed to load AI. Using fallback mode.';
+                    }
+                    this.webllmReady = false;
+                }
+            }
+
+            async generateWithAI(prompt) {
+                if (this.data.settings?.aiProvider === 'webllm' && this.webllmEngine && this.webllmReady) {
+                    try {
+                        const messages = [
+                            { role: 'system', content: 'You are a helpful assistant for a note-taking app. Be concise and practical.' },
+                            { role: 'user', content: prompt }
+                        ];
+                        const response = await this.webllmEngine.chat.completions.create({ messages });
+                        return response.choices[0].message.content;
+                    } catch (err) {
+                        console.error('WebLLM error:', err);
+                        return null; // Fall back to demo mode
+                    }
+                }
+                return null; // No AI provider configured
+            }
+
             // ==================== IMPORT WIZARD ====================
 
             setupAiPanelListeners() {
@@ -7653,8 +7768,8 @@
                 });
 
                 // Download WebLLM model
-                document.getElementById('downloadWebllmModel')?.addEventListener('click', () => {
-                    alert('In demo mode, AI features work with simulated responses. In production, this would download the 1.9GB model to your browser.');
+                document.getElementById('downloadWebllmModel')?.addEventListener('click', async () => {
+                    await this.initWebLLM();
                 });
 
                 // Test Ollama connection
@@ -7672,12 +7787,18 @@
                 });
 
                 // Save settings
-                document.getElementById('saveAiSettings')?.addEventListener('click', () => {
+                document.getElementById('saveAiSettings')?.addEventListener('click', async () => {
                     const provider = document.querySelector('input[name="aiProvider"]:checked')?.value || 'webllm';
                     this.data.settings.aiProvider = provider;
                     this.saveData();
                     document.getElementById('aiPanelModal').classList.remove('active');
-                    alert('AI settings saved! AI features are ready to use in demo mode.');
+                    
+                    if (provider === 'webllm') {
+                        this.showToast('AI settings saved! Loading WebLLM model...', 'success');
+                        await this.initWebLLM();
+                    } else {
+                        this.showToast('AI settings saved!', 'success');
+                    }
                 });
             }
         }
