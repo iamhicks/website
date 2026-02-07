@@ -1069,6 +1069,12 @@ body {
     border-color: var(--accent);
 }
 
+.template-card.selected {
+    border-color: var(--accent);
+    background: var(--bg-hover);
+    box-shadow: 0 0 0 2px var(--accent);
+}
+
 .template-icon {
     width: 40px;
     height: 40px;
