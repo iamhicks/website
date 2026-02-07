@@ -3596,7 +3596,7 @@
                 };
             }
 
-            processAiSelection(action) {
+            async processAiSelection(action) {
                 const loading = document.getElementById('aiLoadingState');
                 const result = document.getElementById('aiSuggestionResult');
                 const resultText = document.getElementById('aiSuggestionText');
@@ -3604,38 +3604,50 @@
                 loading.style.display = 'block';
                 result.style.display = 'none';
 
-                // Simulate AI processing
-                setTimeout(() => {
-                    loading.style.display = 'none';
-                    result.style.display = 'block';
-
-                    const original = this.currentAiText;
-                    let suggestion = original;
-
-                    switch(action) {
-                        case 'improve':
-                            suggestion = this.simulateAiImprove(original);
-                            break;
-                        case 'grammar':
-                            suggestion = this.simulateAiGrammar(original);
-                            break;
-                        case 'shorter':
-                            suggestion = this.simulateAiShorter(original);
-                            break;
-                        case 'longer':
-                            suggestion = this.simulateAiLonger(original);
-                            break;
-                        case 'simplify':
-                            suggestion = this.simulateAiSimplify(original);
-                            break;
-                        case 'professional':
-                            suggestion = this.simulateAiProfessional(original);
-                            break;
+                const original = this.currentAiText;
+                let suggestion = original;
+                
+                // Try Ollama first if connected
+                if (this.ollamaReady) {
+                    const prompts = {
+                        improve: `Improve this text:\n\n${original}`,
+                        grammar: `Fix grammar and spelling:\n\n${original}`,
+                        shorter: `Make this shorter and more concise:\n\n${original}`,
+                        longer: `Expand on this with more detail:\n\n${original}`,
+                        simplify: `Simplify this for easier reading:\n\n${original}`,
+                        professional: `Make this more professional:\n\n${original}`
+                    };
+                    
+                    const aiResult = await this.generateWithOllama(prompts[action] || prompts.improve);
+                    
+                    if (aiResult.success) {
+                        suggestion = aiResult.text;
+                    } else {
+                        // Fallback to simulation
+                        suggestion = this.simulateAiAction(action, original);
                     }
+                } else {
+                    // Demo mode - use simulation
+                    await new Promise(r => setTimeout(r, 800)); // Fake delay
+                    suggestion = this.simulateAiAction(action, original);
+                }
 
-                    this.currentAiSuggestion = suggestion;
-                    resultText.textContent = suggestion;
-                }, 1500);
+                loading.style.display = 'none';
+                result.style.display = 'block';
+                resultText.textContent = suggestion;
+                this.currentAiSuggestion = suggestion;
+            }
+            
+            simulateAiAction(action, original) {
+                switch(action) {
+                    case 'improve': return this.simulateAiImprove(original);
+                    case 'grammar': return this.simulateAiGrammar(original);
+                    case 'shorter': return this.simulateAiShorter(original);
+                    case 'longer': return this.simulateAiLonger(original);
+                    case 'simplify': return this.simulateAiSimplify(original);
+                    case 'professional': return this.simulateAiProfessional(original);
+                    default: return original;
+                }
             }
 
             simulateAiImprove(text) {
@@ -3945,14 +3957,47 @@
                     try {
                         const response = await fetch('http://localhost:11434/api/tags');
                         if (response.ok) {
-                            document.getElementById('ollamaStatus').textContent = '✅ Connected! Ollama is running.';
+                            const data = await response.json();
+                            document.getElementById('ollamaStatus').textContent = `✅ Connected! ${data.models?.length || 0} models available.`;
                             document.getElementById('ollamaStatus').style.color = 'var(--success)';
+                            this.ollamaReady = true;
                         }
                     } catch (e) {
                         document.getElementById('ollamaStatus').textContent = '❌ Not connected. Please install and start Ollama.';
                         document.getElementById('ollamaStatus').style.color = 'var(--danger)';
+                        this.ollamaReady = false;
                     }
                 });
+                
+                // Generate with Ollama function
+                this.generateWithOllama = async (prompt, systemPrompt = '') => {
+                    if (!this.ollamaReady) {
+                        return { error: 'Ollama not connected. Test connection first.' };
+                    }
+                    
+                    const model = document.getElementById('ollamaModel')?.value || 'llama3.2';
+                    
+                    try {
+                        const response = await fetch('http://localhost:11434/api/generate', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                model: model,
+                                prompt: prompt,
+                                system: systemPrompt,
+                                stream: false
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            return { success: true, text: data.response };
+                        }
+                        return { error: 'Generation failed' };
+                    } catch (err) {
+                        return { error: err.message };
+                    }
+                };
 
                 // Save settings
                 document.getElementById('saveAiSettings')?.addEventListener('click', () => {
