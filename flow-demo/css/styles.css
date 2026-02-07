@@ -285,6 +285,190 @@ body {
     font-size: 12px;
 }
 
+/* Priority Selector */
+.priority-selector {
+    display: flex;
+    gap: 8px;
+}
+
+.priority-option {
+    flex: 1;
+    padding: 8px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all var(--transition);
+}
+
+.priority-option:hover {
+    background: var(--bg-hover);
+}
+
+.priority-option.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+.priority-option.low.selected {
+    background: var(--priority-low);
+    border-color: var(--priority-low);
+}
+
+.priority-option.medium.selected {
+    background: var(--priority-medium);
+    border-color: var(--priority-medium);
+}
+
+.priority-option.high.selected {
+    background: var(--priority-high);
+    border-color: var(--priority-high);
+}
+
+/* Label Selector */
+.label-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.label-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.label-option:hover {
+    background: var(--bg-hover);
+}
+
+.label-option input[type="checkbox"] {
+    accent-color: var(--accent);
+}
+
+/* Checklist */
+.checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.checklist-item.checked {
+    opacity: 0.6;
+}
+
+.checklist-item.checked span {
+    text-decoration: line-through;
+}
+
+.checklist-drag-handle {
+    cursor: grab;
+    color: var(--text-tertiary);
+    padding: 2px;
+}
+
+.checklist-drag-handle:active {
+    cursor: grabbing;
+}
+
+.delete-item {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.delete-item:hover {
+    color: var(--danger);
+}
+
+.add-checklist-item {
+    display: flex;
+    gap: 8px;
+}
+
+.add-checklist-item input {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.add-checklist-item input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* Attachments */
+.attachment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.attachment-icon {
+    color: var(--text-tertiary);
+}
+
+.attachment-name {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.attachment-delete {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.attachment-delete:hover {
+    color: var(--danger);
+}
+
 /* Main Content */
 .main-content {
     padding: 20px;
