@@ -27,7 +27,7 @@
                 TaskMaster
             </div>
             <div class="board-selector">
-                <select class="board-dropdown" id="boardSelect">
+                <select class="board-dropdown form-select" id="boardSelect">
                     <option value="">Select a board...</option>
                 </select>
                 <button class="btn btn-icon" id="editBoardBtn" title="Edit Board Name">✏️</button>
@@ -71,7 +71,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Board Name</label>
-                    <input type="text" id="newBoardName" placeholder="Enter board name...">
+                    <input type="text" id="newBoardName" class="form-input" placeholder="Enter board name...">
                 </div>
                 <div class="form-group">
                     <label>Template</label>
@@ -100,15 +100,15 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Task Title</label>
-                    <input type="text" id="newTaskTitle" placeholder="Enter task title...">
+                    <input type="text" id="newTaskTitle" class="form-input" placeholder="Enter task title...">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea id="newTaskDescription" rows="3" placeholder="Add description..."></textarea>
+                    <textarea id="newTaskDescription" class="form-textarea" rows="3" placeholder="Add description..."></textarea>
                 </div>
                 <div class="form-group">
                     <label>Priority</label>
-                    <select id="newTaskPriority">
+                    <select id="newTaskPriority" class="form-select">
                         <option value="low">Low</option>
                         <option value="medium" selected>Medium</option>
                         <option value="high">High</option>
@@ -116,11 +116,11 @@
                 </div>
                 <div class="form-group">
                     <label>Due Date</label>
-                    <input type="date" id="newTaskDueDate">
+                    <input type="date" id="newTaskDueDate" class="form-input">
                 </div>
                 <div class="form-group">
                     <label>Tags (comma separated)</label>
-                    <input type="text" id="newTaskTags" placeholder="bug, feature, urgent...">
+                    <input type="text" id="newTaskTags" class="form-input" placeholder="bug, feature, urgent...">
                 </div>
             </div>
             <div class="modal-footer">
