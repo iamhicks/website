@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOW — TaskMaster (Demo)</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>FLOW — TaskMaster (Demo)</title>
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/all.css">
-    <link rel="stylesheet" href="css/styles.css?v=2">
+    <link rel="stylesheet" href="css/styles.css?v=3">
 </head>
 <body>
     <div class="demo-banner">
@@ -27,140 +27,383 @@
                 TaskMaster
             </div>
             <div class="board-selector">
-                <select class="board-dropdown form-select" id="boardSelect">
+                <select class="board-dropdown" id="boardSelect">
                     <option value="">Select a board...</option>
                 </select>
                 <button class="btn btn-icon" id="editBoardBtn" title="Edit Board Name">✏️</button>
                 <button class="btn btn-icon" id="deleteBoardBtn" title="Delete Board">🗑️</button>
             </div>
         </div>
-        <div class="header-right">
-            <button class="btn btn-primary" id="createBoardBtn">+ New Board</button>
-            <div class="user-menu" id="userMenuBtn">
-                <button class="btn btn-icon" title="Settings">⚙️</button>
+        <div class="header-center">
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="board">Board</button>
+                <button class="view-btn" data-view="calendar">Calendar</button>
             </div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-icon" id="searchBtn" title="Search (Ctrl+K)">🔍</button>
+            <button class="btn btn-icon" id="templateBtn" title="Templates">📄</button>
+            <button class="btn btn-icon" id="labelsBtn" title="Manage Labels">🏷️</button>
+            <button class="btn btn-icon" id="archiveBtn" title="Archive">📦</button>
+            <button class="btn btn-icon" id="settingsBtn" title="Settings">⚙️</button>
+            <button class="btn btn-icon" id="helpBtn" title="Help (?)">❓</button>
+            <button class="btn btn-primary" id="newBoardBtn">+ New Board</button>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="main-content" id="mainContent">
-        <!-- Boards Grid -->
-        <div class="boards-grid" id="boardsGrid"></div>
-        
-        <!-- Selected Board View -->
-        <div class="board-view hidden" id="boardView">
-            <div class="board-header">
-                <h2 id="currentBoardName"></h2>
-                <div class="board-actions">
-                    <button class="btn btn-secondary" id="addListBtn">+ Add List</button>
-                    <button class="btn btn-secondary" id="backToBoardsBtn">← Back to Boards</button>
-                </div>
-            </div>
-            
-            <div class="lists-container" id="listsContainer"></div>
+    <!-- Toolbar -->
+    <div class="toolbar" id="toolbar">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search cards...">
         </div>
-    </main>
+        <div class="filter-chips" id="filterChips">
+            <div class="chip" data-filter="priority-high">🔴 High Priority</div>
+            <div class="chip" data-filter="priority-medium">🟡 Medium Priority</div>
+            <div class="chip" data-filter="priority-low">🟢 Low Priority</div>
+            <div class="chip" data-filter="overdue">⏰ Overdue</div>
+            <div class="chip" data-filter="today">📅 Today</div>
+        </div>
+    </div>
 
-    <!-- Create Board Modal -->
-    <div class="modal" id="createBoardModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create New Board</h3>
-                <button class="modal-close" id="closeCreateBoard">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Board Name</label>
-                    <input type="text" id="newBoardName" class="form-input" placeholder="Enter board name...">
-                </div>
-                <div class="form-group">
-                    <label>Template</label>
-                    <select id="boardTemplate">
-                        <option value="blank">Blank Board</option>
-                        <option value="kanban">Kanban (To Do, Doing, Done)</option>
-                        <option value="sprint">Sprint Planning</option>
-                        <option value="personal">Personal Tasks</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancelCreateBoard">Cancel</button>
-                <button class="btn btn-primary" id="confirmCreateBoard">Create Board</button>
+    <!-- Board View -->
+    <div class="board-container" id="boardView">
+        <div class="board" id="board">
+            <!-- Columns will be rendered here -->
+            <div class="add-column" id="addColumnBtn">
+                <span>+</span> Add Column
             </div>
         </div>
     </div>
 
-    <!-- Add Task Modal -->
-    <div class="modal" id="addTaskModal">
-        <div class="modal-content">
+    <!-- Calendar View -->
+    <div class="calendar-view" id="calendarView">
+        <div class="calendar-header">
+            <div class="calendar-nav">
+                <button class="btn" id="prevMonth">←</button>
+                <span class="calendar-month" id="calendarMonth">January 2026</span>
+                <button class="btn" id="nextMonth">→</button>
+            </div>
+            <button class="btn" id="todayBtn">Today</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- Calendar will be rendered here -->
+        </div>
+    </div>
+
+    <!-- Card Edit Modal -->
+    <div class="modal-overlay" id="cardModal">
+        <div class="modal">
             <div class="modal-header">
-                <h3>Add New Task</h3>
-                <button class="modal-close" id="closeAddTask">×</button>
+                <span class="modal-title">Edit Card</span>
+                <button class="modal-close" id="closeCardModal">×</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Task Title</label>
-                    <input type="text" id="newTaskTitle" class="form-input" placeholder="Enter task title...">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="cardTitle" placeholder="Card title">
                 </div>
                 <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="newTaskDescription" class="form-textarea" rows="3" placeholder="Add description..."></textarea>
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="cardDescription" placeholder="Add a description..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Due Date</label>
+                        <input type="date" class="form-input" id="cardDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <div class="priority-selector">
+                            <div class="priority-option low" data-priority="low">Low</div>
+                            <div class="priority-option medium" data-priority="medium">Medium</div>
+                            <div class="priority-option high" data-priority="high">High</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Recurring</label>
+                        <select class="form-select" id="cardRecurring">
+                            <option value="">No</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Labels</label>
+                        <div class="label-selector" id="labelSelector">
+                            <!-- Labels will be rendered here dynamically -->
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Priority</label>
-                    <select id="newTaskPriority" class="form-select">
-                        <option value="low">Low</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="high">High</option>
-                    </select>
+                    <label class="form-label">Attachments</label>
+                    <div class="attachment-list" id="attachmentList"></div>
+                    <input type="file" id="fileInput" style="display: none;" multiple>
+                    <button class="btn" id="addAttachmentBtn" style="margin-top: 8px;">+ Add File</button>
                 </div>
                 <div class="form-group">
-                    <label>Due Date</label>
-                    <input type="date" id="newTaskDueDate" class="form-input">
+                    <label class="form-label">Checklist</label>
+                    <div class="checklist" id="checklist"></div>
+                    <div class="add-checklist-item">
+                        <input type="text" id="newChecklistItem" placeholder="Add item...">
+                        <button class="btn" id="addChecklistItemBtn">Add</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Tags (comma separated)</label>
-                    <input type="text" id="newTaskTags" class="form-input" placeholder="bug, feature, urgent...">
+                <div class="form-group" style="margin-top: 20px; display: flex; gap: 8px;">
+                    <button class="btn btn-primary" id="saveCardBtn">Save Card</button>
+                    <button class="btn" id="archiveCardBtn">Archive</button>
+                    <button class="btn" id="deleteCardBtn" style="margin-left: auto; color: var(--priority-high);">Delete</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancelAddTask">Cancel</button>
-                <button class="btn btn-primary" id="confirmAddTask">Add Task</button>
+        </div>
+    </div>
+
+    <!-- New Board Modal -->
+    <div class="modal-overlay" id="boardModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="boardModalTitle">Create New Board</span>
+                <button class="modal-close" id="closeBoardModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Board Name</label>
+                    <input type="text" class="form-input" id="boardName" placeholder="My Board">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Choose Template</label>
+                    <div class="template-grid" id="templateGrid">
+                        <div class="template-card" data-template="blank">
+                            <div class="template-icon">📄</div>
+                            <div class="template-name">Blank</div>
+                        </div>
+                        <div class="template-card" data-template="todo">
+                            <div class="template-icon">✅</div>
+                            <div class="template-name">To Do</div>
+                        </div>
+                        <div class="template-card" data-template="kanban">
+                            <div class="template-icon">📊</div>
+                            <div class="template-name">Kanban</div>
+                        </div>
+                        <div class="template-card" data-template="project">
+                            <div class="template-icon">🚀</div>
+                            <div class="template-name">Project</div>
+                        </div>
+                        <div class="template-card" data-template="routine">
+                            <div class="template-icon">🔄</div>
+                            <div class="template-name">Daily Routine</div>
+                        </div>
+                        <div class="template-card" data-template="content">
+                            <div class="template-icon">📝</div>
+                            <div class="template-name">Content Plan</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <button class="btn btn-primary" id="createBoardBtn">Create Board</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Labels Management Modal -->
+    <div class="modal-overlay" id="labelsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Manage Custom Labels</span>
+                <button class="modal-close" id="closeLabelsModal">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px; color: var(--text-secondary);">Create custom named labels to organize your cards. Labels can have custom colors and names like "Work", "Personal", "Urgent", etc.</p>
+                
+                <div class="form-group">
+                    <label class="form-label">Your Labels</label>
+                    <div class="custom-labels-list" id="customLabelsList">
+                        <!-- Custom labels will be rendered here -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Add New Label</label>
+                    <div class="add-custom-label">
+                        <input type="color" id="newLabelColor" value="#58a6ff">
+                        <input type="text" id="newLabelName" placeholder="Label name (e.g., Work, Urgent)">
+                        <button class="btn btn-primary" id="addNewLabelBtn">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Modal -->
+    <div class="modal-overlay" id="templatesModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Apply Template</span>
+                <button class="modal-close" id="closeTemplatesModal">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px; color: var(--text-secondary);">Select a template to add to your current board:</p>
+                <div class="template-grid" id="applyTemplateGrid">
+                    <div class="template-card" data-template="todo">
+                        <div class="template-icon">✅</div>
+                        <div class="template-name">To Do List</div>
+                    </div>
+                    <div class="template-card" data-template="sprint">
+                        <div class="template-icon">🏃</div>
+                        <div class="template-name">Sprint Planning</div>
+                    </div>
+                    <div class="template-card" data-template="bug">
+                        <div class="template-icon">🐛</div>
+                        <div class="template-name">Bug Tracker</div>
+                    </div>
+                    <div class="template-card" data-template="goals">
+                        <div class="template-icon">🎯</div>
+                        <div class="template-name">Goals</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archive Modal -->
+    <div class="modal-overlay" id="archiveModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Archived Cards</span>
+                <button class="modal-close" id="closeArchiveModal">×</button>
+            </div>
+            <div class="modal-body" id="archiveList">
+                <!-- Archived cards will be rendered here -->
             </div>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
             <div class="modal-header">
-                <h3>Settings</h3>
-                <button class="modal-close" id="closeSettings">×</button>
+                <span class="modal-title">Settings</span>
+                <button class="modal-close" id="closeSettingsModal">×</button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label>Theme</label>
-                    <select id="themeSelect">
-                        <option value="dark">Dark</option>
-                        <option value="light">Light</option>
-                    </select>
+                <div class="help-section">
+                    <h3>Data Management</h3>
+                    <div class="form-group">
+                        <button class="btn" id="exportBtn">📤 Export Data (JSON)</button>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn" id="importBtn">📥 Import Data</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn" id="backupBtn">💾 Create Backup</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Export Data</label>
-                    <button class="btn btn-secondary" id="exportDataBtn">Export as JSON</button>
+                <div class="help-section">
+                    <h3>Preferences</h3>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="autoSaveToggle" checked> Auto-save changes
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="backupReminderToggle" checked> Show backup reminders
+                        </label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Import Data</label>
-                    <input type="file" id="importFile" accept=".json">
-                </div>
-                <div class="form-group">
-                    <label>Reset Demo</label>
-                    <button class="btn btn-danger" id="resetDemoBtn">Reset All Data</button>
+                <div class="help-section">
+                    <h3>Danger Zone</h3>
+                    <button class="btn" id="clearAllBtn" style="color: var(--priority-high);">🗑️ Clear All Data</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="js/app.js?v=2"></script>
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Keyboard Shortcuts</span>
+                <button class="modal-close" id="closeHelpModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3>General</h3>
+                    <div class="shortcut-list">
+                        <div class="shortcut-item">
+                            <span>Quick Add Card</span>
+                            <span class="shortcut-key">N</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Search</span>
+                            <span class="shortcut-key">Ctrl + K</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Close Modal</span>
+                            <span class="shortcut-key">Esc</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Toggle Calendar View</span>
+                            <span class="shortcut-key">C</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <h3>Card Actions</h3>
+                    <div class="shortcut-list">
+                        <div class="shortcut-item">
+                            <span>Edit Card</span>
+                            <span class="shortcut-key">Click card</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Drag to Move</span>
+                            <span class="shortcut-key">Click & Drag</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <h3>Board Actions</h3>
+                    <div class="shortcut-list">
+                        <div class="shortcut-item">
+                            <span>New Board</span>
+                            <span class="shortcut-key">B</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <span>Add Column</span>
+                            <span class="shortcut-key">+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Add Overlay -->
+    <div class="quick-add-overlay" id="quickAddOverlay">
+        <div class="quick-add-box">
+            <input type="text" class="quick-add-input" id="quickAddInput" placeholder="What needs to be done?">
+            <div class="quick-add-hint">
+                Press Enter to add • Press Esc to cancel • Type @column to specify column
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="menu-overlay" id="menuOverlay">
+        <div class="menu" id="contextMenu">
+            <!-- Menu items will be dynamically added -->
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    
+    <script src="js/app.js?v=3"></script>
 </body>
 </html>
