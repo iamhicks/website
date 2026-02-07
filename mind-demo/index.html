@@ -5306,8 +5306,8 @@
             renderTagResults(tag) {
                 const notes = this.data.notes.filter(n => n.tags.includes(tag));
                 
-                // Hide normal editor content
-                document.getElementById('emptyState').classList.remove('hidden');
+                // Hide normal editor content and empty state
+                document.getElementById('emptyState').classList.add('hidden');
                 document.getElementById('editorToolbar').classList.add('hidden');
                 document.getElementById('tabsBar').classList.add('hidden');
                 document.getElementById('editorContentWrapper').classList.add('hidden');
@@ -5318,6 +5318,14 @@
                     resultsContainer = document.createElement('div');
                     resultsContainer.id = 'tagResultsContainer';
                     resultsContainer.className = 'tag-results-view';
+                    resultsContainer.style.position = 'absolute';
+                    resultsContainer.style.top = '0';
+                    resultsContainer.style.left = '0';
+                    resultsContainer.style.right = '0';
+                    resultsContainer.style.bottom = '0';
+                    resultsContainer.style.overflowY = 'auto';
+                    resultsContainer.style.zIndex = '10';
+                    resultsContainer.style.background = 'var(--bg-primary)';
                     document.querySelector('.main').appendChild(resultsContainer);
                 }
                 
