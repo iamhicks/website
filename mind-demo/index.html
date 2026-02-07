@@ -1255,6 +1255,7 @@
             flex-direction: column;
             background: var(--bg-primary);
             min-width: 0;
+            position: relative;
         }
 
         .main-header {
@@ -5352,21 +5353,24 @@
                     resultsContainer = document.createElement('div');
                     resultsContainer.id = 'tagResultsContainer';
                     resultsContainer.className = 'tag-results-view';
-                    resultsContainer.style.position = 'absolute';
-                    resultsContainer.style.top = '0';
-                    resultsContainer.style.left = '0';
-                    resultsContainer.style.right = '0';
-                    resultsContainer.style.bottom = '0';
-                    resultsContainer.style.overflowY = 'auto';
-                    resultsContainer.style.zIndex = '10';
-                    resultsContainer.style.background = 'var(--bg-primary)';
+                    resultsContainer.style.cssText = `
+                        position: absolute;
+                        top: var(--header-height, 50px);
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        overflow-y: auto;
+                        z-index: 10;
+                        background: var(--bg-primary);
+                        padding: 24px;
+                    `;
                     document.querySelector('.main').appendChild(resultsContainer);
                 }
                 
                 // Clear previous and show
                 resultsContainer.style.display = 'block';
                 resultsContainer.innerHTML = `
-                    <div style="padding: 24px; max-width: 900px; margin: 0 auto;">
+                    <div style="max-width: 900px; margin: 0 auto;">
                         <div style="margin-bottom: 24px;">
                             <h2 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
                                 <i class="ph ph-tag" style="color: #fbbf24;"></i>
