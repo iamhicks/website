@@ -1376,6 +1376,12 @@
                 document.getElementById('boardModal').classList.add('active');
                 document.getElementById('boardName').value = '';
                 document.getElementById('boardName').focus();
+                
+                // Pre-select the last used template
+                const lastTemplate = localStorage.getItem('lastBoardTemplate') || 'blank';
+                document.querySelectorAll('#templateGrid .template-card').forEach(c => c.classList.remove('selected'));
+                const templateToSelect = document.querySelector(`#templateGrid .template-card[data-template="${lastTemplate}"]`);
+                if (templateToSelect) templateToSelect.classList.add('selected');
             });
             
             document.getElementById('closeBoardModal').addEventListener('click', () => {
@@ -1399,6 +1405,7 @@
                 card.addEventListener('click', () => {
                     document.querySelectorAll('#templateGrid .template-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
+                    localStorage.setItem('lastBoardTemplate', card.dataset.template);
                 });
             });
             
