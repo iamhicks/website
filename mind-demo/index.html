@@ -3214,6 +3214,11 @@
                 this.db = null;
                 this.openTabs = []; // Array of note IDs
                 this.activeTabId = null;
+                
+                // AI Integration
+                this.ollamaUrl = 'http://localhost:11434';
+                this.ollamaModel = 'llama3.2';
+                this.ollamaReady = false;
 
                 this.init();
             }
@@ -7269,9 +7274,9 @@
 
                 // AI action buttons
                 document.querySelectorAll('.ai-action-btn').forEach(btn => {
-                    btn.onclick = () => {
+                    btn.onclick = async () => {
                         const action = btn.dataset.action;
-                        this.processAiSelection(action);
+                        await this.processAiSelection(action);
                     };
                 });
 
@@ -7284,48 +7289,6 @@
                 document.getElementById('discardAiSuggestion').onclick = () => {
                     document.getElementById('aiSuggestionResult').style.display = 'none';
                 };
-            }
-
-            processAiSelection(action) {
-                const loading = document.getElementById('aiLoadingState');
-                const result = document.getElementById('aiSuggestionResult');
-                const resultText = document.getElementById('aiSuggestionText');
-
-                loading.style.display = 'block';
-                result.style.display = 'none';
-
-                // Simulate AI processing
-                setTimeout(() => {
-                    loading.style.display = 'none';
-                    result.style.display = 'block';
-
-                    const original = this.currentAiText;
-                    let suggestion = original;
-
-                    switch(action) {
-                        case 'improve':
-                            suggestion = this.simulateAiImprove(original);
-                            break;
-                        case 'grammar':
-                            suggestion = this.simulateAiGrammar(original);
-                            break;
-                        case 'shorter':
-                            suggestion = this.simulateAiShorter(original);
-                            break;
-                        case 'longer':
-                            suggestion = this.simulateAiLonger(original);
-                            break;
-                        case 'simplify':
-                            suggestion = this.simulateAiSimplify(original);
-                            break;
-                        case 'professional':
-                            suggestion = this.simulateAiProfessional(original);
-                            break;
-                    }
-
-                    this.currentAiSuggestion = suggestion;
-                    resultText.textContent = suggestion;
-                }, 1500);
             }
 
             simulateAiImprove(text) {
@@ -7632,15 +7595,18 @@
 
                 // Test Ollama connection
                 document.getElementById('testOllamaConnection')?.addEventListener('click', async () => {
-                    try {
-                        const response = await fetch('http://localhost:11434/api/tags');
-                        if (response.ok) {
-                            document.getElementById('ollamaStatus').textContent = '✅ Connected! Ollama is running.';
-                            document.getElementById('ollamaStatus').style.color = 'var(--success)';
-                        }
-                    } catch (e) {
-                        document.getElementById('ollamaStatus').textContent = '❌ Not connected. Please install and start Ollama.';
-                        document.getElementById('ollamaStatus').style.color = 'var(--danger)';
+                    const statusEl = document.getElementById('ollamaStatus');
+                    statusEl.textContent = 'Testing connection...';
+                    statusEl.style.color = 'var(--text-secondary)';
+                    
+                    const result = await this.testOllamaConnection();
+                    
+                    if (result.success) {
+                        statusEl.textContent = `✅ Connected! ${result.models.length} models available.`;
+                        statusEl.style.color = 'var(--success)';
+                    } else {
+                        statusEl.textContent = '❌ Not connected. Please install and start Ollama.';
+                        statusEl.style.color = 'var(--danger)';
                     }
                 });
 
@@ -7652,6 +7618,110 @@
                     document.getElementById('aiPanelModal').classList.remove('active');
                     alert('AI settings saved! AI features are ready to use in demo mode.');
                 });
+            }
+            
+            // ==================== AI METHODS ====================
+            
+            async testOllamaConnection() {
+                try {
+                    const response = await fetch(`${this.ollamaUrl}/api/tags`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.ollamaReady = true;
+                        return { success: true, models: data.models || [] };
+                    }
+                    return { success: false, error: 'Could not connect to Ollama' };
+                } catch (err) {
+                    return { success: false, error: err.message };
+                }
+            }
+            
+            async generateWithOllama(prompt, systemPrompt = '') {
+                if (!this.ollamaReady) {
+                    const test = await this.testOllamaConnection();
+                    if (!test.success) return { error: test.error };
+                }
+                
+                const model = document.getElementById('ollamaModel')?.value || this.ollamaModel;
+                
+                try {
+                    const response = await fetch(`${this.ollamaUrl}/api/generate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            model: model,
+                            prompt: prompt,
+                            system: systemPrompt,
+                            stream: false
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        return { success: true, text: data.response };
+                    }
+                    return { error: 'Generation failed' };
+                } catch (err) {
+                    return { error: err.message };
+                }
+            }
+            
+            async processAiSelection(action) {
+                const loading = document.getElementById('aiLoadingState');
+                const result = document.getElementById('aiSuggestionResult');
+                const resultText = document.getElementById('aiSuggestionText');
+
+                loading.style.display = 'block';
+                result.style.display = 'none';
+
+                const original = this.currentAiText;
+                let suggestion = original;
+                
+                // Try Ollama first if connected
+                if (this.ollamaReady) {
+                    const prompts = {
+                        improve: `Improve this text:\n\n${original}`,
+                        grammar: `Fix grammar and spelling:\n\n${original}`,
+                        shorter: `Make this shorter and more concise:\n\n${original}`,
+                        longer: `Expand on this with more detail:\n\n${original}`,
+                        simplify: `Simplify this for easier reading:\n\n${original}`,
+                        professional: `Make this more professional:\n\n${original}`
+                    };
+                    
+                    const aiResult = await this.generateWithOllama(prompts[action] || prompts.improve);
+                    
+                    if (aiResult.success) {
+                        suggestion = aiResult.text;
+                    } else {
+                        // Fallback to simulation
+                        suggestion = this.simulateAiAction(action, original);
+                    }
+                } else {
+                    // Demo mode - use simulation
+                    await new Promise(r => setTimeout(r, 800));
+                    suggestion = this.simulateAiAction(action, original);
+                }
+
+                loading.style.display = 'none';
+                result.style.display = 'block';
+                resultText.textContent = suggestion;
+                this.currentAiSuggestion = suggestion;
+            }
+            
+            simulateAiAction(action, original) {
+                switch(action) {
+                    case 'improve': return this.simulateAiImprove(original);
+                    case 'grammar': return this.simulateAiGrammar(original);
+                    case 'shorter': return this.simulateAiShorter(original);
+                    case 'longer': return this.simulateAiLonger(original);
+                    case 'simplify': return this.simulateAiSimplify(original);
+                    case 'professional': return this.simulateAiProfessional(original);
+                    default: return original;
+                }
             }
         }
 
