@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLOW — TaskMaster (Demo)</title>
+    <title>Flow (Demo)</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-    <link rel="stylesheet" href="css/styles.css?v=16">
+    <link rel="stylesheet" href="css/styles.css?v=17">
 </head>
 <body>
     <div class="demo-banner">
@@ -24,20 +24,20 @@
         <div class="header-left">
             <div class="logo">
                 <div class="logo-icon"><i class="ph ph-kanban"></i></div>
-                TaskMaster <span style="font-size:0.6em;opacity:0.5;margin-left:4px">v2.1</span>
+                Flow <span style="font-size:0.6em;opacity:0.5;margin-left:4px">v2.1</span>
             </div>
             <div class="board-selector">
                 <select class="board-dropdown" id="boardSelect">
                     <option value="">Select a board...</option>
                 </select>
-                <button class="btn btn-icon" id="editBoardBtn" title="Edit Board Name">✏️</button>
-                <button class="btn btn-icon" id="deleteBoardBtn" title="Delete Board">🗑️</button>
+                <button class="btn btn-icon" id="editBoardBtn" title="Edit Board Name"><i class="ph ph-pencil-simple"></i></button>
+                <button class="btn btn-icon" id="deleteBoardBtn" title="Delete Board"><i class="ph ph-trash"></i></button>
             </div>
         </div>
         <div class="header-center">
             <div class="view-toggle">
-                <button class="view-btn active" data-view="board">Board</button>
-                <button class="view-btn" data-view="calendar">Calendar</button>
+                <button class="view-btn active" data-view="board"><i class="ph ph-kanban"></i> Board</button>
+                <button class="view-btn" data-view="calendar"><i class="ph ph-calendar"></i> Calendar</button>
             </div>
         </div>
         <div class="header-right">
