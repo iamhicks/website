@@ -5273,14 +5273,21 @@
             }
 
             filterByTag(tag) {
-                // Toggle off if already filtering by this tag
+                // If already filtering by this tag and viewing a note, show results again
                 if (this.currentTagFilter === tag) {
-                    this.currentTagFilter = null;
-                    this.currentFolder = 'root';
-                    this.render();
-                    // Hide tag results if showing
-                    const tagResults = document.getElementById('tagResultsContainer');
-                    if (tagResults) tagResults.style.display = 'none';
+                    if (this.currentNote) {
+                        // We're viewing a note, go back to tag results
+                        this.currentNote = null;
+                        this.showEmptyState();
+                        this.renderTagResults(tag);
+                    } else {
+                        // Already viewing results, toggle off
+                        this.currentTagFilter = null;
+                        this.currentFolder = 'root';
+                        const tagResults = document.getElementById('tagResultsContainer');
+                        if (tagResults) tagResults.style.display = 'none';
+                        this.render();
+                    }
                     return;
                 }
 
