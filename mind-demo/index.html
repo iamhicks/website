@@ -3371,8 +3371,8 @@
             // ==================== THEME ====================
 
             applyTheme() {
-                const theme = this.data.settings.theme;
-                const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                const theme = this.data.settings.theme || 'dark';
+                const isDark = theme === 'dark';
                 
                 if (isDark) {
                     document.documentElement.setAttribute('data-theme', 'dark');
@@ -3380,25 +3380,18 @@
                     document.documentElement.removeAttribute('data-theme');
                 }
                 
-                // Update theme select dropdown
-                const themeSelect = document.getElementById('themeSelect');
-                if (themeSelect) {
-                    themeSelect.value = theme;
-                }
-                
                 // Update theme button icon
                 const themeBtn = document.getElementById('themeBtn');
                 if (themeBtn) {
                     themeBtn.innerHTML = isDark ? '<i class="ph ph-sun"></i>' : '<i class="ph ph-moon"></i>';
                     themeBtn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-                    themeBtn.style.color = 'var(--text-secondary)';
                 }
             }
 
             toggleTheme() {
-                const themes = ['light', 'dark', 'auto'];
                 const current = this.data.settings.theme;
-                const next = themes[(themes.indexOf(current) + 1) % themes.length];
+                // Toggle between light and dark only (no auto)
+                const next = current === 'dark' ? 'light' : 'dark';
                 this.data.settings.theme = next;
                 this.applyTheme();
                 this.saveData();
