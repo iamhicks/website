@@ -3,12 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>EDGE — Trading Journal (Demo)</title>
-    <link rel="stylesheet" href="css/styles.css?v=2">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/all.css">
+    <style>
+        .demo-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 10px 16px;
+            z-index: 10000;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .demo-banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .demo-reset-timer {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .demo-banner-link {
+            color: white;
+            text-decoration: none;
+            margin-left: auto;
+            opacity: 0.9;
+        }
+        .app-container {
+            padding-top: 40px;
+        }
+    </style>
 </head>
 <body>
     <div class="demo-banner">
@@ -582,6 +618,52 @@
         </div>
     </div>
 
-    <script src="js/app.js?v=2"></script>
+    <script src="storage.js"></script>
+    <script src="templates.js"></script>
+    <script src="psychology.js"></script>
+    <script src="statistics.js"></script>
+    <script src="mistakes.js"></script>
+    <script src="accounts.js"></script>
+    <script src="app.js"></script>
+    
+    <!-- Demo Auto-Reset -->
+    <script>
+        (function() {
+            const RESET_INTERVAL = 60 * 60 * 1000; // 1 hour
+            const LAST_RESET_KEY = 'edge_demo_last_reset';
+            
+            const now = Date.now();
+            const lastReset = parseInt(localStorage.getItem(LAST_RESET_KEY) || '0');
+            
+            if (!lastReset || (now - lastReset > RESET_INTERVAL)) {
+                // Clear all trading journal data
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.startsWith('tradingJournal') || key.startsWith('tj_') || key.startsWith('edge_'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                localStorage.setItem(LAST_RESET_KEY, now.toString());
+                console.log('EDGE demo: Auto-reset performed');
+            }
+            
+            // Update timer if banner exists
+            function updateTimer() {
+                const timerEl = document.getElementById('demoResetTimer');
+                if (!timerEl) return;
+                const currentReset = parseInt(localStorage.getItem(LAST_RESET_KEY) || Date.now().toString());
+                const nextReset = currentReset + RESET_INTERVAL;
+                const remaining = nextReset - Date.now();
+                if (remaining <= 0) { location.reload(); return; }
+                const mins = Math.floor(remaining / 60000);
+                const secs = Math.floor((remaining % 60000) / 1000);
+                timerEl.textContent = `Resets in ${mins}m ${secs.toString().padStart(2, '0')}s`;
+            }
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        })();
+    </script>
 </body>
 </html>
