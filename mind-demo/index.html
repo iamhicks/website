@@ -7744,10 +7744,12 @@
                 
                 // Get approximate file size for display
                 const modelSizes = {
+                    "gemma-2b-it-q4f16_1-MLC": "0.5GB",
                     "Phi-3-mini-4k-instruct-q4f16_1-MLC": "1.2GB",
-                    "Phi-3-mini-4k-instruct-q4f32_1-MLC": "1.8GB"
+                    "Phi-3-mini-4k-instruct-q4f32_1-MLC": "1.8GB",
+                    "Llama-3-8B-Instruct-q4f16_1-MLC": "3.5GB"
                 };
-                const size = modelSizes[selectedModel] || "1.2GB";
+                const size = modelSizes[selectedModel] || "unknown size";
                 
                 const statusEl = document.getElementById('aiStatusMessage');
                 if (statusEl) {
