@@ -399,6 +399,61 @@
         }
         
         /* Footer */
+        /* Comparison Section */
+        .comparison {
+            padding: 100px 24px;
+            background: var(--dark);
+        }
+
+        .comparison-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-top: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-column h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-white);
+        }
+
+        .comparison-column.them h3 {
+            color: var(--text-gray);
+        }
+
+        .comparison-column ul {
+            list-style: none;
+        }
+
+        .comparison-column li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comparison-column li:before {
+            content: '✓';
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .comparison-column.them li:before {
+            content: '✗';
+            color: var(--text-gray);
+        }
         footer {
             padding: 40px 24px;
             text-align: center;
@@ -613,6 +668,39 @@
         </div>
     </section>
 
+    <!-- Comparison Section -->
+    <section class="comparison">
+        <div class="section-header">
+            <h2>Mind_ai vs The Rest</h2>
+            <p>Why choose us over Notion, Obsidian, and other note-taking apps?</p>
+        </div>
+
+        <div class="comparison-grid">
+            <div class="comparison-column them">
+                <h3>Them (Notion/Obsidian)</h3>
+                <ul>
+                    <li>Monthly subscription or upsells</li>
+                    <li>Your data in their cloud</li>
+                    <li>Requires internet for full features</li>
+                    <li>Limited AI capabilities</li>
+                    <li>Complex learning curve</li>
+                    <li>Vendor lock-in</li>
+                </ul>
+            </div>
+            
+            <div class="comparison-column">
+                <h3>Us (Mind_ai)</h3>
+                <ul>
+                    <li>$29 once, yours forever</li>
+                    <li>Your data stays local</li>
+                    <li>Works 100% offline</li>
+                    <li>Local AI — no API keys</li>
+                    <li>Simple, intuitive design</li>
+                    <li>Export anytime (JSON/Markdown)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
     <footer>
         <p>© 2026 i_am_Hicks. Define yourself.</p>
         <p>
