@@ -12,15 +12,15 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --bg-dark: #0d1117;
-            --bg-card: #161b22;
-            --bg-tertiary: #21262d;
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --text-tertiary: #6e7681;
-            --border: #30363d;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
+            --bg-light: #F1F1F1;
+            --bg-dark: #1B1B1D;
+            --bg-card: #2A2A2C;
+            --bg-tertiary: #3A3A3C;
+            --text-primary: #FFFFFF;
+            --text-secondary: #817D7D;
+            --text-dark: #000000;
+            --border: #3A3A3C;
+            --border-light: #D1D1D1;
         }
         
         body {
@@ -37,7 +37,7 @@
             left: 0;
             right: 0;
             height: 60px;
-            background: rgba(13, 17, 23, 0.95);
+            background: rgba(27, 27, 29, 0.95);
             backdrop-filter: blur(20px);
             z-index: 1000;
             border-bottom: 1px solid var(--border);
@@ -56,15 +56,12 @@
         .nav-logo {
             font-weight: 700;
             font-size: 18px;
-            color: #fff;
+            color: var(--text-primary);
             text-decoration: none;
         }
         
         .nav-logo span {
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-secondary);
         }
         
         .nav-links {
@@ -97,7 +94,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: var(--text-tertiary);
+            color: var(--text-secondary);
             margin-bottom: 16px;
         }
         
@@ -110,10 +107,7 @@
         }
         
         .hero h1 span {
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-secondary);
         }
         
         .hero-subtitle {
@@ -148,81 +142,6 @@
         .story-section p strong {
             color: var(--text-primary);
             font-weight: 600;
-        }
-        
-        /* Founder Section */
-        .founder-section {
-            padding: 100px 24px;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .founder-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 48px;
-            align-items: start;
-        }
-        
-        @media (max-width: 768px) {
-            .founder-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-        }
-        
-        .founder-avatar {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 80px;
-            margin: 0 auto;
-        }
-        
-        .founder-info h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .founder-role {
-            font-size: 16px;
-            color: var(--accent-blue);
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-        
-        .founder-bio {
-            font-size: 16px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
-        
-        .founder-bio p {
-            margin-bottom: 16px;
-        }
-        
-        .credentials {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 24px;
-        }
-        
-        .credential-badge {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: var(--text-secondary);
         }
         
         /* Values Section */
@@ -265,14 +184,14 @@
         }
         
         .value-card:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--text-secondary);
             transform: translateY(-4px);
         }
         
         .value-icon {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            background: var(--bg-tertiary);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -296,7 +215,7 @@
         /* Mission Section */
         .mission-section {
             padding: 100px 24px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            background: var(--bg-card);
             text-align: center;
         }
         
@@ -346,11 +265,11 @@
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 20px;
-            color: var(--accent-purple);
+            color: var(--text-primary);
         }
         
         .different-column.them h3 {
-            color: #ef4444;
+            color: var(--text-secondary);
         }
         
         .different-column ul {
@@ -368,13 +287,13 @@
         
         .different-column li:before {
             content: '✓';
-            color: #22c55e;
+            color: var(--text-primary);
             font-weight: bold;
         }
         
         .different-column.them li:before {
             content: '✗';
-            color: #ef4444;
+            color: var(--text-secondary);
         }
         
         /* CTA Section */
@@ -420,13 +339,12 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
-            color: white;
+            background: var(--text-primary);
+            color: var(--bg-dark);
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+            background: var(--bg-light);
         }
         
         .btn-secondary {
@@ -461,10 +379,9 @@
         <div class="nav-content">
             <a href="/" class="nav-logo">i_am<span>Hicks</span></a>
             <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/mind/">MIND</a>
-                <a href="/flow/">FLOW</a>
-                <a href="/about/">About</a>
+                <a href="/mind/">Mind_ai</a>
+                <a href="/flow/">Flow_ai</a>
+                <a href="/about/">About Us</a>
             </div>
         </div>
     </nav>
@@ -478,41 +395,13 @@
     <section class="story-section">
         <h2>The Problem</h2>
         
-        <p>For 20 years, I designed software for big companies. Award-winning interfaces used by millions. I knew how to build tools that people loved to use.</p>
+        <p>For 20 years, I designed software for big companies. Award-winning interfaces. I knew how to build tools that people loved to use.</p>
         
         <p>But in my personal life, I was stuck. I was paying <strong>$200/month</strong> for productivity software. Notion, Todoist, various trading journals, finance apps — each one taking a monthly cut.</p>
         
         <p>Worse, <strong>I didn't own any of it</strong>. My data lived in someone else's cloud. My workflows were hostage to subscription fees. If any of those companies changed their pricing, changed their terms, or shut down — <strong>my productivity system would collapse</strong>.</p>
         
         <p>And I wasn't alone. Every freelancer, indie hacker, and privacy-conscious professional I knew had the same frustration. We were all renting our tools, feeding the subscription economy, and losing control of our digital lives.</p>
-    </section>
-
-    <section class="founder-section">
-        <div class="founder-content">
-            <div class="founder-avatar">👋</div>
-            
-            <div class="founder-info">
-                <h2>Pete</h2>
-                <div class="founder-role">Founder, Designer, Trader</div>
-                
-                <div class="founder-bio"
-                    <p>I've spent two decades designing software that millions of people use every day. I've led UI/UX teams, shipped award-winning products, and learned what makes tools truly great.</p>
-                    
-                    <p>I'm also a trader. I've studied the markets for 5 years, learning the psychology of profitable trading. I know what traders need because I am one.</p>
-                    
-                    <p>And I'm a father. I have a 4-year-old daughter who speaks English and Russian. I'm teaching her to value independence, privacy, and ownership — values that software should embody too.</p>
-                    
-                    <p>i_am_Hicks is the intersection of all these parts of my life: design excellence, trading discipline, and a deep belief that people should own their tools, not rent them.</p>
-                </div>
-                
-                <div class="credentials"
-                    <span class="credential-badge">🎨 20 Years UI/UX</span>
-                    <span class="credential-badge">🏆 Award-Winning Software</span>
-                    <span class="credential-badge">📈 5 Years Trading</span>
-                    <span class="credential-badge">👨‍👧 Father & Educator</span>
-                </div>
-            </div>
-        </div>
     </section>
 
     <section class="values-section">
@@ -588,7 +477,6 @@
                     <li>"Upgrade to Pro" banners</li>
                     <li>Locks you in</li>
                     <li>Sells your data</li>
-                    <li>Faceless corporation</li>
                 </ul>
             </div>
             
@@ -601,7 +489,6 @@
                     <li>No upsells, ever</li>
                     <li>Open formats, export anytime</li>
                     <li>Zero tracking</li>
-                    <li>Built by a real human</li>
                 </ul>
             </div>
         </div>
@@ -631,3 +518,5 @@
     </footer>
 </body>
 </html>
+</parameter>
+</invoke>
