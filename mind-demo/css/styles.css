@@ -1546,13 +1546,13 @@
         .task-checkbox:checked::after {
             content: '';
             position: absolute;
-            left: 5px;
-            top: 1px;
+            left: 4px;
+            top: 50%;
             width: 5px;
             height: 10px;
             border: solid white;
             border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
+            transform: translateY(-70%) rotate(45deg);
         }
 
         .tag-autocomplete-item:hover,
