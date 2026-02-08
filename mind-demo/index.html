@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>Mind</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -174,7 +171,6 @@
         .sidebar-search {
             padding: 12px 16px;
             border-bottom: 1px solid var(--border);
-            position: relative;
         }
 
         .search-input {
@@ -1255,7 +1251,6 @@
             flex-direction: column;
             background: var(--bg-primary);
             min-width: 0;
-            position: relative;
         }
 
         .main-header {
@@ -1407,15 +1402,15 @@
         }
 
         .selection-toolbar-btn.ai {
-            color: #fbbf24;
+            color: var(--accent);
             font-weight: 500;
             padding: 6px 12px;
             gap: 6px;
         }
 
         .selection-toolbar-btn.ai:hover {
-            background: #fbbf24;
-            color: #191919;
+            background: var(--accent);
+            color: white;
         }
 
         .selection-toolbar-divider {
@@ -1512,18 +1507,18 @@
         }
 
         .tag-autocomplete {
-            position: fixed;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
             background: var(--bg-primary);
-            border: 1px solid var(--accent);
+            border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             box-shadow: 0 4px 12px var(--shadow);
             max-height: 200px;
             overflow-y: auto;
-            z-index: 10000;
+            z-index: 1000;
             margin-top: 4px;
-            min-width: 120px;
-            width: auto;
-            white-space: nowrap;
         }
 
         .tag-autocomplete-item {
@@ -1534,36 +1529,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            white-space: nowrap;
-        }
-
-        .task-checkbox {
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid var(--text-tertiary);
-            border-radius: 3px;
-            background: transparent;
-            cursor: pointer;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .task-checkbox:checked {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .task-checkbox:checked::after {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 1px;
-            width: 5px;
-            height: 10px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
         }
 
         .tag-autocomplete-item:hover,
@@ -2414,7 +2379,7 @@
             <div class="modal-overlay" id="aiSuggestModal">
                 <div class="modal" style="max-width: 600px;">
                     <div class="modal-header">
-                        <div class="modal-title"><i class="ph ph-sparkle"></i> AI Suggest Edits</div>
+                        <div class="modal-title">✨ AI Suggest Edits</div>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -2488,12 +2453,12 @@
                                 <label class="form-label" style="font-size: 16px; margin-bottom: 16px;">Where are you importing from?</label>
                                 <div style="display: flex; gap: 20px; margin-top: 16px;">
                                     <div class="import-source-option" data-source="notion" style="flex: 1; padding: 32px 24px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; text-align: center; transition: all 0.2s;">
-                                        <div style="font-size: 40px; margin-bottom: 12px; color: var(--accent);"><i class="ph ph-file-text"></i></div>
+                                        <div style="font-size: 40px; margin-bottom: 12px;">📄</div>
                                         <div style="font-weight: 600; font-size: 18px; margin-bottom: 6px;">Notion</div>
                                         <div style="font-size: 14px; color: var(--text-secondary);">Export as Markdown</div>
                                     </div>
                                     <div class="import-source-option" data-source="obsidian" style="flex: 1; padding: 32px 24px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; text-align: center; transition: all 0.2s;">
-                                        <div style="font-size: 40px; margin-bottom: 12px; color: var(--accent);"><i class="ph ph-notebook"></i></div>
+                                        <div style="font-size: 40px; margin-bottom: 12px;">📝</div>
                                         <div style="font-weight: 600; font-size: 18px; margin-bottom: 6px;">Obsidian</div>
                                         <div style="font-size: 14px; color: var(--text-secondary);">Vault ZIP export</div>
                                     </div>
@@ -2509,7 +2474,7 @@
                                 </div>
                             </div>
                             <div class="form-group" style="padding: 16px; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: var(--radius); font-size: 14px; color: var(--text-primary);">
-                                <strong style="color: var(--accent);"><i class="ph ph-warning"></i> Import Limitations:</strong>
+                                <strong style="color: #fbbf24;">⚠️ Import Limitations:</strong>
                                 <ul style="margin: 12px 0 0 20px; padding: 0; color: var(--text-secondary);">
                                     <li style="margin-bottom: 6px;">Text content and basic formatting only</li>
                                     <li style="margin-bottom: 6px;">Images cannot be imported (external links will be preserved)</li>
@@ -2578,7 +2543,7 @@
                     </div>
                     <div class="modal-body">
                         <div style="padding: 12px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: var(--radius); margin-bottom: 20px; font-size: 13px;">
-                            <strong style="color: var(--accent);"><i class="ph ph-lightning"></i> Demo Mode:</strong> AI features are simulated. Connect a provider for real AI.
+                            <strong>⚡ AI features are simulated in demo mode.</strong> For real AI, connect a provider below.
                         </div>
                         
                         <div class="form-group">
@@ -2587,21 +2552,21 @@
                                 <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--accent); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
                                     <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
                                     <div style="flex: 1;">
-                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-rocket"></i> WebLLM (Recommended)</div>
+                                        <div style="font-weight: 600; margin-bottom: 4px;">🚀 WebLLM (Recommended)</div>
                                         <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. No installation. One-time 1.9GB download.</div>
                                     </div>
                                 </label>
                                 <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
                                     <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
                                     <div style="flex: 1;">
-                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-lightning"></i> Ollama Desktop</div>
+                                        <div style="font-weight: 600; margin-bottom: 4px;">⚡ Ollama Desktop</div>
                                         <div style="font-size: 13px; color: var(--text-secondary);">Better performance. Requires desktop app.</div>
                                     </div>
                                 </label>
                                 <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
                                     <input type="radio" name="aiProvider" value="cloud" style="margin-top: 2px;">
                                     <div style="flex: 1;">
-                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-cloud"></i> Cloud API</div>
+                                        <div style="font-weight: 600; margin-bottom: 4px;">☁️ Cloud API</div>
                                         <div style="font-size: 13px; color: var(--text-secondary);">OpenAI/Anthropic. Requires API key.</div>
                                     </div>
                                 </label>
@@ -2696,7 +2661,7 @@
                     </button>
                 </div>
 
-                <div class="editor-toolbar hidden" id="editorToolbar" style="display: none !important;">
+                <div class="editor-toolbar hidden" id="editorToolbar">
                     <div class="toolbar-group">
                         <button class="toolbar-btn" data-command="bold" title="Bold"><i class="ph ph-text-b"></i></button>
                         <button class="toolbar-btn" data-command="italic" title="Italic"><i class="ph ph-text-italic"></i></button>
@@ -2721,6 +2686,10 @@
                     <div class="toolbar-group">
                         <button class="toolbar-btn" data-command="removeFormat" title="Clear Formatting"><i class="ph ph-text-t-slash"></i></button>
                     </div>
+                    <div class="toolbar-group" style="margin-left: auto;">
+                        <button class="toolbar-btn" id="aiSuggestBtn" title="Suggest Edits"><i class="ph ph-sparkle"></i></button>
+                        <button class="toolbar-btn" id="moreBtn" title="More"><i class="ph ph-dots-three"></i></button>
+                    </div>
                 </div>
 
                 <!-- Tabs Bar -->
@@ -2730,8 +2699,7 @@
                     </div>
                     <div class="tabs-container" id="tabsContainer"></div>
                     <button class="tabs-new-btn" id="newTabBtn" title="New Note"><i class="ph ph-plus"></i></button>
-                    <div style="flex: 1;"></div>
-                    <button class="toolbar-btn" id="moreBtn" title="More" style="padding: 6px 10px; background: transparent; border: 1px solid var(--border); border-radius: 4px; color: var(--text-secondary); cursor: pointer; font-size: 14px; margin-right: 20px; align-self: center;"><i class="ph ph-dots-three"></i></button>
+                    <div class="tabs-spacer"></div>
                 </div>
 
                 <!-- Note Menu Dropdown -->
@@ -2803,9 +2771,6 @@
                                     <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
                                     <div class="tag-autocomplete" id="tagAutocomplete" style="display: none;"></div>
                                 </div>
-                                <button class="btn btn-secondary" id="suggestTagsBtn" title="AI Suggest Tags" style="padding: 4px 8px; font-size: 11px; margin-left: 4px; background: transparent; border: 1px solid var(--border); color: #fbbf24;">
-                                    <i class="ph ph-sparkle"></i> AI Tags
-                                </button>
                             </div>
                         </div>
                         
@@ -2820,35 +2785,21 @@
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                                 <select id="templateSelect" style="background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
                                     <option value="">Template</option>
-                                    <option value="save-current">+ Save as Template</option>
+                                    <option value="blank">Blank</option>
+                                    <option value="trading-journal">Trading Journal</option>
+                                    <option value="daily-review">Daily Review</option>
+                                    <option value="strategy">Strategy Plan</option>
+                                    <option value="meeting">Meeting Notes</option>
                                 </select>
                             </div>
                             <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
                         </div>
                         <div class="note-tab-content" id="summaryTabContent" style="display: none;">
-                            <!-- AI Summary Button -->
-                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                                <button class="btn btn-secondary" id="summarizeBtn" title="AI Summarize Note" style="background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; color: #fbbf24; cursor: pointer;">
-                                    <i class="ph ph-sparkle"></i> AI Summary
-                                </button>
-                            </div>
-                            <div id="summaryContent" style="padding: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
-                                <div id="summaryEmptyState">
-                                    <p style="font-style: italic; color: var(--text-tertiary);">No summary yet. Click "AI Summary" to generate one from your note content.</p>
-                                </div>
-                                <div id="summaryResult" style="display: none;">
-                                    <div id="summaryText"></div>
-                                    <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border);">
-                                        <small style="color: var(--text-tertiary);">
-                                            <i class="ph ph-info"></i> Demo mode: Summary generated from keywords
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="summaryContent" style="padding: 16px; color: var(--text-secondary);"><p>No summary yet. Start typing in the Note tab...</p></div>
                         </div>
                         <div class="note-tab-content" id="tasksTabContent" style="display: none;">
                             <div id="tasksList" style="padding: 8px 0;"></div>
-                            <button class="btn btn-secondary" id="addFirstTaskBtn" style="margin-top: 12px; font-size: 12px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary);"><i class="ph ph-plus"></i> Add Task</button>
+                            <button class="btn btn-secondary" id="addFirstTaskBtn" style="margin-top: 12px; font-size: 12px; padding: 6px 12px;"><i class="ph ph-plus"></i> Add First Task</button>
                         </div>
                     </div>
                     
@@ -2882,13 +2833,6 @@
                         </button>
                         <button class="selection-toolbar-btn" data-command="insertOrderedList" title="Numbered List">
                             <i class="ph ph-list-numbers"></i>
-                        </button>
-                        <span class="selection-toolbar-divider"></span>
-                        <button class="selection-toolbar-btn" id="toolbarLinkBtn" title="Insert Link">
-                            <i class="ph ph-link"></i>
-                        </button>
-                        <button class="selection-toolbar-btn" id="toolbarImageBtn" title="Insert Image">
-                            <i class="ph ph-image"></i>
                         </button>
                         <span class="selection-toolbar-divider"></span>
                         <button class="selection-toolbar-btn ai" id="askAiSelectionBtn" title="Ask AI">
@@ -3173,11 +3117,11 @@
 
     <!-- Context Menu -->
     <div class="context-menu" id="contextMenu">
-        <div class="context-menu-item" id="ctxRename"><i class="ph ph-pencil-simple"></i> Rename</div>
-        <div class="context-menu-item" id="ctxDuplicate"><i class="ph ph-copy"></i> Duplicate</div>
+        <div class="context-menu-item" id="ctxRename">✏ Rename</div>
+        <div class="context-menu-item" id="ctxDuplicate">📋 Duplicate</div>
         <div class="context-menu-item" id="ctxMove"><i class="ph ph-folder"></i> Move to...</div>
         <div class="context-menu-separator"></div>
-        <div class="context-menu-item danger" id="ctxDelete"><i class="ph ph-trash"></i> Delete</div>
+        <div class="context-menu-item danger" id="ctxDelete">🗑 Delete</div>
     </div>
 
     <!-- Toast Container -->
@@ -3189,18 +3133,6 @@
     <input type="file" id="importInput" accept=".json,.md,.markdown" hidden>
 
     <script>
-        // ==================== EMERGENCY CLEANUP ====================
-        // Clear old backups first to prevent quota errors on startup
-        (function() {
-            try {
-                localStorage.removeItem('kb_data_backup');
-                localStorage.removeItem('kb_backup_date');
-                console.log('Emergency cleanup: cleared old backups');
-            } catch (e) {
-                console.warn('Cleanup failed:', e);
-            }
-        })();
-
         // ==================== KNOWLEDGE BASE APP ====================
 
         class KnowledgeBase {
@@ -3212,7 +3144,6 @@
                     ],
                     notes: [],
                     tags: [],
-                    customTemplates: [],
                     settings: {
                         theme: 'auto',
                         sidebarCollapsed: {}
@@ -3235,7 +3166,7 @@
                 try {
                     await this.initIndexedDB();
                     this.loadData();
-                    // this.autoBackup(); // DISABLED: Temporarily disabled to fix quota error
+                    this.autoBackup(); // Create backup on startup if data exists
                     this.setupEventListeners();
                     this.setupMobileGestures();
                     this.applyTheme();
@@ -3258,20 +3189,11 @@
 
             autoBackup() {
                 // Silently create a backup if we have data
-                try {
-                    const data = localStorage.getItem('kb_data');
-                    if (data && data.length > 100) { // Only backup if substantial data exists
-                        // Clear old backup first to free up space
-                        localStorage.removeItem('kb_data_backup');
-                        localStorage.removeItem('kb_backup_date');
-                        // Then save new backup
-                        localStorage.setItem('kb_data_backup', data);
-                        localStorage.setItem('kb_backup_date', new Date().toISOString());
-                        console.log('Auto-backup created');
-                    }
-                } catch (e) {
-                    // Quota exceeded or other error - silently skip backup
-                    console.warn('Auto-backup skipped:', e.message);
+                const data = localStorage.getItem('kb_data');
+                if (data && data.length > 100) { // Only backup if substantial data exists
+                    localStorage.setItem('kb_data_backup', data);
+                    localStorage.setItem('kb_backup_date', new Date().toISOString());
+                    console.log('Auto-backup created');
                 }
             }
 
@@ -3390,24 +3312,14 @@
             }
 
             saveData() {
-                try {
-                    localStorage.setItem('kb_data', JSON.stringify(this.data));
-                } catch (e) {
-                    if (e.name === 'QuotaExceededError' || e.message.includes('quota')) {
-                        console.error('Storage quota exceeded. Try deleting some notes or images.');
-                        alert('Storage is full. Please delete some notes or images to save new data.');
-                    } else {
-                        console.error('Failed to save data:', e);
-                    }
-                    throw e;
-                }
+                localStorage.setItem('kb_data', JSON.stringify(this.data));
             }
 
             // ==================== THEME ====================
 
             applyTheme() {
-                const theme = this.data.settings.theme || 'dark';
-                const isDark = theme === 'dark';
+                const theme = this.data.settings.theme;
+                const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
                 
                 if (isDark) {
                     document.documentElement.setAttribute('data-theme', 'dark');
@@ -3415,18 +3327,25 @@
                     document.documentElement.removeAttribute('data-theme');
                 }
                 
+                // Update theme select dropdown
+                const themeSelect = document.getElementById('themeSelect');
+                if (themeSelect) {
+                    themeSelect.value = theme;
+                }
+                
                 // Update theme button icon
                 const themeBtn = document.getElementById('themeBtn');
                 if (themeBtn) {
                     themeBtn.innerHTML = isDark ? '<i class="ph ph-sun"></i>' : '<i class="ph ph-moon"></i>';
                     themeBtn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+                    themeBtn.style.color = 'var(--text-secondary)';
                 }
             }
 
             toggleTheme() {
+                const themes = ['light', 'dark', 'auto'];
                 const current = this.data.settings.theme;
-                // Toggle between light and dark only (no auto)
-                const next = current === 'dark' ? 'light' : 'dark';
+                const next = themes[(themes.indexOf(current) + 1) % themes.length];
                 this.data.settings.theme = next;
                 this.applyTheme();
                 this.saveData();
@@ -3591,16 +3510,16 @@
                                     <button class="folder-action-btn more-menu" title="More options"><i class="ph ph-dots-three"></i></button>
                                     <div class="folder-dropdown" id="dropdown-fav-${folder.id}">
                                         <div class="folder-dropdown-item" data-action="remove-favorite">
-                                            <span class="folder-dropdown-icon"><i class="ph ph-star"></i></span>
+                                            <span class="folder-dropdown-icon">⭐</span>
                                             <span>Remove from Favorites</span>
                                         </div>
                                         <div class="folder-dropdown-item" data-action="rename">
-                                            <span class="folder-dropdown-icon"><i class="ph ph-pencil-simple"></i></span>
+                                            <span class="folder-dropdown-icon">✏️</span>
                                             <span>Rename</span>
                                         </div>
                                         <div class="folder-dropdown-divider"></div>
                                         <div class="folder-dropdown-item delete" data-action="delete">
-                                            <span class="folder-dropdown-icon"><i class="ph ph-trash"></i></span>
+                                            <span class="folder-dropdown-icon">🗑️</span>
                                             <span>Move to Trash</span>
                                         </div>
                                     </div>
@@ -4060,34 +3979,34 @@
                 const welcomeContent = `
                     <h1>Welcome to Knowledge Base!</h1>
                     <p>This is your personal, offline knowledge management system. Here's how to get started:</p>
-                    <h2><i class="ph ph-notebook"></i> Creating Notes</h2>
+                    <h2>📝 Creating Notes</h2>
                     <ul>
                         <li>Click "New Note" to create a note</li>
                         <li>Use the toolbar to format your text</li>
                         <li>Add tags to organize your notes</li>
                     </ul>
-                    <h2><i class="ph ph-folders"></i> Organizing with Folders</h2>
+                    <h2>📁 Organizing with Folders</h2>
                     <ul>
                         <li>Right-click in the sidebar to create folders</li>
                         <li>Drag and drop notes between folders</li>
                         <li>Create nested folders for better organization</li>
                     </ul>
-                    <h2><i class="ph ph-link"></i> Linking Notes</h2>
+                    <h2>🔗 Linking Notes</h2>
                     <p>Type <code>[[Note Title]]</code> or use the link button to create connections between notes. Backlinks are automatically tracked!</p>
-                    <h2><i class="ph ph-tag"></i> Tags</h2>
+                    <h2>🏷 Tags</h2>
                     <p>Add tags to your notes for cross-cutting organization. Click any tag in the sidebar to filter.</p>
-                    <h2><i class="ph ph-lightbulb"></i> Pro Tips</h2>
+                    <h2>💡 Pro Tips</h2>
                     <ul>
                         <li>Use <strong>Cmd/Ctrl + K</strong> to quickly search</li>
                         <li>Try Focus Mode for distraction-free writing</li>
                         <li>Your data stays on your device - completely private</li>
                     </ul>
-                    <p>Happy writing! <i class="ph ph-sparkle"></i></p>
+                    <p>Happy writing! ✨</p>
                 `;
 
                 const note = {
                     id: 'note_welcome',
-                    title: '\u003ci class="ph ph-waving-hand"\u003e\u003c/i\u003e Welcome to Knowledge Base',
+                    title: '👋 Welcome to Knowledge Base',
                     content: welcomeContent,
                     folderId: 'root',
                     tags: ['getting-started', 'tutorial'],
@@ -4230,10 +4149,6 @@
                 document.getElementById('editorContentWrapper').classList.remove('hidden');
                 document.getElementById('backlinksPanel').classList.remove('hidden');
 
-                // Hide tag results if showing
-                const tagResults = document.getElementById('tagResultsContainer');
-                if (tagResults) tagResults.style.display = 'none';
-
                 // Populate fields
                 document.getElementById('noteTitle').value = note.title;
                 document.getElementById('wysiwygEditor').innerHTML = note.content;
@@ -4252,9 +4167,6 @@
 
                 // Update tags
                 this.renderNoteTags();
-
-                // Reset and update tasks for new note
-                this.renderTasks();
 
                 // Apply font preference
                 const editor = document.getElementById('wysiwygEditor');
@@ -4539,20 +4451,20 @@
                                     <button class="folder-action-btn more-menu" title="More options"><i class="ph ph-dots-three"></i></button>
                                     <div class="folder-dropdown" id="dropdown-${folder.id}">
                                         <div class="folder-dropdown-item" data-action="favorite">
-                                            <span class="folder-dropdown-icon"><i class="ph ph-star"></i></span>
+                                            <span class="folder-dropdown-icon">⭐</span>
                                             <span>Add to Favorites</span>
                                         </div>
                                         <div class="folder-dropdown-item" data-action="duplicate">
-                                            <span class="folder-dropdown-icon"><i class="ph ph-copy"></i></span>
+                                            <span class="folder-dropdown-icon">📋</span>
                                             <span>Duplicate</span>
                                         </div>
                                         <div class="folder-dropdown-item" data-action="rename">
-                                            <span class="folder-dropdown-icon"><i class="ph ph-pencil-simple"></i></span>
+                                            <span class="folder-dropdown-icon">✏️</span>
                                             <span>Rename</span>
                                         </div>
                                         <div class="folder-dropdown-divider"></div>
                                         <div class="folder-dropdown-item delete" data-action="delete">
-                                            <span class="folder-dropdown-icon"><i class="ph ph-trash"></i></span>
+                                            <span class="folder-dropdown-icon">🗑️</span>
                                             <span>Move to Trash</span>
                                         </div>
                                     </div>
@@ -5301,21 +5213,11 @@
             }
 
             filterByTag(tag) {
-                // If already filtering by this tag and viewing a note, show results again
+                // Toggle off if already filtering by this tag
                 if (this.currentTagFilter === tag) {
-                    if (this.currentNote) {
-                        // We're viewing a note, go back to tag results
-                        this.currentNote = null;
-                        this.showEmptyState();
-                        this.renderTagResults(tag);
-                    } else {
-                        // Already viewing results, toggle off
-                        this.currentTagFilter = null;
-                        this.currentFolder = 'root';
-                        const tagResults = document.getElementById('tagResultsContainer');
-                        if (tagResults) tagResults.style.display = 'none';
-                        this.render();
-                    }
+                    this.currentTagFilter = null;
+                    this.currentFolder = 'root';
+                    this.render();
                     return;
                 }
 
@@ -5323,104 +5225,46 @@
                 this.currentTagFilter = tag;
                 this.currentFolder = 'tag:' + tag;
                 this.currentNote = null;
+                this.showEmptyState();
 
                 // Update UI
                 document.querySelectorAll('.tag-item-small').forEach(el => {
                     el.classList.toggle('active', el.dataset.tag === tag);
                 });
 
-                document.getElementById('headerTitle').textContent = `#${tag}`;
+                document.getElementById('headerTitle').textContent = `Tag: ${tag}`;
 
                 // Re-render tags to show active state
                 this.renderTagsCloud();
 
-                // Show tag results in main content
-                this.renderTagResults(tag);
+                // Re-render folder tree to show filtered notes
+                this.renderFolderTreeForTag(tag);
             }
 
-            renderTagResults(tag) {
+            renderFolderTreeForTag(tag) {
+                const tree = document.getElementById('folderTree');
+                tree.innerHTML = '';
+
                 const notes = this.data.notes.filter(n => n.tags.includes(tag));
-                
-                // Hide normal editor content and empty state
-                document.getElementById('emptyState').classList.add('hidden');
-                document.getElementById('editorToolbar').classList.add('hidden');
-                document.getElementById('tabsBar').classList.add('hidden');
-                document.getElementById('editorContentWrapper').classList.add('hidden');
-                
-                // Create or get tag results container
-                let resultsContainer = document.getElementById('tagResultsContainer');
-                if (!resultsContainer) {
-                    resultsContainer = document.createElement('div');
-                    resultsContainer.id = 'tagResultsContainer';
-                    resultsContainer.className = 'tag-results-view';
-                    resultsContainer.style.cssText = `
-                        position: absolute;
-                        top: var(--header-height, 50px);
-                        left: 0;
-                        right: 0;
-                        bottom: 0;
-                        overflow-y: auto;
-                        z-index: 10;
-                        background: var(--bg-primary);
-                        padding: 24px;
+
+                const ul = document.createElement('ul');
+                ul.className = 'folder-tree';
+
+                notes.forEach(note => {
+                    const li = document.createElement('li');
+                    li.className = 'folder-item';
+                    li.innerHTML = `
+                        <div class="note-item" data-note-id="${note.id}" style="padding-left: 8px;">
+                            <span class="note-icon"><i class="ph ph-file-text"></i></span>
+                            <span class="note-title">${this.escapeHtml(note.title)}</span>
+                        </div>
                     `;
-                    document.querySelector('.main').appendChild(resultsContainer);
-                }
-                
-                // Clear previous and show
-                resultsContainer.style.display = 'block';
-                resultsContainer.innerHTML = `
-                    <div style="max-width: 900px; margin: 0 auto; width: 100%; padding: 0 16px; box-sizing: border-box;">
-                        <div style="margin-bottom: 24px;">
-                            <h2 style="font-size: clamp(18px, 5vw, 24px); font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
-                                <i class="ph ph-tag" style="color: #fbbf24;"></i>
-                                ${this.escapeHtml(tag)}
-                            </h2>
-                            <p style="color: var(--text-secondary); margin: 0;">${notes.length} note${notes.length !== 1 ? 's' : ''}</p>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            ${notes.map(note => `
-                                <div class="tag-result-card" data-note-id="${note.id}" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s;">
-                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                        <i class="ph ph-file-text" style="color: var(--text-secondary);"></i>
-                                        <span style="font-weight: 500; color: var(--text-primary);">${this.stripHtml(note.title) || 'Untitled'}</span>
-                                    </div>
-                                    <div style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
-                                        ${this.escapeHtml(this.stripHtml(note.content).substring(0, 200))}${this.stripHtml(note.content).length > 200 ? '...' : ''}
-                                    </div>
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                                            ${note.tags.map(t => `<span style="background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 12px; font-size: 12px;">#${this.escapeHtml(t)}</span>`).join('')}
-                                        </div>
-                                        <span style="color: var(--text-tertiary); font-size: 12px; display: flex; align-items: center; gap: 4px;">
-                                            <i class="ph ph-folder"></i>
-                                            ${this.getFolderName(note.folderId)}
-                                        </span>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
 
-                // Add hover effect and click handlers
-                resultsContainer.querySelectorAll('.tag-result-card').forEach(card => {
-                    card.addEventListener('mouseenter', () => {
-                        card.style.borderColor = 'var(--accent)';
-                    });
-                    card.addEventListener('mouseleave', () => {
-                        card.style.borderColor = 'var(--border)';
-                    });
-                    card.addEventListener('click', () => {
-                        resultsContainer.style.display = 'none';
-                        this.selectNote(card.dataset.noteId);
-                    });
+                    li.querySelector('.note-item').addEventListener('click', () => this.selectNote(note.id));
+                    ul.appendChild(li);
                 });
-            }
 
-            getFolderName(folderId) {
-                const folder = this.data.folders.find(f => f.id === folderId);
-                return folder ? folder.name : 'Unknown';
+                tree.appendChild(ul);
             }
 
             // ==================== SEARCH ====================
@@ -5918,24 +5762,14 @@
             }
 
             createBackup() {
-                try {
-                    const data = localStorage.getItem('kb_data');
-                    if (data) {
-                        // Clear old backup first to free space
-                        localStorage.removeItem('kb_data_backup');
-                        localStorage.removeItem('kb_backup_date');
-                        // Save new backup
-                        localStorage.setItem('kb_data_backup', data);
-                        localStorage.setItem('kb_backup_date', new Date().toISOString());
-                        document.getElementById('backupStatus').textContent = 'Backup created at ' + new Date().toLocaleString();
-                        this.showToast('Backup created successfully', 'success');
-                    } else {
-                        document.getElementById('backupStatus').textContent = 'No data to backup';
-                    }
-                } catch (e) {
-                    console.error('Backup failed:', e);
-                    document.getElementById('backupStatus').textContent = 'Backup failed: ' + e.message;
-                    this.showToast('Backup failed: ' + e.message, 'error');
+                const data = localStorage.getItem('kb_data');
+                if (data) {
+                    localStorage.setItem('kb_data_backup', data);
+                    localStorage.setItem('kb_backup_date', new Date().toISOString());
+                    document.getElementById('backupStatus').textContent = 'Backup created at ' + new Date().toLocaleString();
+                    this.showToast('Backup created successfully', 'success');
+                } else {
+                    document.getElementById('backupStatus').textContent = 'No data to backup';
                 }
             }
 
@@ -6015,25 +5849,6 @@
                 });
 
                 setTimeout(() => toast.remove(), 4000);
-            }
-
-            updateTemplateDropdown() {
-                const select = document.getElementById('templateSelect');
-                const customTemplates = this.data.customTemplates || [];
-                
-                // Build options - only custom templates + save option
-                let html = `
-                    <option value="">Template</option>
-                `;
-                
-                // Add custom templates
-                customTemplates.forEach(t => {
-                    html += `<option value="${t.id}">${this.escapeHtml(t.name)} 🗑</option>`;
-                });
-                
-                html += `<option value="save-current">+ Save as Template</option>`;
-                
-                select.innerHTML = html;
             }
 
             toggleFocusMode() {
@@ -6178,13 +5993,6 @@
                     this.search(e.target.value);
                 });
 
-                document.getElementById('searchInput').addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        this.search(e.target.value);
-                    }
-                });
-
                 document.addEventListener('click', (e) => {
                     if (!e.target.closest('.sidebar-search')) {
                         document.getElementById('searchResults').classList.remove('active');
@@ -6193,20 +6001,8 @@
 
                 // Tags input with autocomplete
                 const tagInput = document.getElementById('tagInput');
-                let tagAutocomplete = document.getElementById('tagAutocomplete');
+                const tagAutocomplete = document.getElementById('tagAutocomplete');
                 let activeAutocompleteIndex = -1;
-
-                // Move autocomplete to body for proper positioning
-                if (tagAutocomplete) {
-                    document.body.appendChild(tagAutocomplete);
-                }
-
-                function positionAutocomplete() {
-                    if (!tagAutocomplete || tagAutocomplete.style.display === 'none') return;
-                    const rect = tagInput.getBoundingClientRect();
-                    tagAutocomplete.style.left = rect.left + 'px';
-                    tagAutocomplete.style.top = (rect.bottom + 4) + 'px';
-                }
 
                 tagInput.addEventListener('input', (e) => {
                     const value = e.target.value.trim().toLowerCase();
@@ -6216,15 +6012,15 @@
                         return;
                     }
                     
+                    // Get all existing tags that match and aren't already on this note
                     const existingTags = this.getAllTags();
                     const currentNoteTags = this.currentNote?.tags || [];
                     const matches = existingTags.filter(tag => 
                         tag.toLowerCase().includes(value) && 
                         !currentNoteTags.includes(tag)
-                    ).slice(0, 5);
+                    ).slice(0, 5); // Max 5 suggestions
                     
                     if (matches.length > 0) {
-                        const rect = tagInput.getBoundingClientRect();
                         tagAutocomplete.innerHTML = matches.map((tag, index) => `
                             <div class="tag-autocomplete-item ${index === 0 ? 'active' : ''}" data-tag="${this.escapeHtml(tag)}" data-index="${index}">
                                 <i class="ph ph-tag"></i>
@@ -6232,22 +6028,10 @@
                             </div>
                         `).join('');
                         
-                        tagAutocomplete.style.cssText = `
-                            display: block !important;
-                            position: fixed;
-                            z-index: 99999;
-                            background: var(--bg-primary);
-                            border: 1px solid var(--accent);
-                            border-radius: 4px;
-                            max-height: 200px;
-                            overflow-y: auto;
-                            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                            min-width: ${rect.width}px;
-                            width: auto;
-                        `;
-                        positionAutocomplete();
+                        tagAutocomplete.style.display = 'block';
                         activeAutocompleteIndex = 0;
                         
+                        // Add click handlers
                         tagAutocomplete.querySelectorAll('.tag-autocomplete-item').forEach(item => {
                             item.addEventListener('click', () => {
                                 if (this.currentNote) {
@@ -6261,10 +6045,6 @@
                         tagAutocomplete.style.display = 'none';
                     }
                 });
-
-                // Reposition on scroll/resize
-                window.addEventListener('scroll', positionAutocomplete);
-                window.addEventListener('resize', positionAutocomplete);
 
                 tagInput.addEventListener('keydown', (e) => {
                     const items = tagAutocomplete.querySelectorAll('.tag-autocomplete-item');
@@ -6774,19 +6554,14 @@
                 // AI Panel setup (for the panel itself, not the button)
                 this.setupAiPanelListeners();
 
-                // Handle link clicks
+                // Handle internal link clicks
                 document.getElementById('wysiwygEditor').addEventListener('click', (e) => {
-                    if (e.target.tagName === 'A') {
+                    if (e.target.tagName === 'A' && e.target.classList.contains('internal-link')) {
                         e.preventDefault();
-                        const href = e.target.getAttribute('href');
-                        if (e.target.classList.contains('internal-link')) {
-                            const noteId = href.replace('note:', '');
-                            const note = this.data.notes.find(n => n.id === noteId);
-                            if (note) {
-                                this.selectNote(note.id);
-                            }
-                        } else if (href) {
-                            window.open(href, '_blank');
+                        const noteId = e.target.getAttribute('href').replace('note:', '');
+                        const note = this.data.notes.find(n => n.id === noteId);
+                        if (note) {
+                            this.selectNote(note.id);
                         }
                     }
                 });
@@ -6837,260 +6612,119 @@
 
                 // Template selector
                 document.getElementById('templateSelect')?.addEventListener('change', (e) => this.applyTemplate(e.target.value));
-
-                // AI Suggest Tags button
-                document.getElementById('suggestTagsBtn')?.addEventListener('click', () => this.suggestTagsWithAi());
-
-                // AI Summarize button
-                document.getElementById('summarizeBtn')?.addEventListener('click', () => this.summarizeNote());
-            }
-
-            suggestTagsWithAi() {
-                // Check if AI is configured
-                if (!this.data.settings?.aiProvider) {
-                    document.getElementById('aiPanelModal').classList.add('active');
-                    return;
-                }
-
-                if (!this.currentNote) {
-                    this.showToast('Open a note first', 'error');
-                    return;
-                }
-
-                const content = document.getElementById('wysiwygEditor').innerText.trim();
-                if (content.length < 10) {
-                    this.showToast('Note needs more content', 'error');
-                    return;
-                }
-
-                // Demo mode - generate suggestions based on keywords
-                const suggestions = this.generateDemoTagSuggestions(content, this.currentNote.tags || []);
-                
-                if (suggestions.length === 0) {
-                    this.showToast('No tag suggestions found', 'info');
-                    return;
-                }
-
-                this.showTagSuggestionsModal(suggestions);
-            }
-
-            generateDemoTagSuggestions(content, existingTags) {
-                const text = content.toLowerCase();
-                const suggestions = [];
-                
-                const keywords = {
-                    'trading': ['trading', 'trade', 'market', 'buy', 'sell', 'position'],
-                    'psychology': ['psychology', 'mental', 'mindset', 'emotion', 'fear', 'greed'],
-                    'analysis': ['analysis', 'chart', 'pattern', 'trend', 'support', 'resistance'],
-                    'strategy': ['strategy', 'plan', 'system', 'method', 'approach'],
-                    'risk-management': ['risk', 'stop loss', 'stop-loss', 'position size'],
-                    'journal': ['journal', 'log', 'record', 'track', 'review'],
-                    'learning': ['learn', 'study', 'education', 'course', 'book'],
-                    'crypto': ['crypto', 'bitcoin', 'btc', 'ethereum', 'eth'],
-                    'forex': ['forex', 'currency', 'eurusd', 'gbpusd'],
-                    'stocks': ['stock', 'equity', 'shares', 'nasdaq', 'nyse'],
-                    'gold': ['gold', 'xauusd', 'xau'],
-                    'tutorial': ['tutorial', 'guide', 'how to', 'lesson'],
-                    'research': ['research', 'study', 'data', 'backtest'],
-                    'ideas': ['idea', 'concept', 'thought', 'insight'],
-                    'workflow': ['workflow', 'process', 'routine', 'habit'],
-                    'review': ['review', 'retrospective', 'summary'],
-                    'goals': ['goal', 'target', 'objective', 'aim']
-                };
-
-                for (const [tag, words] of Object.entries(keywords)) {
-                    if (words.some(w => text.includes(w)) && !existingTags.includes(tag)) {
-                        suggestions.push(tag);
-                    }
-                }
-
-                return [...new Set(suggestions)].slice(0, 5);
-            }
-
-            showTagSuggestionsModal(suggestions) {
-                // Create modal if not exists
-                let modal = document.getElementById('tagSuggestionsModal');
-                if (!modal) {
-                    modal = document.createElement('div');
-                    modal.id = 'tagSuggestionsModal';
-                    modal.className = 'modal-overlay';
-                    modal.innerHTML = `
-                        <div class="modal" style="max-width: 400px;">
-                            <div class="modal-header">
-                                <div class="modal-title"><i class="ph ph-sparkle"></i> Suggested Tags</div>
-                                <button class="modal-close" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <div style="background: var(--bg-tertiary); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);">
-                                    <i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags suggested based on keywords in your note.
-                                </div>
-                                <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 13px;">Click tags to add them:</p>
-                                <div id="tagSuggestionsList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">Close</button>
-                            </div>
-                        </div>
-                    `;
-                    document.body.appendChild(modal);
-                }
-
-                // Populate suggestions
-                const list = document.getElementById('tagSuggestionsList');
-                list.innerHTML = suggestions.map(tag => `
-                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" data-tag="${tag}">
-                        <i class="ph ph-plus"></i> ${tag}
-                    </button>
-                `).join('');
-
-                // Add click handlers
-                list.querySelectorAll('button').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const tag = btn.dataset.tag;
-                        if (this.currentNote) {
-                            this.addTagToNote(this.currentNote.id, tag);
-                            btn.style.opacity = '0.5';
-                            btn.disabled = true;
-                            btn.innerHTML = `<i class="ph ph-check"></i> ${tag}`;
-                        }
-                    });
-                });
-
-                // Show modal
-                modal.classList.add('active');
-            }
-
-            summarizeNote() {
-                // Check if AI is configured
-                if (!this.data.settings?.aiProvider) {
-                    document.getElementById('aiPanelModal').classList.add('active');
-                    return;
-                }
-
-                if (!this.currentNote) {
-                    this.showToast('Open a note first', 'error');
-                    return;
-                }
-
-                const content = document.getElementById('wysiwygEditor').innerText.trim();
-                if (content.length < 50) {
-                    this.showToast('Note needs more content to summarize', 'error');
-                    return;
-                }
-
-                // Show loading
-                const btn = document.getElementById('summarizeBtn');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Summarizing...';
-                btn.disabled = true;
-
-                // Simulate AI processing
-                setTimeout(() => {
-                    const summary = this.generateDemoSummary(content);
-                    this.displaySummary(summary);
-                    
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    this.showToast('Summary generated!', 'success');
-                }, 1000);
-            }
-
-            generateDemoSummary(content) {
-                const sentences = content.match(/[^.!?]+[.!?]+/g) || [content];
-                const keywords = ['analysis', 'strategy', 'trading', 'market', 'psychology', 'risk', 'entry', 'exit', 'target', 'stop'];
-                
-                // Score sentences by keyword density
-                const scored = sentences.map(sentence => {
-                    const score = keywords.reduce((acc, kw) => {
-                        return acc + (sentence.toLowerCase().includes(kw) ? 1 : 0);
-                    }, 0);
-                    return { sentence: sentence.trim(), score };
-                });
-                
-                // Sort by score and pick top sentences
-                scored.sort((a, b) => b.score - a.score);
-                const topSentences = scored.slice(0, 3).map(s => s.sentence);
-                
-                // If no keywords matched, use first and last sentences
-                if (topSentences.length === 0) {
-                    topSentences.push(sentences[0]);
-                    if (sentences.length > 1) topSentences.push(sentences[sentences.length - 1]);
-                }
-                
-                return topSentences.join(' ');
-            }
-
-            displaySummary(summary) {
-                document.getElementById('summaryEmptyState').style.display = 'none';
-                document.getElementById('summaryResult').style.display = 'block';
-                document.getElementById('summaryText').innerHTML = `<p>${summary}</p>`;
-                
-                // Store in note metadata
-                if (!this.currentNote.metadata) this.currentNote.metadata = {};
-                this.currentNote.metadata.summary = summary;
-                this.saveData();
             }
 
             applyTemplate(templateId) {
-                if (!templateId || !this.currentNote) {
-                    document.getElementById('templateSelect').value = '';
-                    return;
-                }
+                if (!templateId || !this.currentNote) return;
                 
-                // Handle save current note as template
-                if (templateId === 'save-current') {
-                    const name = prompt('Template name:', this.currentNote.title || 'New Template');
-                    if (name && name.trim()) {
-                        const content = document.getElementById('wysiwygEditor').innerHTML;
-                        if (!this.data.customTemplates) this.data.customTemplates = [];
-                        this.data.customTemplates.push({
-                            id: 'custom_' + Date.now(),
-                            name: name.trim(),
-                            content: content
-                        });
-                        this.saveData();
-                        this.updateTemplateDropdown();
-                        this.showToast('Template saved!', 'success');
-                    }
-                    document.getElementById('templateSelect').value = '';
-                    return;
-                }
-                
-                // Check for custom template - ask apply or delete
-                const customTemplate = this.data.customTemplates?.find(t => t.id === templateId);
-                if (customTemplate) {
-                    const action = confirm(`Template: ${customTemplate.name}\n\nClick OK to APPLY this template\nClick Cancel to DELETE this template`);
-                    if (!action) {
-                        // Delete with confirmation
-                        if (!confirm(`Delete template "${customTemplate.name}"?\n\nThis action cannot be undone.`)) {
-                            document.getElementById('templateSelect').value = '';
-                            return;
-                        }
-                        this.data.customTemplates = this.data.customTemplates.filter(t => t.id !== templateId);
-                        this.saveData();
-                        this.updateTemplateDropdown();
-                        this.showToast('Template deleted', 'success');
+                const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
+                if (currentContent.length > 50) {
+                    if (!confirm('This will replace your current note content. Continue?')) {
                         document.getElementById('templateSelect').value = '';
                         return;
                     }
-                    // Apply
-                    const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
-                    if (currentContent.length > 50) {
-                        if (!confirm('This will replace your current note content. Continue?')) {
-                            document.getElementById('templateSelect').value = '';
-                            return;
-                        }
-                    }
-                    document.getElementById('wysiwygEditor').innerHTML = customTemplate.content;
-                    this.currentNote.content = customTemplate.content;
-                    this.saveData();
-                    document.getElementById('templateSelect').value = '';
-                    this.showToast(`Applied ${customTemplate.name} template`, 'success');
-                    return;
                 }
                 
-                // Unknown template - reset
+                const templates = {
+                    'blank': '',
+                    'trading-journal': `<h2>Trade Setup</h2>
+<p><strong>Instrument:</strong> </p>
+<p><strong>Timeframe:</strong> </p>
+<p><strong>Direction:</strong> Long / Short</p>
+<p><strong>Entry:</strong> </p>
+<p><strong>Stop Loss:</strong> </p>
+<p><strong>Target:</strong> </p>
+<p><strong>Risk:Reward:</strong> </p>
+
+<h2>Analysis</h2>
+<p>Market structure / Key levels / Confluences:</p>
+
+<h2>Psychology</h2>
+<p>Emotional state / Confidence level:</p>
+
+<h2>Outcome</h2>
+<p>Result / Lessons learned:</p>`,
+                    'daily-review': `<h2>Market Overview</h2>
+<p>Key moves / Economic events:</p>
+
+<h2>My Trades</h2>
+<ul>
+<li>Trade 1:</li>
+<li>Trade 2:</li>
+</ul>
+
+<h2>What Worked</h2>
+<p></p>
+
+<h2>What Didn't</h2>
+<p></p>
+
+<h2>Tomorrow's Focus</h2>
+<p></p>`,
+                    'strategy': `<h2>Strategy Name</h2>
+<p></p>
+
+<h2>Setup Criteria</h2>
+<ul>
+<li>Criterion 1:</li>
+<li>Criterion 2:</li>
+<li>Criterion 3:</li>
+</ul>
+
+<h2>Entry Rules</h2>
+<p></p>
+
+<h2>Exit Rules</h2>
+<p>Take profit / Stop loss:</p>
+
+<h2>Risk Management</h2>
+<p>Position sizing / Max risk per trade:</p>
+
+<h2>Backtest Results</h2>
+<p>Win rate / Expectancy / Sample size:</p>`,
+                    'meeting': `<h2>Meeting Details</h2>
+<p><strong>Date:</strong> </p>
+<p><strong>Attendees:</strong> </p>
+<p><strong>Objective:</strong> </p>
+
+<h2>Agenda</h2>
+<ul>
+<li>Item 1:</li>
+<li>Item 2:</li>
+</ul>
+
+<h2>Key Discussion Points</h2>
+<p></p>
+
+<h2>Decisions Made</h2>
+<ul>
+<li>Decision 1:</li>
+</ul>
+
+<h2>Action Items</h2>
+<ul>
+<li>[ ] Action 1 - Owner:</li>
+<li>[ ] Action 2 - Owner:</li>
+</ul>`
+                };
+                
+                const template = templates[templateId];
+                if (template === undefined) return;
+                
+                document.getElementById('wysiwygEditor').innerHTML = template;
+                this.currentNote.content = template;
+                this.saveData();
+                
                 document.getElementById('templateSelect').value = '';
+                
+                const templateNames = {
+                    'blank': 'Blank',
+                    'trading-journal': 'Trading Journal',
+                    'daily-review': 'Daily Review',
+                    'strategy': 'Strategy Plan',
+                    'meeting': 'Meeting Notes'
+                };
+                this.showToast(`Applied ${templateNames[templateId]} template`, 'success');
             }
 
             switchNoteTab(tabName) {
@@ -7186,12 +6820,12 @@
                 }
 
                 container.innerHTML = tasks.map(task => `
-                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
-                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}
-                            >
-                        <input type="text" class="task-title-input" value="${this.escapeHtml(task.text)}"
+                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); margin-bottom: 8px;">
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
+                            style="margin-top: 2px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent);">
+                        <input type="text" class="task-title-input" value="${this.escapeHtml(task.text)}" 
                             placeholder="Task..."
-                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'}; padding: 0;">
+                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'};">
                         <button class="task-delete" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; opacity: 0; transition: opacity 0.2s;">
                             <i class="ph ph-trash"></i>
                         </button>
@@ -7226,6 +6860,7 @@
             setupSelectionToolbar() {
                 const toolbar = document.getElementById('selectionToolbar');
                 const editor = document.getElementById('wysiwygEditor');
+                const editorContent = document.querySelector('.editor-content');
                 let currentSelection = null;
                 let currentRange = null;
 
@@ -7239,37 +6874,43 @@
                             currentSelection = text;
                             currentRange = selection.getRangeAt(0).cloneRange();
 
-                            // Get selection coordinates using getBoundingClientRect for viewport positioning
-                            const rect = currentRange.getBoundingClientRect();
-                            
-                            // Make toolbar visible to get dimensions
-                            toolbar.style.display = 'flex';
+                            // Get the start of the selection
+                            const startRange = document.createRange();
+                            try {
+                                startRange.setStart(currentRange.startContainer, currentRange.startOffset);
+                                startRange.setEnd(currentRange.startContainer, currentRange.startOffset);
+                            } catch (e) {
+                                startRange.selectNodeContents(editor);
+                                startRange.collapse(true);
+                            }
+                            const startRect = startRange.getBoundingClientRect();
+                            const contentRect = editorContent.getBoundingClientRect();
+
+                            // Get toolbar dimensions
                             toolbar.style.visibility = 'hidden';
+                            toolbar.style.display = 'flex';
                             const toolbarRect = toolbar.getBoundingClientRect();
-                            
-                            // Calculate position - above the selection using viewport coordinates
-                            let top = rect.top - toolbarRect.height - 8;
-                            let left = rect.left;
-                            
-                            // If too close to top, show below selection
+                            toolbar.style.display = '';
+                            toolbar.style.visibility = '';
+
+                            // Position: directly above the selection start, aligned left
+                            let left = startRect.left - contentRect.left;
+                            let top = startRect.top - contentRect.top - toolbarRect.height - 8;
+
+                            // Ensure toolbar stays within editor-content bounds
+                            const maxLeft = contentRect.width - toolbarRect.width - 16;
+                            left = Math.max(8, Math.min(left, maxLeft));
+
+                            // If too close to top, show below the selection
                             if (top < 0) {
-                                top = rect.bottom + 8;
+                                top = startRect.bottom - contentRect.top + 8;
                             }
-                            
-                            // Keep within viewport horizontally
-                            if (left + toolbarRect.width > window.innerWidth) {
-                                left = window.innerWidth - toolbarRect.width - 16;
-                            }
-                            
-                            // Apply fixed positioning
-                            toolbar.style.position = 'fixed';
-                            toolbar.style.top = top + 'px';
+
                             toolbar.style.left = left + 'px';
-                            toolbar.style.visibility = 'visible';
+                            toolbar.style.top = top + 'px';
                             toolbar.classList.add('visible');
                         } else {
                             toolbar.classList.remove('visible');
-                            toolbar.style.display = 'none';
                         }
                     }, 0);
                 });
@@ -7278,7 +6919,6 @@
                 document.addEventListener('mousedown', (e) => {
                     if (!toolbar.contains(e.target)) {
                         toolbar.classList.remove('visible');
-                        toolbar.style.display = 'none';
                     }
                 });
 
@@ -7292,28 +6932,6 @@
                         document.execCommand(command, false, value);
                         toolbar.classList.remove('visible');
                     });
-                });
-
-                // Link button
-                document.getElementById('toolbarLinkBtn').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const url = prompt('Enter URL:');
-                    if (url) {
-                        document.execCommand('createLink', false, url);
-                    }
-                    toolbar.classList.remove('visible');
-                });
-
-                // Image button
-                document.getElementById('toolbarImageBtn').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const url = prompt('Enter image URL:');
-                    if (url) {
-                        document.execCommand('insertImage', false, url);
-                    }
-                    toolbar.classList.remove('visible');
                 });
 
                 // Ask AI button
