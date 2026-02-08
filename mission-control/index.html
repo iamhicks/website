@@ -531,102 +531,134 @@
             }
             
             async loadData() {
-                this.loadCronJobs();
-                this.loadSystemInfo();
-                this.loadBackupStatus();
-                this.loadActivityLog();
+                try {
+                    const response = await fetch('data.json?t=' + Date.now());
+                    if (!response.ok) throw new Error('Failed to fetch data');
+                    const data = await response.json();
+                    
+                    this.renderSystemInfo(data.system);
+                    this.renderCronJobs(data.cronJobs);
+                    this.renderActivityLog(data.recentLogs);
+                    this.renderBackupStatus(data.system);
+                } catch (err) {
+                    console.error('Failed to load data:', err);
+                    this.showError('Failed to load data. Run export-data.sh first.');
+                }
             }
             
-            // Cron Jobs
-            async loadCronJobs() {
-                try {
-                    // In a real implementation, this would fetch from OpenClaw API
-                    // For now, showing mock data structure
-                    const jobs = [
-                        { name: 'Daily Backup', schedule: 'Every 30 min', status: 'active', lastRun: '5 min ago' },
-                        { name: 'Heartbeat Check', schedule: 'Every 5 min', status: 'active', lastRun: '2 min ago' },
-                        { name: 'Gateway Monitor', schedule: 'Every 30 sec', status: 'active', lastRun: '10 sec ago' }
-                    ];
+            renderSystemInfo(system) {
+                // Update status dots
+                const gatewayDot = document.getElementById('gatewayStatus');
+                const watchdogDot = document.getElementById('watchdogStatus');
+                
+                gatewayDot.className = 'status-dot ' + (system.gatewayStatus === 'online' ? 'online' : 'offline');
+                watchdogDot.className = 'status-dot ' + (system.watchdogStatus === 'online' ? 'online' : 'offline');
+                
+                // Update stats
+                document.getElementById('openclawVersion').textContent = system.openclawVersion || 'unknown';
+                document.getElementById('gatewayPort').textContent = system.gatewayPort;
+                document.getElementById('gatewayUptime').textContent = system.gatewayUptime;
+                document.getElementById('totalSessions').textContent = system.totalSessions || '0';
+                document.getElementById('activeCronJobs').textContent = '6'; // From cron jobs array
+                document.getElementById('lastBackup').textContent = 'Just now';
+                document.getElementById('defaultModel').textContent = 'kimi-coding/k2p5';
+            }
+            
+            renderCronJobs(jobs) {
+                const list = document.getElementById('cronJobsList');
+                document.getElementById('activeCronJobs').textContent = jobs.filter(j => j.enabled !== false).length;
+                
+                if (!jobs || jobs.length === 0) {
+                    list.innerHTML = '<li class="empty-state"><i class="ph ph-info"></i><p>No cron jobs configured</p></li>';
+                    return;
+                }
+                
+                list.innerHTML = jobs.map(job => {
+                    const schedule = job.schedule ? `${job.schedule.expr} (${job.schedule.tz})` : 'Unknown';
+                    const lastRun = job.state?.lastRunAtMs ? this.formatTimeAgo(job.state.lastRunAtMs) : 'Never';
+                    const status = job.enabled !== false ? 'active' : 'disabled';
+                    const badgeClass = job.enabled !== false ? 'badge-success' : 'badge-warning';
                     
-                    document.getElementById('activeCronJobs').textContent = jobs.length;
-                    
-                    const list = document.getElementById('cronJobsList');
-                    list.innerHTML = jobs.map(job => `
+                    return `
                         <li class="list-item">
                             <div class="list-item-main">
                                 <span class="list-item-title">${job.name}</span>
-                                <span class="list-item-subtitle">${job.schedule} • Last run: ${job.lastRun}</span>
+                                <span class="list-item-subtitle">${schedule} • Last run: ${lastRun}</span>
                             </div>
-                            <span class="badge badge-success">${job.status}</span>
+                            <span class="badge ${badgeClass}">${status}</span>
                         </li>
-                    `).join('');
-                } catch (err) {
-                    console.error('Failed to load cron jobs:', err);
-                }
+                    `;
+                }).join('');
             }
             
-            // System Info
-            async loadSystemInfo() {
-                try {
-                    // Mock data - would fetch from openclaw.json
-                    document.getElementById('openclawVersion').textContent = '2026.2.6-3';
-                    document.getElementById('gatewayPort').textContent = '18789';
-                    document.getElementById('defaultModel').textContent = 'kimi-coding/k2p5';
-                    document.getElementById('totalSessions').textContent = '1,247';
-                    document.getElementById('gatewayUptime').textContent = '2h 34m';
-                    document.getElementById('lastBackup').textContent = '0.5';
-                } catch (err) {
-                    console.error('Failed to load system info:', err);
+            renderActivityLog(logs) {
+                const logContainer = document.getElementById('activityLog');
+                
+                if (!logs || logs.length === 0) {
+                    logContainer.innerHTML = '<div class="log-line">No recent activity</div>';
+                    return;
                 }
-            }
-            
-            // Backup Status
-            async loadBackupStatus() {
-                try {
-                    const backups = [
-                        { component: 'Mind', status: 'success', time: '10:48' },
-                        { component: 'Flow', status: 'success', time: '10:48' },
-                        { component: 'Website', status: 'success', time: '10:48' },
-                        { component: 'Obsidian', status: 'success', time: '10:48' },
-                        { component: 'OpenClaw', status: 'success', time: '10:48' }
-                    ];
+                
+                logContainer.innerHTML = logs.slice().reverse().map(line => {
+                    // Parse log line
+                    const match = line.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z)\s+\[([^\]]+)\]\s+(.*)$/);
+                    if (!match) return `<div class="log-line">${this.escapeHtml(line)}</div>`;
                     
-                    const list = document.getElementById('backupList');
-                    list.innerHTML = backups.map(backup => `
-                        <li class="list-item">
-                            <div class="list-item-main">
-                                <span class="list-item-title">${backup.component}</span>
-                                <span class="list-item-subtitle">Backed up at ${backup.time}</span>
-                            </div>
-                            <span class="badge badge-success">✓</span>
-                        </li>
-                    `).join('');
-                } catch (err) {
-                    console.error('Failed to load backups:', err);
-                }
-            }
-            
-            // Activity Log
-            async loadActivityLog() {
-                try {
-                    const activities = [
-                        { time: '10:48:55', level: 'success', message: 'Backup completed: All 5 components' },
-                        { time: '10:48:30', level: 'info', message: 'Starting backup routine' },
-                        { time: '10:30:15', level: 'info', message: 'Gateway restart: Auto-recovery successful' },
-                        { time: '10:30:12', level: 'warning', message: 'Gateway down detected' },
-                        { time: '09:57:04', level: 'error', message: 'Gateway restart failed (manual intervention required)' }
-                    ];
+                    const [, timestamp, level, message] = match;
+                    const time = new Date(timestamp).toLocaleTimeString();
+                    let levelClass = 'info';
+                    if (level.includes('error')) levelClass = 'error';
+                    else if (level.includes('warn')) levelClass = 'warning';
+                    else if (level.includes('success') || line.includes('✓')) levelClass = 'success';
                     
-                    const log = document.getElementById('activityLog');
-                    log.innerHTML = activities.map(act => `
+                    return `
                         <div class="log-line">
-                            <span class="log-time">[${act.time}]</span>
-                            <span class="log-${act.level}">${act.message}</span>
+                            <span class="log-time">[${time}]</span>
+                            <span class="log-${levelClass}">${this.escapeHtml(message)}</span>
                         </div>
-                    `).join('');
-                } catch (err) {
-                    console.error('Failed to load activity:', err);
-                }
+                    `;
+                }).join('');
+            }
+            
+            renderBackupStatus(system) {
+                const list = document.getElementById('backupList');
+                const components = [
+                    { name: 'Mind', time: system.lastBackup },
+                    { name: 'Flow', time: system.lastBackup },
+                    { name: 'Website', time: system.lastBackup },
+                    { name: 'Obsidian', time: system.lastBackup },
+                    { name: 'OpenClaw', time: system.lastBackup }
+                ];
+                
+                list.innerHTML = components.map(comp => `
+                    <li class="list-item">
+                        <div class="list-item-main">
+                            <span class="list-item-title">${comp.name}</span>
+                            <span class="list-item-subtitle">Last backup: ${comp.time}</span>
+                        </div>
+                        <span class="badge badge-success">✓</span>
+                    </li>
+                `).join('');
+            }
+            
+            formatTimeAgo(timestampMs) {
+                const seconds = Math.floor((Date.now() - timestampMs) / 1000);
+                if (seconds < 60) return `${seconds}s ago`;
+                const minutes = Math.floor(seconds / 60);
+                if (minutes < 60) return `${minutes}m ago`;
+                const hours = Math.floor(minutes / 60);
+                if (hours < 24) return `${hours}h ago`;
+                return `${Math.floor(hours / 24)}d ago`;
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            showError(message) {
+                document.getElementById('cronJobsList').innerHTML = `<li class="empty-state"><i class="ph ph-warning"></i><p>${message}</p></li>`;
             }
         }
         
