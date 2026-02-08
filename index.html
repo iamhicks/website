@@ -16,46 +16,43 @@
         }
 
         :root {
-            /* Surfer-inspired color palette */
-            --coral: #E85A5A;
-            --coral-light: #F07A7A;
-            --coral-glow: rgba(232, 90, 90, 0.4);
-            --teal: #7AB8C4;
-            --teal-light: #9ACCD6;
-            --teal-glow: rgba(122, 184, 196, 0.4);
-            --cream: #F5F3F0;
-            --cream-dark: #EBE8E3;
-            --charcoal: #1A1A1A;
-            --charcoal-light: #2A2A2A;
-            --charcoal-lighter: #3A3A3A;
+            /* Monochrome palette */
+            --off-white: #F1F1F1;
+            --dark: #1B1B1D;
+            --dark-lighter: #2A2A2C;
+            --dark-card: #252527;
+            
+            /* Text colors */
+            --text-white: #FFFFFF;
+            --text-gray: #817D7D;
+            --text-black: #000000;
             
             /* Semantic colors */
-            --bg-primary: var(--cream);
-            --bg-secondary: var(--charcoal);
-            --bg-tertiary: var(--charcoal-light);
-            --bg-card: var(--charcoal-lighter);
-            --text-primary: #f5f5f7;
-            --text-secondary: #a0a0b0;
-            --text-muted: #6b6b7b;
-            --text-dark: #2A2A2A;
-            --text-dark-secondary: #5A5A5A;
+            --bg-primary: var(--off-white);
+            --bg-secondary: var(--dark);
+            --bg-tertiary: var(--dark-lighter);
+            --bg-card: var(--dark-card);
+            --text-primary: var(--text-white);
+            --text-secondary: var(--text-gray);
+            --text-muted: #6b6b6b;
+            --text-dark: var(--text-black);
+            --text-dark-secondary: #333333;
             
-            /* Accent colors */
-            --accent-mind: var(--teal);
-            --accent-mind-glow: var(--teal-glow);
-            --accent-flow: var(--coral);
-            --accent-flow-glow: var(--coral-glow);
-            --accent-gradient: linear-gradient(135deg, var(--teal) 0%, var(--coral) 100%);
-            --sunset-gradient: linear-gradient(135deg, #F5D4A1 0%, var(--coral) 50%, var(--teal) 100%);
+            /* Accent colors - monochrome */
+            --accent-mind: var(--text-white);
+            --accent-mind-glow: rgba(255, 255, 255, 0.15);
+            --accent-flow: var(--text-gray);
+            --accent-flow-glow: rgba(129, 125, 125, 0.2);
+            --accent-gradient: linear-gradient(135deg, #FFFFFF 0%, #817D7D 100%);
             
             /* Effects */
-            --border-light: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.15);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(255, 255, 255, 0.2);
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
             --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
-            --shadow-glow-mind: 0 0 40px var(--teal-glow);
-            --shadow-glow-flow: 0 0 40px var(--coral-glow);
+            --shadow-glow-mind: 0 0 40px rgba(255, 255, 255, 0.1);
+            --shadow-glow-flow: 0 0 40px rgba(129, 125, 125, 0.15);
         }
 
         html {
@@ -64,7 +61,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--charcoal);
+            background: var(--dark);
             color: var(--text-primary);
             line-height: 1.6;
             font-weight: 400;
@@ -85,7 +82,7 @@
             left: 0;
             right: 0;
             height: 64px;
-            background: rgba(245, 243, 240, 0.85);
+            background: rgba(241, 241, 241, 0.85);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
             z-index: 9999;
@@ -105,7 +102,7 @@
 
         .nav-logo {
             font-family: 'Fraunces', sans-serif;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 20px;
             letter-spacing: -0.01em;
             color: var(--text-dark);
@@ -117,8 +114,7 @@
 
         .nav-logo span {
             font-weight: 300;
-            opacity: 1;
-            color: var(--text-dark-secondary);
+            opacity: 0.7;
         }
 
         .nav-links {
@@ -143,7 +139,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--accent-gradient);
+            background: var(--dark);
             transition: width 0.3s ease;
         }
 
@@ -156,12 +152,12 @@
         }
 
         .nav-cta {
-            background: var(--accent-gradient);
-            color: #fff !important;
+            background: var(--dark);
+            color: var(--off-white) !important;
             padding: 10px 20px;
             border-radius: 100px;
             font-weight: 600;
-            box-shadow: 0 4px 20px rgba(122, 184, 196, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease !important;
         }
 
@@ -171,7 +167,7 @@
 
         .nav-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(122, 184, 196, 0.4);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
         }
 
         /* ===== WAVE STYLES ===== */
@@ -245,22 +241,8 @@
             text-align: center;
             padding: 140px 40px 180px;
             position: relative;
-            background: var(--cream);
+            background: var(--off-white);
             overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(ellipse 60% 40% at 30% 40%, rgba(232, 90, 90, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse 50% 30% at 70% 60%, rgba(122, 184, 196, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse 40% 40% at 50% 50%, rgba(245, 212, 161, 0.05) 0%, transparent 60%);
-            pointer-events: none;
         }
 
         .hero-content {
@@ -269,48 +251,30 @@
             max-width: 900px;
         }
 
-        /* Animated Gradient Text for i_am_Hicks */
         .hero h1 {
-            font-size: clamp(72px, 14vw, 160px);
+            font-size: clamp(64px, 12vw, 140px);
             font-weight: 600;
             line-height: 0.9;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.03em;
             margin-bottom: 24px;
-            background: linear-gradient(
-                135deg,
-                var(--coral) 0%,
-                #F5D4A1 25%,
-                var(--teal) 50%,
-                #F5D4A1 75%,
-                var(--coral) 100%
-            );
-            background-size: 300% 300%;
+            background: linear-gradient(135deg, var(--text-black) 0%, var(--text-dark-secondary) 50%, var(--text-black) 100%);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: gradientShift 8s ease infinite;
-            filter: drop-shadow(0 4px 20px rgba(232, 90, 90, 0.2));
+            animation: gradient-shift 8s ease infinite;
         }
 
-        @keyframes gradientShift {
-            0%, 100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .hero h1 span {
             font-weight: 300;
-            opacity: 0.8;
-            -webkit-text-fill-color: var(--teal);
-            animation: fadePulse 4s ease-in-out infinite;
-        }
-
-        @keyframes fadePulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 0.9; }
+            opacity: 1;
+            color: #817D7D;
+            -webkit-text-fill-color: #817D7D;
         }
 
         .hero-tagline {
@@ -318,7 +282,7 @@
             font-size: clamp(24px, 4vw, 36px);
             font-weight: 400;
             color: var(--text-dark-secondary);
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             margin-bottom: 24px;
         }
@@ -326,7 +290,7 @@
         .hero-subhead {
             font-size: clamp(18px, 2.5vw, 22px);
             font-weight: 400;
-            color: var(--text-dark-secondary);
+            color: var(--text-gray);
             margin-bottom: 48px;
             max-width: 560px;
             margin-left: auto;
@@ -374,28 +338,27 @@
         }
 
         .btn-primary {
-            background: var(--accent-gradient);
-            color: #fff;
-            box-shadow: 0 4px 24px rgba(122, 184, 196, 0.4);
+            background: var(--dark);
+            color: var(--off-white);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 32px rgba(122, 184, 196, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .btn-secondary {
             background: transparent;
-            color: var(--text-dark);
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            box-shadow: var(--shadow-sm);
+            color: var(--text-black);
+            border: 1px solid var(--text-dark-secondary);
+            box-shadow: none;
         }
 
         .btn-secondary:hover {
-            background: rgba(0, 0, 0, 0.03);
-            border-color: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.05);
+            border-color: var(--text-black);
             transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
         }
 
         .hero-apps {
@@ -414,27 +377,17 @@
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 16px;
             text-decoration: none;
-            color: var(--text-dark);
+            color: var(--text-black);
             font-size: 15px;
             font-weight: 500;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .hero-app-link:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .hero-app-link.mind:hover {
-            border-color: var(--accent-mind);
-            box-shadow: 0 8px 24px var(--teal-glow);
-        }
-
-        .hero-app-link.flow:hover {
-            border-color: var(--accent-flow);
-            box-shadow: 0 8px 24px var(--coral-glow);
+            border-color: rgba(0, 0, 0, 0.15);
         }
 
         .hero-app-link .icon {
@@ -449,25 +402,23 @@
         }
 
         .hero-app-link:hover .icon {
-            transform: scale(1.1) rotate(-5deg);
+            transform: scale(1.1);
         }
 
         .hero-app-link.mind .icon {
-            background: linear-gradient(135deg, var(--accent-mind) 0%, var(--teal-light) 100%);
+            background: var(--dark);
             color: white;
-            box-shadow: 0 4px 16px var(--teal-glow);
         }
 
         .hero-app-link.flow .icon {
-            background: linear-gradient(135deg, var(--accent-flow) 0%, var(--coral-light) 100%);
+            background: var(--text-gray);
             color: white;
-            box-shadow: 0 4px 16px var(--coral-glow);
         }
 
         /* Products Section */
         .products {
-            padding: 160px 40px 120px;
-            background: var(--charcoal);
+            padding: 120px 40px;
+            background: var(--dark);
             position: relative;
         }
 
@@ -482,7 +433,7 @@
             font-weight: 600;
             letter-spacing: -0.02em;
             margin-bottom: 16px;
-            background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%);
+            background: linear-gradient(135deg, #fff 0%, #817D7D 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -490,14 +441,14 @@
 
         .section-header p {
             font-size: 20px;
-            color: var(--text-secondary);
+            color: var(--text-gray);
         }
 
         .products-grid {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
             gap: 32px;
         }
 
@@ -522,35 +473,21 @@
         }
 
         .product-card.mind::before {
-            background: linear-gradient(90deg, var(--accent-mind) 0%, var(--teal-light) 100%);
+            background: linear-gradient(90deg, #fff 0%, #817D7D 100%);
         }
 
         .product-card.flow::before {
-            background: linear-gradient(90deg, var(--accent-flow) 0%, var(--coral-light) 100%);
+            background: linear-gradient(90deg, #817D7D 0%, #fff 100%);
         }
 
         .product-card:hover {
             transform: translateY(-8px);
             border-color: var(--border-hover);
-        }
-
-        .product-card.mind:hover {
-            box-shadow: var(--shadow-lg), var(--shadow-glow-mind);
-        }
-
-        .product-card.flow:hover {
-            box-shadow: var(--shadow-lg), var(--shadow-glow-flow);
+            box-shadow: var(--shadow-lg);
         }
 
         .product-card:hover::before {
             height: 4px;
-        }
-
-        .product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 24px;
         }
 
         .product-icon {
@@ -561,41 +498,22 @@
             align-items: center;
             justify-content: center;
             font-size: 36px;
+            margin-bottom: 28px;
             transition: transform 0.3s ease;
         }
 
         .product-card:hover .product-icon {
-            transform: scale(1.1) rotate(-5deg);
+            transform: scale(1.1);
         }
 
         .product-card.mind .product-icon {
-            background: linear-gradient(135deg, var(--accent-mind) 0%, var(--teal-light) 100%);
-            box-shadow: 0 12px 32px var(--teal-glow);
+            background: linear-gradient(135deg, #fff 0%, #817D7D 100%);
+            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.1);
         }
 
         .product-card.flow .product-icon {
-            background: linear-gradient(135deg, var(--accent-flow) 0%, var(--coral-light) 100%);
-            box-shadow: 0 12px 32px var(--coral-glow);
-        }
-
-        .ai-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: linear-gradient(135deg, rgba(122, 184, 196, 0.15), rgba(232, 90, 90, 0.1));
-            border: 1px solid rgba(122, 184, 196, 0.25);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--teal-light);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .ai-badge::before {
-            content: '✦';
-            color: var(--accent-mind);
+            background: linear-gradient(135deg, #817D7D 0%, #fff 100%);
+            box-shadow: 0 12px 32px rgba(129, 125, 125, 0.2);
         }
 
         .product-card h3 {
@@ -606,217 +524,26 @@
         }
 
         .product-card.mind h3 {
-            color: var(--accent-mind);
+            color: #fff;
         }
 
         .product-card.flow h3 {
-            color: var(--accent-flow);
+            color: var(--text-gray);
         }
 
         .product-card .tagline {
             font-family: 'Fraunces', sans-serif;
             font-size: 18px;
-            color: var(--text-secondary);
+            color: var(--text-gray);
             margin-bottom: 16px;
             letter-spacing: 0.05em;
         }
 
         .product-card > p {
-            color: var(--text-muted);
+            color: var(--text-gray);
             margin-bottom: 24px;
             font-size: 15px;
             line-height: 1.6;
-        }
-
-        /* Product Mockup Styles */
-        .product-mockup {
-            background: var(--charcoal);
-            border-radius: 16px;
-            border: 1px solid var(--border-light);
-            overflow: hidden;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .mockup-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .mockup-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .mockup-dot.red { background: #ff5f57; }
-        .mockup-dot.yellow { background: #febc2e; }
-        .mockup-dot.green { background: #28c840; }
-
-        .mockup-content {
-            padding: 20px;
-            min-height: 180px;
-        }
-
-        /* Mind Mockup */
-        .mind-mockup .mockup-sidebar {
-            display: flex;
-            gap: 16px;
-        }
-
-        .mockup-nav {
-            width: 60px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .mockup-nav-item {
-            height: 36px;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        .mockup-nav-item.active {
-            background: var(--accent-mind);
-        }
-
-        .mockup-main {
-            flex: 1;
-        }
-
-        .mockup-note-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .mockup-note-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-            border-left: 3px solid var(--accent-mind);
-        }
-
-        .mockup-note-item.ai-highlight {
-            background: linear-gradient(90deg, rgba(122, 184, 196, 0.15), var(--bg-tertiary));
-            border-left-color: var(--teal-light);
-        }
-
-        .mockup-note-title {
-            height: 10px;
-            background: var(--text-secondary);
-            border-radius: 3px;
-            flex: 1;
-        }
-
-        .mockup-note-title.short { width: 60%; }
-
-        .mockup-ai-suggestion {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            background: linear-gradient(135deg, rgba(122, 184, 196, 0.2), rgba(232, 90, 90, 0.1));
-            border: 1px solid rgba(122, 184, 196, 0.3);
-            border-radius: 10px;
-            margin-top: 12px;
-        }
-
-        .mockup-ai-suggestion span {
-            font-size: 11px;
-            color: var(--teal-light);
-        }
-
-        /* Flow Mockup */
-        .flow-mockup .mockup-board {
-            display: flex;
-            gap: 12px;
-        }
-
-        .mockup-column {
-            flex: 1;
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 12px;
-        }
-
-        .mockup-column-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .mockup-column-title {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-        }
-
-        .mockup-column-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent-flow);
-        }
-
-        .mockup-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 8px;
-        }
-
-        .mockup-card-title {
-            height: 8px;
-            background: var(--text-secondary);
-            border-radius: 2px;
-            margin-bottom: 8px;
-        }
-
-        .mockup-card-meta {
-            display: flex;
-            gap: 6px;
-        }
-
-        .mockup-tag {
-            height: 6px;
-            width: 30px;
-            background: var(--accent-flow);
-            border-radius: 3px;
-            opacity: 0.6;
-        }
-
-        .mockup-ai-insight {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: linear-gradient(135deg, rgba(232, 90, 90, 0.15), rgba(122, 184, 196, 0.1));
-            border: 1px solid rgba(232, 90, 90, 0.25);
-            border-radius: 8px;
-            margin-top: 8px;
-        }
-
-        .mockup-ai-insight span {
-            font-size: 10px;
-            color: var(--coral-light);
         }
 
         .product-features {
@@ -828,7 +555,7 @@
             padding: 12px 0;
             padding-left: 32px;
             position: relative;
-            color: var(--text-secondary);
+            color: var(--text-gray);
             font-size: 15px;
             border-bottom: 1px solid var(--border-light);
             transition: all 0.2s ease;
@@ -839,7 +566,7 @@
         }
 
         .product-card:hover .product-features li {
-            color: var(--text-primary);
+            color: var(--text-white);
         }
 
         .product-features li::before {
@@ -857,13 +584,13 @@
         }
 
         .product-card.mind .product-features li::before {
-            background: rgba(122, 184, 196, 0.15);
-            color: var(--accent-mind);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
 
         .product-card.flow .product-features li::before {
-            background: rgba(232, 90, 90, 0.15);
-            color: var(--accent-flow);
+            background: rgba(129, 125, 125, 0.2);
+            color: var(--text-gray);
         }
 
         .product-price {
@@ -882,7 +609,7 @@
 
         .price-note {
             font-size: 14px;
-            color: var(--text-muted);
+            color: var(--text-gray);
         }
 
         .product-actions {
@@ -897,157 +624,155 @@
         }
 
         .btn-mind {
-            background: linear-gradient(135deg, var(--accent-mind) 0%, #5BA3B0 100%);
-            color: #fff;
-            box-shadow: 0 4px 20px var(--teal-glow);
+            background: linear-gradient(135deg, #fff 0%, #817D7D 100%);
+            color: var(--dark);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
         }
 
         .btn-mind:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 24px var(--teal-glow);
+            box-shadow: 0 6px 24px rgba(255, 255, 255, 0.15);
         }
 
         .btn-flow {
-            background: linear-gradient(135deg, var(--accent-flow) 0%, #D94A4A 100%);
-            color: #fff;
-            box-shadow: 0 4px 20px var(--coral-glow);
+            background: linear-gradient(135deg, #817D7D 0%, #fff 100%);
+            color: var(--dark);
+            box-shadow: 0 4px 20px rgba(129, 125, 125, 0.2);
         }
 
         .btn-flow:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 24px var(--coral-glow);
+            box-shadow: 0 6px 24px rgba(129, 125, 125, 0.25);
         }
 
         .btn-demo {
             background: var(--bg-tertiary);
-            color: var(--text-primary);
+            color: var(--text-white);
             border: 1px solid var(--border-light);
         }
 
         .btn-demo:hover {
-            background: var(--bg-secondary);
+            background: var(--dark-lighter);
             border-color: var(--border-hover);
         }
 
-        /* Comparison Section */
-        .comparison {
-            padding: 100px 40px;
-            background: var(--cream);
-            position: relative;
-        }
-
-        .comparison .section-header h2 {
-            background: linear-gradient(135deg, var(--text-dark) 0%, var(--text-dark-secondary) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-
-        .comparison .section-header p {
-            color: var(--text-dark-secondary);
-        }
-
-        .comparison-content {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr 1fr;
-            gap: 0;
-            border-radius: 24px;
+        /* Product Mockup Styles */
+        .product-mockup {
+            margin: 24px 0;
+            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-light);
+            background: var(--dark-lighter);
         }
 
-        .comparison-header {
-            display: contents;
-        }
-
-        .comparison-header > div {
-            padding: 24px;
-            font-weight: 600;
-            font-size: 16px;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.03);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            color: var(--text-dark);
-        }
-
-        .comparison-header .mind-ai-header {
-            background: linear-gradient(135deg, rgba(122, 184, 196, 0.2), rgba(122, 184, 196, 0.1));
-            color: #5A8A94;
-        }
-
-        .comparison-row {
-            display: contents;
-        }
-
-        .comparison-row > div {
-            padding: 20px 24px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-            font-size: 14px;
+        .mockup-header {
+            background: var(--dark);
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            color: var(--text-dark);
+            gap: 8px;
+            border-bottom: 1px solid var(--border-light);
         }
 
-        .comparison-row:last-child > div {
-            border-bottom: none;
+        .mockup-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
         }
 
-        .comparison-feature {
-            color: var(--text-dark);
-            font-weight: 500;
+        .mockup-dot.red { background: #ff5f56; }
+        .mockup-dot.yellow { background: #ffbd2e; }
+        .mockup-dot.green { background: #27c93f; }
+
+        .mockup-content {
+            padding: 20px;
+            min-height: 200px;
         }
 
-        .comparison-yes {
-            justify-content: center;
-            color: #10b981;
+        .mockup-sidebar {
+            display: flex;
+            gap: 20px;
+        }
+
+        .mockup-nav {
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .mockup-nav-item {
+            padding: 8px 12px;
+            margin-bottom: 4px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .mockup-nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .mockup-editor {
+            flex: 1;
+            background: var(--dark);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .mockup-title {
+            font-size: 20px;
             font-weight: 600;
-            font-size: 18px;
+            margin-bottom: 12px;
+            color: #fff;
         }
 
-        .comparison-no {
-            justify-content: center;
-            color: var(--text-dark-secondary);
-            font-size: 16px;
+        .mockup-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-gray);
         }
 
-        .comparison-mind-ai {
-            justify-content: center;
-            background: rgba(122, 184, 196, 0.08);
-            color: #5A8A94;
+        .mockup-text p {
+            margin-bottom: 8px;
+        }
+
+        .mockup-kanban {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mockup-column {
+            flex: 1;
+            background: var(--dark);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .mockup-column-header {
+            font-size: 12px;
             font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-light);
         }
 
-        .comparison-cta {
-            text-align: center;
-            margin-top: 40px;
+        .mockup-card {
+            background: var(--dark-lighter);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 11px;
+            color: var(--text-gray);
         }
 
         /* Bundle Section */
         .bundle {
-            padding: 140px 40px 120px;
-            background: var(--charcoal);
+            padding: 120px 40px;
+            background: var(--off-white);
             text-align: center;
             position: relative;
             overflow: hidden;
-        }
-
-        .bundle::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(ellipse 80% 50% at 50% 50%, rgba(122, 184, 196, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse 60% 40% at 30% 70%, rgba(232, 90, 90, 0.06) 0%, transparent 50%);
-            pointer-events: none;
         }
 
         .bundle-content {
@@ -1061,13 +786,13 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(122, 184, 196, 0.15);
-            border: 1px solid rgba(122, 184, 196, 0.25);
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             padding: 10px 20px;
             border-radius: 100px;
             font-size: 14px;
             font-weight: 600;
-            color: var(--accent-mind);
+            color: var(--text-dark);
             margin-bottom: 32px;
         }
 
@@ -1076,15 +801,12 @@
             font-weight: 600;
             margin-bottom: 20px;
             letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #fff 0%, #a0a0b0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-black);
         }
 
         .bundle p {
             font-size: 20px;
-            color: var(--text-secondary);
+            color: var(--text-gray);
             margin-bottom: 40px;
         }
 
@@ -1102,57 +824,104 @@
             font-weight: 600;
             font-family: 'Fraunces', sans-serif;
             letter-spacing: -0.03em;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-black);
         }
 
         .bundle-price .original {
             font-size: 36px;
-            color: var(--text-muted);
+            color: var(--text-gray);
             text-decoration: line-through;
         }
 
         .bundle-price .save {
-            background: linear-gradient(135deg, var(--coral) 0%, var(--coral-light) 100%);
+            background: var(--dark);
             color: #fff;
             padding: 10px 18px;
             border-radius: 100px;
             font-size: 16px;
             font-weight: 600;
-            box-shadow: 0 4px 16px var(--coral-glow);
         }
 
         .bundle .btn-primary {
             font-size: 20px;
             padding: 22px 48px;
-            box-shadow: 0 8px 32px rgba(122, 184, 196, 0.4);
+            background: var(--dark);
+            color: var(--off-white);
         }
 
-        .bundle .btn-primary:hover {
-            box-shadow: 0 12px 40px rgba(122, 184, 196, 0.5);
+        /* Comparison Section */
+        .comparison {
+            padding: 120px 40px;
+            background: var(--dark);
+            position: relative;
+        }
+
+        .comparison-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-top: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-column h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-white);
+        }
+
+        .comparison-column.them h3 {
+            color: var(--text-gray);
+        }
+
+        .comparison-column ul {
+            list-style: none;
+        }
+
+        .comparison-column li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comparison-column li:before {
+            content: '✓';
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .comparison-column.them li:before {
+            content: '✗';
+            color: var(--text-gray);
         }
 
         /* Built Different Section */
         .built-different {
-            padding: 140px 40px 120px;
-            background: var(--cream);
+            padding: 120px 40px;
+            background: var(--dark-lighter);
             position: relative;
-        }
-
-        .built-different .section-header h2 {
-            background: linear-gradient(135deg, var(--text-dark) 0%, var(--text-dark-secondary) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-
-        .built-different .section-header p {
-            color: var(--text-dark-secondary);
         }
 
         .built-different .section-header {
             margin-bottom: 64px;
+        }
+
+        .built-different .section-header h2 {
+            background: linear-gradient(135deg, #fff 0%, #817D7D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .features-grid {
@@ -1164,18 +933,17 @@
         }
 
         .feature-card {
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--bg-card);
             border-radius: 24px;
             padding: 36px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-light);
         }
 
         .feature-card:hover {
             transform: translateY(-6px);
-            border-color: rgba(0, 0, 0, 0.1);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-md);
         }
 
         .feature-icon {
@@ -1187,34 +955,41 @@
             justify-content: center;
             font-size: 28px;
             margin-bottom: 20px;
-            background: rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            background: var(--dark-lighter);
+            border: 1px solid var(--border-light);
             transition: all 0.3s ease;
         }
 
         .feature-card:hover .feature-icon {
-            transform: scale(1.1) rotate(-5deg);
-            background: linear-gradient(135deg, var(--accent-mind) 0%, var(--accent-flow) 100%);
+            transform: scale(1.1);
+            background: #fff;
         }
 
         .feature-card h3 {
             font-size: 22px;
             font-weight: 600;
             margin-bottom: 10px;
-            color: var(--text-dark);
+            color: #fff;
         }
 
         .feature-card p {
             font-size: 15px;
-            color: var(--text-dark-secondary);
+            color: var(--text-gray);
             line-height: 1.7;
         }
 
         /* Stats */
         .stats {
-            padding: 120px 40px 100px;
-            background: var(--charcoal);
+            padding: 100px 40px;
+            background: var(--off-white);
             position: relative;
+        }
+
+        .stats .section-header h2 {
+            background: linear-gradient(135deg, var(--text-black) 0%, var(--text-gray) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .stats-grid {
@@ -1239,7 +1014,7 @@
             font-size: 64px;
             font-weight: 600;
             font-family: 'Fraunces', sans-serif;
-            background: var(--accent-gradient);
+            background: linear-gradient(135deg, var(--text-black) 0%, var(--text-gray) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1249,7 +1024,7 @@
 
         .stat-label {
             font-size: 15px;
-            color: var(--text-secondary);
+            color: var(--text-gray);
             font-weight: 500;
             margin-top: 12px;
             text-transform: uppercase;
@@ -1258,15 +1033,9 @@
 
         /* FAQ */
         .faq {
-            padding: 140px 40px 120px;
-            background: var(--cream);
+            padding: 120px 40px;
+            background: var(--dark);
             position: relative;
-        }
-
-        .faq .section-header h2 {
-            background: linear-gradient(135deg, var(--text-dark) 0%, var(--text-dark-secondary) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
         }
 
         .faq-grid {
@@ -1275,39 +1044,37 @@
         }
 
         .faq-item {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
             border-radius: 20px;
             padding: 28px 32px;
             margin-bottom: 16px;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
         }
 
         .faq-item:hover {
-            border-color: rgba(0, 0, 0, 0.1);
+            border-color: var(--border-hover);
             transform: translateX(4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         }
 
         .faq-item h4 {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 12px;
-            color: var(--text-dark);
+            color: #fff;
         }
 
         .faq-item p {
             font-size: 15px;
-            color: var(--text-dark-secondary);
+            color: var(--text-gray);
             line-height: 1.7;
         }
 
         /* Footer */
         footer {
             padding: 80px 40px 40px;
-            background: var(--charcoal);
-            border-top: 1px solid var(--border-light);
+            background: var(--off-white);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .footer-content {
@@ -1332,18 +1099,17 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            color: var(--text-primary);
+            color: var(--text-black);
         }
 
         .footer-logo span {
             font-weight: 300;
-            opacity: 1;
-            color: var(--text-secondary);
+            opacity: 0.7;
         }
 
         .footer-tagline {
             font-size: 14px;
-            color: var(--text-muted);
+            color: var(--text-gray);
             line-height: 1.6;
         }
 
@@ -1356,14 +1122,14 @@
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 16px;
-            color: var(--text-primary);
+            color: var(--text-black);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         .footer-links-column a {
             display: block;
-            color: var(--text-secondary);
+            color: var(--text-gray);
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 10px;
@@ -1371,7 +1137,7 @@
         }
 
         .footer-links-column a:hover {
-            color: var(--accent-mind);
+            color: var(--dark);
             transform: translateX(4px);
         }
 
@@ -1379,7 +1145,7 @@
             max-width: 1200px;
             margin: 60px auto 0;
             padding-top: 24px;
-            border-top: 1px solid var(--border-light);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1389,7 +1155,7 @@
 
         .footer-copy {
             font-size: 13px;
-            color: var(--text-muted);
+            color: var(--text-gray);
         }
 
         .footer-social {
@@ -1401,21 +1167,21 @@
             width: 40px;
             height: 40px;
             border-radius: 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
+            color: var(--text-gray);
             font-size: 18px;
             transition: all 0.3s ease;
             text-decoration: none;
         }
 
         .footer-social a:hover {
-            background: var(--bg-tertiary);
-            border-color: var(--accent-mind);
-            color: var(--accent-mind);
+            background: var(--dark);
+            border-color: var(--dark);
+            color: #fff;
             transform: translateY(-3px);
         }
 
@@ -1430,7 +1196,7 @@
             }
 
             .hero {
-                padding: 120px 24px 140px;
+                padding: 120px 24px 80px;
             }
 
             .hero-apps {
@@ -1444,16 +1210,6 @@
 
             .product-card {
                 padding: 32px;
-            }
-
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .comparison-header,
-            .comparison-row {
-                display: flex;
-                flex-direction: column;
             }
 
             .features-grid {
@@ -1485,10 +1241,6 @@
                 flex-direction: column;
                 text-align: center;
             }
-
-            .wave-container svg {
-                height: 80px;
-            }
         }
 
         /* Scroll reveal animation */
@@ -1510,9 +1262,9 @@
         <div class="nav-content">
             <a href="/" class="nav-logo"><span>i_am_</span>Hicks</a>
             <div class="nav-links">
-                <a href="#mind">Mind_ai</a>
-                <a href="#flow">Flow_ai</a>
-                <a href="#about">About Us</a>
+                <a href="/mind/">Mind_ai</a>
+                <a href="/flow/">Flow_ai</a>
+                <a href="/about/">About Us</a>
             </div>
         </div>
     </nav>
@@ -1541,14 +1293,14 @@
             </div>
         </div>
 
-        <!-- Dark Wave Divider - Hero to Products -->
+        <!-- Dark Wave Divider -->
         <div class="wave-container bottom wave-animated">
-            <svg viewBox="0 0 1280 128" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
                 <defs>
-                    <path id="wavePath" d="M0,64 C320,100 420,20 640,64 C860,108 960,28 1280,64 L1280,128 L0,128 Z" fill="#1A1A1A"/>
+                    <path id="waveDark" d="M0,64 C320,100 420,20 640,64 C860,108 960,28 1280,64 L1280,128 L0,128 Z" fill="#1B1B1D"/>
                 </defs>
-                <use href="#wavePath" x="0" y="0"/>
-                <use href="#wavePath" x="1280" y="0"/>
+                <use href="#waveDark" x="0" y="0"/>
+                <use href="#waveDark" x="1280" y="0"/>
             </svg>
         </div>
     </section>
@@ -1556,23 +1308,20 @@
     <!-- Products Section -->
     <section class="products" id="products">
         <div class="section-header reveal">
-            <h2>Two apps. Infinite intelligence.</h2>
-            <p>AI-powered tools to capture ideas, organize knowledge, and execute relentlessly.</p>
+            <h2>Two apps. Infinite focus.</h2>
+            <p>Everything you need to think clearly and execute relentlessly.</p>
         </div>
 
         <div class="products-grid">
             <!-- Mind_ai -->
-            <div class="product-card mind reveal" id="mind">
-                <div class="product-header">
-                    <div class="product-icon">🧠</div>
-                    <span class="ai-badge">AI Powered</span>
-                </div>
+            <div class="product-card mind reveal">
+                <div class="product-icon">🧠</div>
                 <h3>Mind_ai</h3>
                 <p class="tagline">i am Clear</p>
-                <p>Your AI-enhanced second brain. Smart notes, bookmarks, and knowledge — organized, searchable, and intelligently connected.</p>
+                <p>Your AI-powered second brain. Notes, knowledge, and insights — organized with intelligent assistance.</p>
                 
-                <!-- Visual Mockup -->
-                <div class="product-mockup mind-mockup">
+                <!-- Product Mockup -->
+                <div class="product-mockup">
                     <div class="mockup-header">
                         <div class="mockup-dot red"></div>
                         <div class="mockup-dot yellow"></div>
@@ -1581,24 +1330,16 @@
                     <div class="mockup-content">
                         <div class="mockup-sidebar">
                             <div class="mockup-nav">
-                                <div class="mockup-nav-item active">📝</div>
-                                <div class="mockup-nav-item">🔖</div>
-                                <div class="mockup-nav-item">🏷️</div>
+                                <div class="mockup-nav-item active">📁 All Notes</div>
+                                <div class="mockup-nav-item">⭐ Favorites</div>
+                                <div class="mockup-nav-item">🔖 Bookmarks</div>
+                                <div class="mockup-nav-item">🏷️ Tags</div>
                             </div>
-                            <div class="mockup-main">
-                                <div class="mockup-note-list">
-                                    <div class="mockup-note-item">
-                                        <div class="mockup-note-title"></div>
-                                    </div>
-                                    <div class="mockup-note-item ai-highlight">
-                                        <div class="mockup-note-title short"></div>
-                                    </div>
-                                    <div class="mockup-note-item">
-                                        <div class="mockup-note-title"></div>
-                                    </div>
-                                </div>
-                                <div class="mockup-ai-suggestion">
-                                    <span>✦ AI suggests: Connect to "Project Ideas"</span>
+                            <div class="mockup-editor">
+                                <div class="mockup-title">Trading Strategy Notes</div>
+                                <div class="mockup-text">
+                                    <p>Key insights from today's market analysis...</p>
+                                    <p style="color: rgba(255,255,255,0.4);">AI suggests: Add tag "psychology"</p>
                                 </div>
                             </div>
                         </div>
@@ -1606,12 +1347,10 @@
                 </div>
 
                 <ul class="product-features">
-                    <li>Rich text editor with AI-powered writing assistance</li>
-                    <li>Smart tagging — AI auto-suggests relevant tags</li>
-                    <li>Intelligent note connections and knowledge graphs</li>
-                    <li>Save bookmarks with AI-generated summaries</li>
-                    <li>Full-text search with semantic understanding</li>
-                    <li>100% offline — AI runs locally on your device</li>
+                    <li>AI writing assistance & smart suggestions</li>
+                    <li>Intelligent tagging & auto-organization</li>
+                    <li>Save bookmarks with full-text search</li>
+                    <li>100% offline — AI runs locally</li>
                     <li>Export to Markdown / JSON anytime</li>
                 </ul>
 
@@ -1623,76 +1362,49 @@
                 <div class="product-actions">
                     <a href="https://gumroad.com" class="btn btn-mind">Buy Mind_ai</a>
                     <a href="/mind-demo/" class="btn btn-demo">Try Demo</a>
+                    <a href="/mind/" class="btn btn-secondary">Learn More</a>
                 </div>
             </div>
 
             <!-- Flow_ai -->
-            <div class="product-card flow reveal" id="flow">
-                <div class="product-header">
-                    <div class="product-icon">⚡</div>
-                    <span class="ai-badge">AI Powered</span>
-                </div>
+            <div class="product-card flow reveal">
+                <div class="product-icon">⚡</div>
                 <h3>Flow_ai</h3>
                 <p class="tagline">i am Focused</p>
-                <p>The intelligent Kanban board that ships. AI task prioritization, smart scheduling, and automated insights to keep you in flow.</p>
+                <p>The Kanban board that ships. AI-powered task management for projects that actually get done.</p>
                 
-                <!-- Visual Mockup -->
-                <div class="product-mockup flow-mockup">
+                <!-- Product Mockup -->
+                <div class="product-mockup">
                     <div class="mockup-header">
                         <div class="mockup-dot red"></div>
                         <div class="mockup-dot yellow"></div>
                         <div class="mockup-dot green"></div>
                     </div>
                     <div class="mockup-content">
-                        <div class="mockup-board">
+                        <div class="mockup-kanban">
                             <div class="mockup-column">
-                                <div class="mockup-column-header">
-                                    <span class="mockup-column-title">To Do</span>
-                                    <div class="mockup-column-dot"></div>
-                                </div>
-                                <div class="mockup-card">
-                                    <div class="mockup-card-title"></div>
-                                    <div class="mockup-card-meta">
-                                        <div class="mockup-tag"></div>
-                                    </div>
-                                </div>
-                                <div class="mockup-card">
-                                    <div class="mockup-card-title"></div>
-                                </div>
+                                <div class="mockup-column-header">To Do</div>
+                                <div class="mockup-card">Design mockups</div>
+                                <div class="mockup-card">Review analytics</div>
                             </div>
                             <div class="mockup-column">
-                                <div class="mockup-column-header">
-                                    <span class="mockup-column-title">Doing</span>
-                                    <div class="mockup-column-dot"></div>
-                                </div>
-                                <div class="mockup-card">
-                                    <div class="mockup-card-title"></div>
-                                    <div class="mockup-card-meta">
-                                        <div class="mockup-tag"></div>
-                                        <div class="mockup-tag" style="background: #10b981;"></div>
-                                    </div>
-                                </div>
+                                <div class="mockup-column-header">In Progress</div>
+                                <div class="mockup-card">Build landing page</div>
                             </div>
                             <div class="mockup-column">
-                                <div class="mockup-column-header">
-                                    <span class="mockup-column-title">Done</span>
-                                    <div class="mockup-column-dot"></div>
-                                </div>
-                                <div class="mockup-ai-insight">
-                                    <span>⚡ Focus: 3 tasks due today</span>
-                                </div>
+                                <div class="mockup-column-header">Done</div>
+                                <div class="mockup-card">Setup project</div>
+                                <div class="mockup-card">Research</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <ul class="product-features">
+                    <li>AI task prioritization & smart scheduling</li>
                     <li>Infinite Kanban boards with drag-and-drop</li>
-                    <li>AI task prioritization based on deadlines & urgency</li>
-                    <li>Smart scheduling suggestions and time estimates</li>
-                    <li>Automated progress insights and bottlenecks</li>
                     <li>Recurring tasks & calendar view</li>
-                    <li>Works offline — AI runs locally on your device</li>
+                    <li>Works offline — no internet required</li>
                     <li>Export/Import — own your data</li>
                 </ul>
 
@@ -1704,15 +1416,16 @@
                 <div class="product-actions">
                     <a href="https://gumroad.com" class="btn btn-flow">Buy Flow_ai</a>
                     <a href="/flow-demo/" class="btn btn-demo">Try Demo</a>
+                    <a href="/flow/" class="btn btn-secondary">Learn More</a>
                 </div>
             </div>
         </div>
 
-        <!-- Cream Wave Divider - Products to Comparison -->
+        <!-- Cream Wave Divider -->
         <div class="wave-container bottom wave-animated">
-            <svg viewBox="0 0 1280 128" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
                 <defs>
-                    <path id="waveCream" d="M0,80 C240,40 400,100 640,60 C880,20 1040,80 1280,40 L1280,128 L0,128 Z" fill="#F5F3F0"/>
+                    <path id="waveCream" d="M0,80 C240,40 400,100 640,60 C880,20 1040,80 1280,40 L1280,128 L0,128 Z" fill="#F1F1F1"/>
                 </defs>
                 <use href="#waveCream" x="0" y="0"/>
                 <use href="#waveCream" x="1280" y="0"/>
@@ -1721,72 +1434,47 @@
     </section>
 
     <!-- Comparison Section -->
-    <section class="comparison" id="comparison">
+    <section class="comparison">
+        <div class="wave-container top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
+                <path d="M0,80 C240,40 400,100 640,60 C880,20 1040,80 1280,40 L1280,128 L0,128 Z" fill="#F1F1F1"/>
+            </svg>
+        </div>
+
         <div class="section-header reveal">
-            <h2>Why Mind_ai Wins</h2>
-            <p>See how we compare to the alternatives.</p>
+            <h2>Mind_ai vs The Rest</h2>
+            <p>Why choose us over Notion, Obsidian, and other note-taking apps?</p>
         </div>
 
-        <div class="comparison-content reveal">
-            <div class="comparison-grid">
-                <div class="comparison-header">
-                    <div>Feature</div>
-                    <div class="mind-ai-header">Mind_ai</div>
-                    <div>Notion / Obsidian</div>
-                </div>
-                <div class="comparison-row">
-                    <div class="comparison-feature">One-time purchase</div>
-                    <div class="comparison-mind-ai">✓ Included</div>
-                    <div class="comparison-no">Subscription</div>
-                </div>
-                <div class="comparison-row">
-                    <div class="comparison-feature">Works offline completely</div>
-                    <div class="comparison-mind-ai">✓ Native</div>
-                    <div class="comparison-yes">✓</div>
-                </div>
-                <div class="comparison-row">
-                    <div class="comparison-feature">AI features included</div>
-                    <div class="comparison-mind-ai">✓ Built-in</div>
-                    <div class="comparison-no">Extra cost</div>
-                </div>
-                <div class="comparison-row">
-                    <div class="comparison-feature">Local AI (privacy-first)</div>
-                    <div class="comparison-mind-ai">✓ Yes</div>
-                    <div class="comparison-no">Cloud only</div>
-                </div>
-                <div class="comparison-row">
-                    <div class="comparison-feature">No account required</div>
-                    <div class="comparison-mind-ai">✓ Instant use</div>
-                    <div class="comparison-no">Signup needed</div>
-                </div>
-                <div class="comparison-row">
-                    <div class="comparison-feature">Portable (single file)</div>
-                    <div class="comparison-mind-ai">✓ One HTML</div>
-                    <div class="comparison-no">App install</div>
-                </div>
-                <div class="comparison-row">
-                    <div class="comparison-feature">Data ownership</div>
-                    <div class="comparison-mind-ai">✓ 100% Yours</div>
-                    <div class="comparison-yes">✓</div>
-                </div>
-                <div class="comparison-row">
-                    <div class="comparison-feature">Automatic syncing</div>
-                    <div class="comparison-no">Manual export</div>
-                    <div class="comparison-yes">✓ Cloud</div>
-                </div>
+        <div class="comparison-grid reveal">
+            <div class="comparison-column them">
+                <h3>Them (Notion/Obsidian)</h3>
+                <ul>
+                    <li>Monthly subscription or upsells</li>
+                    <li>Your data in their cloud</li>
+                    <li>Requires internet for full features</li>
+                    <li>Limited AI capabilities</li>
+                    <li>Complex learning curve</li>
+                    <li>Vendor lock-in</li>
+                </ul>
             </div>
-
-            <div class="comparison-cta">
-                <a href="https://gumroad.com" class="btn btn-mind">Get Mind_ai — $29</a>
+            
+            <div class="comparison-column">
+                <h3>Us (Mind_ai)</h3>
+                <ul>
+                    <li>$29 once, yours forever</li>
+                    <li>Your data stays local</li>
+                    <li>Works 100% offline</li>
+                    <li>Local AI — no API keys</li>
+                    <li>Simple, intuitive design</li>
+                    <li>Export anytime (JSON/Markdown)</li>
+                </ul>
             </div>
         </div>
 
-        <!-- Dark Wave Divider - Comparison to Bundle -->
-        <div class="wave-container bottom wave-animated" style="bottom: -2px;">
-            <svg viewBox="0 0 1280 128" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <path id="waveDark" d="M0,60 C280,100 480,30 640,70 C800,110 1000,40 1280,80 L1280,128 L0,128 Z" fill="#1A1A1A"/>
-                </defs>
+        <!-- Dark Wave Divider -->
+        <div class="wave-container bottom wave-animated">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
                 <use href="#waveDark" x="0" y="0"/>
                 <use href="#waveDark" x="1280" y="0"/>
             </svg>
@@ -1798,7 +1486,7 @@
         <div class="bundle-content reveal">
             <div class="bundle-badge">Best Value</div>
             <h2>The Complete Package</h2>
-            <p>Get both Mind_ai and Flow_ai. Everything you need to capture ideas, organize knowledge, and execute with AI assistance.</p>
+            <p>Get both Mind_ai and Flow_ai. Everything you need to capture ideas and execute on them.</p>
             
             <div class="bundle-price">
                 <span class="current">$49</span>
@@ -1808,21 +1496,16 @@
 
             <a href="https://gumroad.com" class="btn btn-primary">Buy the Bundle</a>
         </div>
-
-        <!-- Cream Wave Divider - Bundle to Built Different -->
-        <div class="wave-container bottom wave-animated">
-            <svg viewBox="0 0 1280 128" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <path id="waveCream2" d="M0,40 C320,90 520,20 640,60 C760,100 960,30 1280,70 L1280,128 L0,128 Z" fill="#F5F3F0"/>
-                </defs>
-                <use href="#waveCream2" x="0" y="0"/>
-                <use href="#waveCream2" x="1280" y="0"/>
-            </svg>
-        </div>
     </section>
 
     <!-- Built Different Section -->
     <section class="built-different" id="features">
+        <div class="wave-container top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
+                <path d="M0,64 C320,100 420,20 640,64 C860,108 960,28 1280,64 L1280,128 L0,128 Z" fill="#F1F1F1"/>
+            </svg>
+        </div>
+
         <div class="section-header reveal">
             <h2>Built Different</h2>
             <p>Most software sells your data, locks you into subscriptions, or disappears when the startup folds. We don't play those games.</p>
@@ -1832,12 +1515,7 @@
             <div class="feature-card reveal">
                 <div class="feature-icon">🔒</div>
                 <h3>i am Private</h3>
-                <p>Your data stays on your device. No cloud syncing. No data mining. AI runs locally — your thoughts never leave your machine.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">🤖</div>
-                <h3>i am Intelligent</h3>
-                <p>Built-in AI features without the price tag. Smart suggestions, auto-tagging, writing assistance — all running offline.</p>
+                <p>Your data stays on your device. No cloud syncing. No data mining. No "analytics." Just pure, private productivity.</p>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">💰</div>
@@ -1859,22 +1537,34 @@
                 <h3>i am Focused</h3>
                 <p>Thoughtfully crafted interfaces that make you want to use them. Beautiful by default. No clutter. Just focus.</p>
             </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🚀</div>
+                <h3>i am Professional</h3>
+                <p>Built by a 20-year UI/UX veteran who actually uses these tools daily. Every feature solves a real problem.</p>
+            </div>
         </div>
 
-        <!-- Dark Wave Divider - Built Different to Stats -->
-        <div class="wave-container bottom wave-animated" style="bottom: -2px;">
-            <svg viewBox="0 0 1280 128" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <path id="waveDark2" d="M0,70 C240,30 440,90 640,50 C840,10 1040,70 1280,30 L1280,128 L0,128 Z" fill="#1A1A1A"/>
-                </defs>
-                <use href="#waveDark2" x="0" y="0"/>
-                <use href="#waveDark2" x="1280" y="0"/>
+        <!-- Cream Wave Divider -->
+        <div class="wave-container bottom wave-animated">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
+                <use href="#waveCream" x="0" y="0"/>
+                <use href="#waveCream" x="1280" y="0"/>
             </svg>
         </div>
     </section>
 
     <!-- Stats -->
     <section class="stats">
+        <div class="wave-container top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
+                <path d="M0,80 C240,40 400,100 640,60 C880,20 1040,80 1280,40 L1280,128 L0,128 Z" fill="#2A2A2C"/>
+            </svg>
+        </div>
+
+        <div class="section-header reveal">
+            <h2>By The Numbers</h2>
+        </div>
+
         <div class="stats-grid reveal">
             <div class="stat-item">
                 <div class="stat-number">0</div>
@@ -1882,7 +1572,7 @@
             </div>
             <div class="stat-item">
                 <div class="stat-number">2</div>
-                <div class="stat-label">AI Apps</div>
+                <div class="stat-label">Powerful Apps</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">100%</div>
@@ -1894,14 +1584,11 @@
             </div>
         </div>
 
-        <!-- Cream Wave Divider - Stats to FAQ -->
+        <!-- Dark Wave Divider -->
         <div class="wave-container bottom wave-animated">
-            <svg viewBox="0 0 1280 128" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <path id="waveCream3" d="M0,50 C280,90 480,20 640,70 C800,120 1000,40 1280,80 L1280,128 L0,128 Z" fill="#F5F3F0"/>
-                </defs>
-                <use href="#waveCream3" x="0" y="0"/>
-                <use href="#waveCream3" x="1280" y="0"/>
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
+                <use href="#waveDark" x="0" y="0"/>
+                <use href="#waveDark" x="1280" y="0"/>
             </svg>
         </div>
     </section>
@@ -1913,10 +1600,6 @@
         </div>
         
         <div class="faq-grid">
-            <div class="faq-item reveal">
-                <h4>How does the AI work offline?</h4>
-                <p>We use lightweight, locally-run AI models that execute directly in your browser. Your data never leaves your device, and you get intelligent features without an internet connection or API costs.</p>
-            </div>
             <div class="faq-item reveal">
                 <h4>How do I install these apps?</h4>
                 <p>Simple. Download the HTML file, save it anywhere on your computer, and double-click to open in your browser. That's it. No installers, no admin rights, no fuss.</p>
@@ -1941,19 +1624,18 @@
     </section>
 
     <!-- Footer -->
-    <footer id="about">
+    <footer>
         <div class="footer-content">
             <div class="footer-brand">
                 <div class="footer-logo"><span>i_am_</span>Hicks</div>
-                <p class="footer-tagline">Beautiful, offline-first AI productivity tools that respect your privacy and your wallet.</p>
+                <p class="footer-tagline">Beautiful, offline-first productivity tools that respect your privacy and your wallet.</p>
             </div>
             <div class="footer-links">
                 <div class="footer-links-column">
-                    <h4>Navigation</h4>
-                    <a href="/">Home</a>
-                    <a href="#mind">Mind_ai</a>
-                    <a href="#flow">Flow_ai</a>
-                    <a href="#about">About Us</a>
+                    <h4>Products</h4>
+                    <a href="/mind/">Mind_ai</a>
+                    <a href="/flow/">Flow_ai</a>
+                    <a href="https://gumroad.com">Buy Bundle</a>
                 </div>
                 <div class="footer-links-column">
                     <h4>Resources</h4>
@@ -1962,8 +1644,8 @@
                     <a href="#faq">FAQ</a>
                 </div>
                 <div class="footer-links-column">
-                    <h4>Get Started</h4>
-                    <a href="https://gumroad.com">Buy Bundle</a>
+                    <h4>Company</h4>
+                    <a href="/about/">About Us</a>
                     <a href="mailto:hello@iamhicks.com">Contact</a>
                 </div>
             </div>
