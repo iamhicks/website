@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us — i_am_Hicks | Define Yourself</title>
+    <meta name="description" content="The story behind i_am_Hicks. Built by a 20-year UI/UX veteran who was tired of subscription software. Privacy-first, offline-capable productivity tools.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --text-tertiary: #6e7681;
+            --border: #30363d;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .nav-logo {
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .nav-logo span {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 140px 24px 80px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-eyebrow {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+        
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -0.03em;
+        }
+        
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Story Section */
+        .story-section {
+            padding: 80px 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .story-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .story-section p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .story-section p strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        /* Founder Section */
+        .founder-section {
+            padding: 100px 24px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .founder-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+        
+        @media (max-width: 768px) {
+            .founder-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+        
+        .founder-avatar {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            margin: 0 auto;
+        }
+        
+        .founder-info h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .founder-role {
+            font-size: 16px;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .founder-bio {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        
+        .founder-bio p {
+            margin-bottom: 16px;
+        }
+        
+        .credentials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .credential-badge {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        /* Values Section */
+        .values-section {
+            padding: 100px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .value-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            transition: all 0.2s;
+        }
+        
+        .value-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+        }
+        
+        .value-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .value-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .value-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Mission Section */
+        .mission-section {
+            padding: 100px 24px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            text-align: center;
+        }
+        
+        .mission-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .mission-content h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        .mission-content p {
+            font-size: 20px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .mission-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Why Different Section */
+        .different-section {
+            padding: 100px 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .different-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-top: 48px;
+        }
+        
+        @media (max-width: 768px) {
+            .different-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .different-column h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--accent-purple);
+        }
+        
+        .different-column.them h3 {
+            color: #ef4444;
+        }
+        
+        .different-column ul {
+            list-style: none;
+        }
+        
+        .different-column li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .different-column li:before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .different-column.them li:before {
+            content: '✗';
+            color: #ef4444;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .cta-content p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+        
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--text-secondary);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        footer a {
+            color: var(--text-primary);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="/" class="nav-logo">i_am<span>Hicks</span></a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/mind/">MIND</a>
+                <a href="/flow/">FLOW</a>
+                <a href="/about/">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-eyebrow">Our Story</div>
+        <h1>Built by someone who was<br><span>tired of renting software</span></h1>
+        <p class="hero-subtitle">i_am_Hicks isn't a corporation. It's one designer's mission to build tools that respect your time, your data, and your wallet.</p>
+    </section>
+
+    <section class="story-section">
+        <h2>The Problem</h2>
+        
+        <p>For 20 years, I designed software for big companies. Award-winning interfaces used by millions. I knew how to build tools that people loved to use.</p>
+        
+        <p>But in my personal life, I was stuck. I was paying <strong>$200/month</strong> for productivity software. Notion, Todoist, various trading journals, finance apps — each one taking a monthly cut.</p>
+        
+        <p>Worse, <strong>I didn't own any of it</strong>. My data lived in someone else's cloud. My workflows were hostage to subscription fees. If any of those companies changed their pricing, changed their terms, or shut down — <strong>my productivity system would collapse</strong>.</p>
+        
+        <p>And I wasn't alone. Every freelancer, indie hacker, and privacy-conscious professional I knew had the same frustration. We were all renting our tools, feeding the subscription economy, and losing control of our digital lives.</p>
+    </section>
+
+    <section class="founder-section">
+        <div class="founder-content">
+            <div class="founder-avatar">👋</div>
+            
+            <div class="founder-info">
+                <h2>Pete</h2>
+                <div class="founder-role">Founder, Designer, Trader</div>
+                
+                <div class="founder-bio"
+                    <p>I've spent two decades designing software that millions of people use every day. I've led UI/UX teams, shipped award-winning products, and learned what makes tools truly great.</p>
+                    
+                    <p>I'm also a trader. I've studied the markets for 5 years, learning the psychology of profitable trading. I know what traders need because I am one.</p>
+                    
+                    <p>And I'm a father. I have a 4-year-old daughter who speaks English and Russian. I'm teaching her to value independence, privacy, and ownership — values that software should embody too.</p>
+                    
+                    <p>i_am_Hicks is the intersection of all these parts of my life: design excellence, trading discipline, and a deep belief that people should own their tools, not rent them.</p>
+                </div>
+                
+                <div class="credentials"
+                    <span class="credential-badge">🎨 20 Years UI/UX</span>
+                    <span class="credential-badge">🏆 Award-Winning Software</span>
+                    <span class="credential-badge">📈 5 Years Trading</span>
+                    <span class="credential-badge">👨‍👧 Father & Educator</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="values-section">
+        <div class="section-header">
+            <h2>What We Believe</h2>
+            <p>These aren't just marketing words. These are the principles that guide every decision we make.</p>
+        </div>
+        
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">🔑</div>
+                <h3>Ownership Over Renting</h3>
+                <p>Software should be yours forever. We reject the subscription model that bleeds users dry. Buy once. Own forever. That's how it should be.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">🔒</div>
+                <h3>Privacy by Design</h3>
+                <p>Your data is yours. Period. Our apps work offline by default. No tracking. No analytics. No cloud required. We don't even know you exist unless you tell us.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">✨</div>
+                <h3>Craftsmanship Matters</h3>
+                <p>We build tools we'd want to use every day. Clean, fast, beautiful. Inspired by the best (Notion, Linear) but made accessible. Design is not an afterthought.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">🏔️</div>
+                <h3>Independence</h3>
+                <p>Self-hosted. Local-first. No dependencies on platforms that might disappear or change terms. Your tools should outlive the companies that make them.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">⚖️</div>
+                <h3>Fair Pricing</h3>
+                <p>Professional-grade tools at honest prices. $29-49 beats $10-15/month, every time. We're not trying to maximize revenue. We're trying to maximize value.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">🎯</div>
+                <h3>Define Yourself</h3>
+                <p>Our tagline isn't just words. We believe you should define your own workflow, your own productivity system, your own digital life. Our tools adapt to you, not the other way around.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mission-section">
+        <div class="mission-content">
+            <h2>Our Mission</h2>
+            
+            <p><strong>Empower individuals to take control of their digital lives</strong> through beautiful, private, offline-capable productivity tools — without subscriptions, without surveillance, without compromise.</p>
+            
+            <p>We envision a world where people <strong>own their software, their data, and their productivity</strong>. No rentals. No lock-in. Just tools that work.</p>
+            
+            <p>Every purchase of i_am_Hicks is a vote for a different kind of software economy. One built on respect, ownership, and craftsmanship.</p>
+        </div>
+    </section>
+
+    <section class="different-section">
+        <div class="section-header">
+            <h2>How We're Different</h2>
+            <p>The software industry has lost its way. Here's how we're fixing it.</p>
+        </div>
+        
+        <div class="different-grid">
+            <div class="different-column them">
+                <h3>Them (Big Tech)</h3>
+                <ul>
+                    <li>$10-15/month forever</li>
+                    <li>Your data in their cloud</li>
+                    <li>Requires internet</li>
+                    <li>"Upgrade to Pro" banners</li>
+                    <li>Locks you in</li>
+                    <li>Sells your data</li>
+                    <li>Faceless corporation</li>
+                </ul>
+            </div>
+            
+            <div class="different-column">
+                <h3>Us (i_am_Hicks)</h3>
+                <ul>
+                    <li>$29 once, yours forever</li>
+                    <li>Your data stays local</li>
+                    <li>Works offline</li>
+                    <li>No upsells, ever</li>
+                    <li>Open formats, export anytime</li>
+                    <li>Zero tracking</li>
+                    <li>Built by a real human</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Ready to define yourself?</h2>
+            
+            <p>Join thousands of people who stopped renting their productivity and started owning it.</p>
+            
+            <div class="cta-group">
+                <a href="/" class="btn btn-primary">Explore Our Tools</a>
+                <a href="/mind-demo/" class="btn btn-secondary">Try Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 i_am_Hicks. Define yourself.</p>
+        <p>
+            <a href="/">Home</a>
+            <a href="/mind/">MIND</a>
+            <a href="/flow/">FLOW</a>
+            <a href="/about/">About</a>
+        </p>
+    </footer>
+</body>
+</html>

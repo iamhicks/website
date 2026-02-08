@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIND — Knowledge Base That Respects You | i_am_Hicks</title>
+    <meta name="description" content="MIND is a beautiful, offline-first knowledge base. $29 one-time purchase. No subscriptions. Your data stays yours.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --mind-purple: #8b5cf6;
+            --mind-purple-dark: #7c3aed;
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border: #30363d;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .nav-logo {
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .nav-logo span {
+            color: var(--mind-purple);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 140px 24px 80px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--mind-purple);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .hero h1 {
+            font-size: clamp(40px, 8vw, 64px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+        }
+        
+        .hero h1 span {
+            color: var(--mind-purple);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(18px, 3vw, 22px);
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-price {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .hero-price span {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--mind-purple) 0%, var(--mind-purple-dark) 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--text-secondary);
+        }
+        
+        /* Elevator Pitch */
+        .pitch-section {
+            padding: 80px 24px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .pitch-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .pitch-content h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+        }
+        
+        .pitch-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: left;
+        }
+        
+        .pitch-box p {
+            margin-bottom: 16px;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+        
+        .pitch-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Features */
+        .features-section {
+            padding: 100px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            transition: all 0.2s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--mind-purple);
+            transform: translateY(-4px);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(139, 92, 246, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        /* FAQ */
+        .faq-section {
+            padding: 100px 24px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+        }
+        
+        .faq-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 24px 0;
+        }
+        
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        
+        .faq-question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .faq-answer {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        
+        /* User Guide Preview */
+        .guide-section {
+            padding: 100px 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .guide-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+        
+        .guide-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .guide-card ol {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .guide-card li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        /* Bundle */
+        .bundle-section {
+            padding: 100px 24px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            text-align: center;
+        }
+        
+        .bundle-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .bundle-content h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .bundle-price {
+            font-size: 56px;
+            font-weight: 800;
+            margin: 24px 0;
+        }
+        
+        .bundle-price .original {
+            font-size: 24px;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+            margin-right: 16px;
+            font-weight: 400;
+        }
+        
+        .save-badge {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        footer a {
+            color: var(--text-primary);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="/" class="nav-logo">i_am<span>Hicks</span></a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/mind/">MIND</a>
+                <a href="/flow/">FLOW</a>
+                <a href="/mind-demo/">Demo</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-badge">
+            <span>🧠</span> MIND — i am Clear
+        </div>
+        <h1>Your second brain,<br><span>actually private</span></h1>
+        <p class="hero-subtitle">A beautiful, offline-first knowledge base that puts you in control of your thoughts — forever.</p>
+        <div class="hero-price">$29 <span>one-time</span></div>
+        <div class="cta-group">
+            <a href="#buy" class="btn btn-primary">Buy MIND — $29</a>
+            <a href="/mind-demo/" class="btn btn-secondary">Try Demo</a>
+        </div>
+    </section>
+
+    <section class="pitch-section">
+        <div class="pitch-content">
+            <h2>Most productivity software is subscription-based, tracks your data, and stops working without internet.</h2>
+            <div class="pitch-box">
+                <p><strong>We built the alternative.</strong></p>
+                <p>MIND is a knowledge base that actually respects you. It's $29 once — not $10/month forever.</p>
+                <p>It works completely offline. Your data never leaves your machine unless you want it to. And it looks beautiful because design matters.</p>
+                <p>It's for people who are tired of renting their tools and want to own their productivity stack. $29 once. Forever yours.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="section-header">
+            <h2>Everything you need, nothing you don't</h2>
+            <p>Beautiful, focused, and designed for how you actually think</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Rich Text Editor</h3>
+                <p>WYSIWYG editing with formatting, lists, and media. No markdown syntax to memorize. Just write.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏷️</div>
+                <h3>Smart Tagging</h3>
+                <p>Multi-tag filtering lets you find anything instantly. Click "Work" + "Urgent" to see only urgent work items.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📁</div>
+                <h3>Hierarchical Organization</h3>
+                <p>Notes → Folders → Tags. Structure that scales from a few ideas to a complete knowledge library.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Instant Search</h3>
+                <p>Full-text search across all your notes. Find that idea you had months ago in milliseconds.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">✈️</div>
+                <h3>Works Offline</h3>
+                <p>On planes, in remote cabins, during outages. Your knowledge doesn't need WiFi.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Privacy First</h3>
+                <p>No account required. No cloud sync unless YOU set it up. No tracking, ever. Your data stays local.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📤</div>
+                <h3>Open Formats</h3>
+                <p>Export to Markdown or JSON anytime. Your data is never trapped. Move to any other tool easily.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌓</div>
+                <h3>Dark & Light Mode</h3>
+                <p>Easy on the eyes, day or night. Switch instantly based on your preference or system setting.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="guide-section">
+        <div class="section-header">
+            <h2>Quick Start Guide</h2>
+            <p>From download to productive in 3 minutes</p>
+        </div>
+        
+        <div class="guide-card">
+            <h3><span>1️⃣</span> Installation</h3>
+            <ol>
+                <li>Download MIND after purchase</li>
+                <li>Unzip the file</li>
+                <li>Open <code>index.html</code> in any modern browser</li>
+                <li>That's it — no installation, no account setup</li>
+            </ol>
+        </div>
+        
+        <div class="guide-card">
+            <h3><span>2️⃣</span> Creating Your First Note</h3>
+            <ol>
+                <li>Click "+ New Note" in the sidebar</li>
+                <li>Give it a title</li>
+                <li>Start typing — auto-saves as you write</li>
+                <li>Add tags by typing #tagname anywhere in the note</li>
+            </ol>
+        </div>
+        
+        <div class="guide-card">
+            <h3><span>3️⃣</span> Organizing with Folders</h3>
+            <ol>
+                <li>Right-click in the sidebar → "New Folder"</li>
+                <li>Drag notes into folders</li>
+                <li>Create nested folders for complex organization</li>
+                <li>Use tags across folders for cross-cutting themes</li>
+            </ol>
+        </div>
+        
+        <div class="guide-card">
+            <h3><span>4️⃣</span> Finding Anything</h3>
+            <ol>
+                <li>Use the search bar for instant full-text search</li>
+                <li>Click a tag to see all notes with that tag</li>
+                <li>Click multiple tags to filter further</li>
+                <li>Browse folders for structured exploration</li>
+            </ol>
+        </div>
+        
+        <div class="cta-group">
+            <a href="/mind-demo/" class="btn btn-secondary">Try the Demo</a>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="faq-content">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">$29 seems expensive for a notes app. Why not just use free alternatives?</div>
+                <div class="faq-answer">It's $29 once, not $10/month forever. Break-even vs Notion is 3 months. After that, you're saving money every month. Plus, free alternatives either harvest your data, show ads, or limit features. MIND respects your privacy and gives you everything upfront.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Does it sync between devices?</div>
+                <div class="faq-answer">Not built-in (privacy first!). But you can use any sync you trust: Dropbox, iCloud, Syncthing, or just export/import. Your notes are standard Markdown files, so they work with any sync solution.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What if you stop updating it?</div>
+                <div class="faq-answer">You own it forever. No subscription means no risk of losing access. It works today, it'll work in 10 years. The code doesn't expire. If we disappeared tomorrow, you'd still have a fully functional notes app.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is it as powerful as Notion?</div>
+                <div class="faq-answer">For personal knowledge management? Yes. For databases and team collaboration? No — and that's intentional. We focused on what 90% of people actually need: fast, private, beautiful note-taking without the bloat.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I import from other apps?</div>
+                <div class="faq-answer">Yes! MIND supports Markdown import, which most apps can export to. Bring your notes from Notion, Obsidian, Bear, or anywhere else.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is there a refund policy?</div>
+                <div class="faq-answer">Yes. 30-day money-back guarantee, no questions asked. If MIND doesn't work for you, we'll refund every penny.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bundle-section" id="buy">
+        <div class="bundle-content">
+            <h2>Get the Complete Suite</h2>
+            <p>MIND + FLOW together. Knowledge and execution, perfectly paired.</p>
+            <div class="bundle-price">
+                <span class="original">$58</span>$49
+            </div>
+            <div class="save-badge">Save $9</div>
+            <div class="cta-group">
+                <a href="#" class="btn btn-primary">Buy Bundle — $49</a>
+                <a href="/flow/" class="btn btn-secondary">Learn about FLOW</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 i_am_Hicks. Define yourself.</p>
+        <p>
+            <a href="/">Home</a>
+            <a href="/mind/">MIND</a>
+            <a href="/flow/">FLOW</a>
+            <a href="/mind-demo/">Demo</a>
+        </p>
+    </footer>
+</body>
+</html>
