@@ -1181,6 +1181,120 @@
             transform: translateY(-3px);
         }
 
+        /* Screenshots Section */
+        .screenshots {
+            padding: 120px 40px;
+            background: var(--dark-lighter);
+            position: relative;
+        }
+
+        .screenshots-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 100px;
+        }
+
+        .screenshot-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .screenshot-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .screenshot-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .screenshot-image {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            aspect-ratio: 16 / 10;
+            background: var(--dark-card);
+        }
+
+        .screenshot-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .screenshot-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--dark-card) 0%, var(--dark-lighter) 100%);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .placeholder-content {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .placeholder-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        .placeholder-content p {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 8px;
+        }
+
+        .placeholder-content span {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+
+        .screenshot-info h3 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-white);
+        }
+
+        .screenshot-info p {
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--text-gray);
+        }
+
+        @media (max-width: 968px) {
+            .screenshot-item {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .screenshot-item:nth-child(even) {
+                direction: ltr;
+            }
+
+            .screenshot-image {
+                aspect-ratio: 16 / 9;
+            }
+
+            .screenshot-info h3 {
+                font-size: 28px;
+            }
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             nav {
@@ -1270,10 +1384,10 @@
         <div class="hero-content">
             <h1><span>i_am_</span>Hicks</h1>
             <p class="hero-tagline">Define yourself</p>
-            <p class="hero-subhead">A knowledge base with <strong>private AI in every note</strong>. $39 once. Offline. Your data stays yours.</p>
+            <p class="hero-subhead">A knowledge base with <strong>private AI in every note</strong>. $49 once. Offline. Your data stays yours.</p>
             
             <div class="hero-cta-group">
-                <a href="/mind/" class="btn btn-primary">Get MIND — $39</a>
+                <a href="/mind/" class="btn btn-primary">Get MIND — $49</a>
                 <a href="/mind-demo/" class="btn btn-secondary">Try Demo</a>
             </div>
         </div>
@@ -1341,73 +1455,16 @@
                 </ul>
 
                 <div class="product-price">
-                    <span class="price">$39</span>
+                    <span class="price">$49</span>
                     <span class="price-note">One-time • Lifetime updates</span>
                 </div>
 
                 <div class="product-actions">
-                    <a href="https://gumroad.com" class="btn btn-mind">Buy MIND</a>
+                    <a href="https://gumroad.com" class="btn btn-mind">Buy MIND — $49</a>
                     <a href="/mind-demo/" class="btn btn-demo">Try Demo</a>
                     <a href="/mind/" class="btn btn-demo">Learn More</a>
                 </div>
             </div>
-
-            <!-- Flow_ai - HIDDEN FOR MIND-ONLY LAUNCH
-            <div class="product-card flow reveal">
-                <h3>Flow_ai</h3>
-                <p class="tagline">i am Focused</p>
-                <p>The Kanban board that ships. AI-powered task management for projects that actually get done.</p>
-                
-                <!-- Product Mockup -->
-                <div class="product-mockup">
-                    <div class="mockup-header">
-                        <div class="mockup-dot red"></div>
-                        <div class="mockup-dot yellow"></div>
-                        <div class="mockup-dot green"></div>
-                    </div>
-                    <div class="mockup-content">
-                        <div class="mockup-kanban">
-                            <div class="mockup-column">
-                                <div class="mockup-column-header">To Do</div>
-                                <div class="mockup-card">Design mockups</div>
-                                <div class="mockup-card">Review analytics</div>
-                            </div>
-                            <div class="mockup-column">
-                                <div class="mockup-column-header">In Progress</div>
-                                <div class="mockup-card">Build landing page</div>
-                            </div>
-                            <div class="mockup-column">
-                                <div class="mockup-column-header">Done</div>
-                                <div class="mockup-card">Setup project</div>
-                                <div class="mockup-card">Research</div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 12px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.5);">
-                            ✨ AI Insight: 3 tasks due tomorrow. Consider prioritizing "Build landing page"
-                        </div>
-                    </div>
-                </div>
-
-                <ul class="product-features">
-                    <li>AI task prioritization & smart scheduling</li>
-                    <li>Infinite Kanban boards with drag-and-drop</li>
-                    <li>Recurring tasks & calendar view</li>
-                    <li>Works offline — no internet required</li>
-                    <li>Export/Import — own your data</li>
-                </ul>
-
-                <div class="product-price">
-                    <span class="price">$29</span>
-                    <span class="price-note">One-time • Lifetime updates</span>
-                </div>
-
-                <div class="product-actions">
-                    <a href="https://gumroad.com" class="btn btn-flow">Buy Flow_ai</a>
-                    <a href="/flow-demo/" class="btn btn-demo">Try Demo</a>
-                    <a href="/flow/" class="btn btn-demo">Learn More</a>
-                </div>
-            </div>
-            END FLOW SECTION -->
         </div>
 
         <!-- Cream Wave Divider -->
@@ -1422,23 +1479,95 @@
         </div>
     </section>
 
-    <!-- Bundle Section - HIDDEN FOR MIND-ONLY LAUNCH
-    <section class="bundle">
-        <div class="bundle-content reveal">
-            <div class="bundle-badge">Best Value</div>
-            <h2>The Complete Package</h2>
-            <p>Get both Mind_ai and Flow_ai. Everything you need to capture ideas and execute on them.</p>
-            
-            <div class="bundle-price">
-                <span class="current">$49</span>
-                <span class="original">$58</span>
-                <span class="save">Save $9</span>
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <div class="section-header reveal">
+            <h2>See MIND in Action</h2>
+            <p>Private AI conversations in every note. Here's what makes MIND different.</p>
+        </div>
+        
+        <div class="screenshots-grid">
+            <!-- Screenshot 1: AI Chat -->
+            <div class="screenshot-item reveal">
+                <div class="screenshot-image">
+                    <img src="assets/screenshot-ai-chat.jpg" alt="AI Chat in MIND - Shows a note with AI conversation sidebar" loading="lazy">
+                    <div class="screenshot-placeholder">
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">💬</div>
+                            <p>AI Chat Feature</p>
+                            <span>Every note has its own private AI conversation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="screenshot-info">
+                    <h3>AI Chat in Every Note</h3>
+                    <p>Each note has its own isolated AI conversation. Ask questions, brainstorm ideas, get writing feedback, or analyze research — all saved with that specific note forever. Writers use it to refine drafts. Researchers use it to extract insights. Thinkers use it to develop concepts. Every chat is private, offline, and persists across sessions.</p>
+                </div>
             </div>
-
-            <a href="https://gumroad.com" class="btn btn-primary">Buy the Bundle</a>
+            
+            <!-- Screenshot 2: Organization -->
+            <div class="screenshot-item reveal">
+                <div class="screenshot-image">
+                    <img src="assets/screenshot-organize.jpg" alt="MIND organization - Shows folder tree and tags" loading="lazy">
+                    <div class="screenshot-placeholder">
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">📁</div>
+                            <p>Organization</p>
+                            <span>Folders, tags, and smart filtering</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="screenshot-info">
+                    <h3>Organize Your Way</h3>
+                    <p>Structure your knowledge with folders, tags, and pinned favorites. Drag and drop to reorder. Filter by multiple tags to find exactly what you need. The folder tree shows your hierarchy at a glance. Everything is designed to scale from a few notes to a complete knowledge library without getting overwhelming.</p>
+                </div>
+            </div>
+            
+            <!-- Screenshot 3: Rich Editor -->
+            <div class="screenshot-item reveal">
+                <div class="screenshot-image">
+                    <img src="assets/screenshot-editor.jpg" alt="MIND editor - Shows rich text editing with formatting" loading="lazy">
+                    <div class="screenshot-placeholder">
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">📝</div>
+                            <p>Rich Editor</p>
+                            <span>Beautiful writing experience</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="screenshot-info">
+                    <h3>Beautiful Writing Experience</h3>
+                    <p>Distraction-free WYSIWYG editor with just the right amount of formatting. Bold, italic, headings, lists, quotes — everything you need, nothing you don't. The clean typography and generous whitespace make writing a pleasure. Your notes look polished without any effort.</p>
+                </div>
+            </div>
+            
+            <!-- Screenshot 4: Offline & Private -->
+            <div class="screenshot-item reveal">
+                <div class="screenshot-image">
+                    <img src="assets/screenshot-offline.jpg" alt="MIND offline - Shows the app working without internet" loading="lazy">
+                    <div class="screenshot-placeholder">
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">🔒</div>
+                            <p>100% Offline</p>
+                            <span>Your data never leaves your device</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="screenshot-info">
+                    <h3>100% Offline & Private</h3>
+                    <p>No internet required. No accounts to create. No data harvesting. Your notes and AI conversations live only on your device. Works on planes, trains, and anywhere else. Export to Markdown or JSON anytime — your data is truly yours, now and forever.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dark Wave Divider -->
+        <div class="wave-container bottom ">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
+                <use href="#waveDark" x="0" y="0"/>
+                <use href="#waveDark" x="1280" y="0"/>
+            </svg>
         </div>
     </section>
-    END BUNDLE SECTION -->
 
     <!-- Built Different Section -->
     <section class="built-different" id="features">
@@ -1495,68 +1624,38 @@
         </div>
     </section>
 
-    <!-- Stats -->
-    <section class="stats">
+    <!-- FAQ -->
+    <section class="faq" id="faq">
         <div class="wave-container top">
             <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
                 <path d="M0,80 C240,40 400,100 640,60 C880,20 1040,80 1280,40 L1280,128 L0,128 Z" fill="#2A2A2C"/>
             </svg>
         </div>
-
-        <div class="section-header reveal">
-            <h2>By The Numbers</h2>
-        </div>
-
-        <div class="stats-grid reveal">
-            <div class="stat-item">
-                <div class="stat-number">0</div>
-                <div class="stat-label">Subscriptions</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">2</div>
-                <div class="stat-label">Powerful Apps</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Private</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">∞</div>
-                <div class="stat-label">Possibilities</div>
-            </div>
-        </div>
-
-        <!-- Dark Wave Divider -->
-        <div class="wave-container bottom ">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
-                <use href="#waveDark" x="0" y="0"/>
-                <use href="#waveDark" x="1280" y="0"/>
-            </svg>
-        </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="faq" id="faq">
+        
         <div class="section-header reveal">
             <h2>Questions? Answered.</h2>
         </div>
         
         <div class="faq-grid">
             <div class="faq-item reveal">
-                <h4>How do I install these apps?</h4>
-                <p>Simple. Download the HTML file, save it anywhere on your computer, and double-click to open in your browser. That's it. No installers, no admin rights, no fuss.</p>
+                <h4>What makes MIND different from other note apps?</h4>
+                <p>Every note has its own private AI conversation. Brainstorm ideas, get writing feedback, or analyze research — all saved with that specific note. Plus it's 100% offline, so your thoughts never leave your device.</p>
+            </div>
+            <div class="faq-item reveal">
+                <h4>How does the AI chat work?</h4>
+                <p>Each note has its own isolated AI conversation. Ask questions, get summaries, or brainstorm ideas. Every chat is saved with that note and backed up automatically. Return months later and your conversation history is right there.</p>
             </div>
             <div class="faq-item reveal">
                 <h4>Where is my data stored?</h4>
-                <p>Right on your computer, in your browser's local storage. It never touches our servers — because we don't have any. Export anytime as JSON for backup or moving to another device.</p>
+                <p>Right on your computer, in your browser's local storage. It never touches our servers — because we don't have any. Both your notes and AI conversations are stored locally. Export anytime as Markdown or JSON for backup.</p>
             </div>
             <div class="faq-item reveal">
-                <h4>Can I use these on multiple devices?</h4>
-                <p>Absolutely. Copy the HTML file to any device. Use the export/import feature to move your data. Your license covers all your personal devices.</p>
+                <h4>Can I use MIND on multiple devices?</h4>
+                <p>Absolutely. Copy the HTML file to any device. Use the export/import feature to move your data — including your AI chat history. Your license covers all your personal devices.</p>
             </div>
             <div class="faq-item reveal">
                 <h4>Do you offer refunds?</h4>
-                <p>Yes. 30-day money-back guarantee, no questions asked. If these tools don't improve your workflow, you shouldn't pay for them.</p>
+                <p>Yes. 30-day money-back guarantee, no questions asked. If MIND doesn't improve your workflow, you shouldn't pay for it.</p>
             </div>
             <div class="faq-item reveal">
                 <h4>Will there be updates?</h4>
@@ -1574,21 +1673,20 @@
             </div>
             <div class="footer-links">
                 <div class="footer-links-column">
-                    <h4>Products</h4>
-                    <a href="/mind/">Mind_ai</a>
-                    <a href="/flow/">Flow_ai</a>
-                    <a href="https://gumroad.com">Buy Bundle</a>
+                    <h4>Product</h4>
+                    <a href="/mind/">MIND</a>
+                    <a href="/mind-demo/">Try Demo</a>
+                    <a href="https://gumroad.com">Buy Now — $49</a>
                 </div>
                 <div class="footer-links-column">
                     <h4>Resources</h4>
-                    <a href="/mind-demo/">Mind_ai Demo</a>
-                    <a href="/flow-demo/">Flow_ai Demo</a>
                     <a href="#faq">FAQ</a>
+                    <a href="mailto:hello@iamhicks.com">Contact</a>
                 </div>
                 <div class="footer-links-column">
                     <h4>Company</h4>
-                    <a href="/about/">About Us</a>
-                    <a href="mailto:hello@iamhicks.com">Contact</a>
+                    <a href="/about/">About</a>
+                    <a href="mailto:hello@iamhicks.com">Support</a>
                 </div>
             </div>
         </div>
