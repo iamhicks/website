@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDGE — Trading Journal (Demo)</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/all.css">
+    <style>
+        .demo-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 10px 16px;
+            z-index: 10000;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .demo-banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .demo-reset-timer {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .demo-banner-link {
+            color: white;
+            text-decoration: none;
+            margin-left: auto;
+            opacity: 0.9;
+        }
+        .app-container {
+            padding-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        <div class="demo-banner-content">
+            <i class="ph ph-clock"></i>
+            <span>EDGE Demo — Resets every hour</span>
+            <span class="demo-reset-timer" id="demoResetTimer"></span>
+            <a href="/" class="demo-banner-link"><i class="ph ph-arrow-left"></i> Back to Website</a>
+        </div>
+    </div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>📈 Trading Journal v2</h1>
+            <nav class="main-nav">
+                <button class="nav-btn active" data-view="trades">Trades</button>
+                <button class="nav-btn" data-view="psychology">Psychology</button>
+                <button class="nav-btn" data-view="templates">Templates</button>
+                <button class="nav-btn" data-view="statistics">Statistics</button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Trades View -->
+            <section id="trades-view" class="view active">
+                <div class="view-header">
+                    <h2>Trade Log</h2>
+                    <button class="btn btn-primary" id="add-trade-btn">+ Add Trade</button>
+                </div>
+                <div class="trades-list" id="trades-list">
+                    <!-- Trades populated by JS -->
+                </div>
+            </section>
+
+            <!-- Psychology View -->
+            <section id="psychology-view" class="view">
+                <div class="view-header">
+                    <h2>Psychology Module</h2>
+                </div>
+                <div class="psychology-container">
+                    <!-- Discipline Score Card -->
+                    <div class="psych-card discipline-score-card">
+                        <h3>🎯 Discipline Score</h3>
+                        <div class="score-display">
+                            <div class="score-circle" id="discipline-score">
+                                <span class="score-value">--</span>
+                                <span class="score-label">/ 100</span>
+                            </div>
+                            <div class="score-breakdown" id="score-breakdown">
+                                <!-- Breakdown populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mood Tracking Chart -->
+                    <div class="psych-card mood-chart-card">
+                        <h3>📊 Mood Tracking (30 Days)</h3>
+                        <div class="mood-chart-container">
+                            <canvas id="mood-chart"></canvas>
+                        </div>
+                        <div class="mood-legend">
+                            <span class="mood-item"><span class="dot excellent"></span> Excellent</span>
+                            <span class="mood-item"><span class="dot good"></span> Good</span>
+                            <span class="mood-item"><span class="dot neutral"></span> Neutral</span>
+                            <span class="mood-item"><span class="dot poor"></span> Poor</span>
+                            <span class="mood-item"><span class="dot bad"></span> Bad</span>
+                        </div>
+                    </div>
+
+                    <!-- Psychology Insights -->
+                    <div class="psych-card insights-card">
+                        <h3>💡 Psychology Insights</h3>
+                        <div class="insights-list" id="psychology-insights">
+                            <!-- Insights populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Pre-Trade Checklists History -->
+                    <div class="psych-card checklist-history-card">
+                        <h3>📝 Recent Pre-Trade Checklists</h3>
+                        <div class="checklist-history" id="pretrade-history">
+                            <!-- History populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Templates View -->
+            <section id="templates-view" class="view">
+                <div class="view-header">
+                    <h2>Trade Templates</h2>
+                    <div class="view-header-actions">
+                        <button class="btn btn-secondary" id="manage-accounts-btn">🏦 Manage Accounts</button>
+                        <button class="btn btn-secondary" id="manage-mistakes-btn">⚠️ Manage Mistakes</button>
+                        <button class="btn btn-primary" id="add-template-btn">+ Create Template</button>
+                    </div>
+                </div>
+                <div class="templates-container" id="templates-container">
+                    <!-- Templates populated by JS -->
+                </div>
+            </section>
+
+            <!-- Statistics View -->
+            <section id="statistics-view" class="view">
+                <div class="view-header">
+                    <h2>Trading Statistics</h2>
+                    <div class="view-header-actions">
+                        <label for="account-filter" style="color: var(--text-muted); font-size: 0.9rem;">Account:</label>
+                        <select id="account-filter" class="form-select account-filter">
+                            <option value="">All Accounts</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="stats-container">
+                    <!-- Key Metrics -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Trades</div>
+                            <div class="stat-value" id="stat-total-trades">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Win Rate</div>
+                            <div class="stat-value" id="stat-win-rate">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Profit Factor</div>
+                            <div class="stat-value" id="stat-profit-factor">0.00</div>
+                        </div>
+                        <div class="stat-card highlight">
+                            <div class="stat-label">Expectancy</div>
+                            <div class="stat-value" id="stat-expectancy">$0.00</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-label">Max Drawdown</div>
+                            <div class="stat-value" id="stat-drawdown">$0.00</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Avg Win</div>
+                            <div class="stat-value" id="stat-avg-win">$0.00</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Avg Loss</div>
+                            <div class="stat-value" id="stat-avg-loss">$0.00</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">R-Multiple Avg</div>
+                            <div class="stat-value" id="stat-r-multiple">0.00R</div>
+                        </div>
+                        <div class="stat-card" style="border: 2px solid var(--primary);">
+                            <div class="stat-label">Opening Balance</div>
+                            <div class="stat-value editable" id="stat-opening-balance" contenteditable="true">$0.00</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Current Balance</div>
+                            <div class="stat-value" id="stat-current-balance">$0.00</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Total P&L</div>
+                            <div class="stat-value" id="stat-total-pnl">$0.00</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Return %</div>
+                            <div class="stat-value" id="stat-return-percent">0.00%</div>
+                        </div>
+                    </div>
+
+                    <!-- Win Rate by Trade Type -->
+                    <div class="stats-section">
+                        <h3>Win Rate by Trade Type</h3>
+                        <div class="trade-type-stats" id="trade-type-stats">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Psychology Correlation -->
+                    <div class="stats-section">
+                        <h3>Psychology Correlations</h3>
+                        <div class="psych-correlations" id="psych-correlations">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Target Statistics -->
+                    <div class="stats-section">
+                        <h3>🎯 Target Statistics</h3>
+                        <div class="target-stats" id="target-stats">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Mistakes Analysis -->
+                    <div class="stats-section">
+                        <h3>⚠️ Mistakes Analysis</h3>
+                        <div class="mistakes-stats" id="mistakes-stats">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- 4H Profile Analysis -->
+                    <div class="stats-section">
+                        <h3>📊 4H Profile Analysis</h3>
+                        <div class="profile4h-stats" id="profile4h-stats">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Equity Curve -->
+                    <div class="stats-section">
+                        <h3>Equity Curve</h3>
+                        <div class="equity-chart-container">
+                            <canvas id="equity-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add/Edit Trade Modal -->
+    <div class="modal" id="trade-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="trade-modal-title">Add Trade</h3>
+                <button class="modal-close" id="close-trade-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="trade-form">
+                    <input type="hidden" id="trade-id">
+                    
+                    <!-- Template Selection -->
+                    <div class="form-section">
+                        <h4>Trade Template</h4>
+                        <select id="trade-template" class="form-select">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+
+                    <!-- Account Selection -->
+                    <div class="form-section">
+                        <h4>Trading Account</h4>
+                        <select id="trade-account" class="form-select" required>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+
+                    <!-- Basic Info -->
+                    <div class="form-section">
+                        <h4>Basic Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="trade-symbol">Symbol</label>
+                                <input type="text" id="trade-symbol" class="form-input" placeholder="AAPL" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="trade-date">Date</label>
+                                <input type="date" id="trade-date" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="trade-direction">Direction</label>
+                                <select id="trade-direction" class="form-select">
+                                    <option value="long">Long</option>
+                                    <option value="short">Short</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="trade-result">Result</label>
+                                <select id="trade-result" class="form-select">
+                                    <option value="win">Win</option>
+                                    <option value="loss">Loss</option>
+                                    <option value="breakeven">Breakeven</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prices -->
+                    <div class="form-section">
+                        <h4>Price Levels</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="trade-entry">Entry Price</label>
+                                <input type="number" id="trade-entry" class="form-input" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="trade-exit">Exit Price</label>
+                                <input type="number" id="trade-exit" class="form-input" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="trade-stop">Stop Loss</label>
+                                <input type="number" id="trade-stop" class="form-input" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="trade-target">Target</label>
+                                <input type="number" id="trade-target" class="form-input" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- P&L -->
+                    <div class="form-section">
+                        <h4>P&L</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="trade-quantity">Quantity</label>
+                                <input type="number" id="trade-quantity" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="trade-pnl">P&L ($)</label>
+                                <input type="number" id="trade-pnl" class="form-input" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pre-Trade Checklist -->
+                    <div class="form-section" id="pretrade-section">
+                        <h4>🧠 Pre-Trade Checklist</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pre-mood">Current Mood</label>
+                                <select id="pre-mood" class="form-select">
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="neutral">Neutral</option>
+                                    <option value="poor">Poor</option>
+                                    <option value="bad">Bad</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pre-confidence">Confidence Level (1-10)</label>
+                                <input type="range" id="pre-confidence" class="form-range" min="1" max="10" value="5">
+                                <span class="range-value" id="confidence-value">5</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pre-sleep">Sleep Quality (hours)</label>
+                                <input type="number" id="pre-sleep" class="form-input" min="0" max="12" step="0.5" value="7">
+                            </div>
+                            <div class="form-group">
+                                <label for="pre-stress">Stress Level (1-10)</label>
+                                <input type="range" id="pre-stress" class="form-range" min="1" max="10" value="3">
+                                <span class="range-value" id="stress-value">3</span>
+                            </div>
+                        </div>
+                        <div class="checklist-items" id="template-checklist">
+                            <!-- Template-specific checklist items populated by JS -->
+                        </div>
+
+                        <!-- 4 Hour Profile Checklist -->
+                        <div class="custom-checklist-section" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
+                            <h5 style="margin-bottom: 10px; color: var(--primary);">📊 4 Hour Profile</h5>
+                            <div class="custom-checklist" id="profile4h-checklist">
+                                <!-- 4H Profile checklist items populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Drivers Checklist -->
+                        <div class="custom-checklist-section" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
+                            <h5 style="margin-bottom: 10px; color: var(--primary);">🎯 Drivers</h5>
+                            <div class="custom-checklist" id="drivers-checklist">
+                                <!-- Drivers checklist items populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post-Trade Reflection -->
+                    <div class="form-section" id="posttrade-section">
+                        <h4>📝 Post-Trade Reflection</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="post-mood">Post-Trade Mood</label>
+                                <select id="post-mood" class="form-select">
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="neutral" selected>Neutral</option>
+                                    <option value="poor">Poor</option>
+                                    <option value="bad">Bad</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="post-discipline">Followed Plan?</label>
+                                <select id="post-discipline" class="form-select">
+                                    <option value="yes">Yes - Followed Plan</option>
+                                    <option value="partial">Partially</option>
+                                    <option value="no">No - Deviated</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="post-lessons">Lessons Learned</label>
+                            <textarea id="post-lessons" class="form-textarea" rows="2" placeholder="Key takeaways (optional)"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="post-emotions">Emotions Felt</label>
+                            <div class="emotion-tags" id="emotion-tags">
+                                <span class="emotion-tag" data-emotion="fear">Fear</span>
+                                <span class="emotion-tag" data-emotion="greed">Greed</span>
+                                <span class="emotion-tag" data-emotion="fomo">FOMO</span>
+                                <span class="emotion-tag" data-emotion="revenge">Revenge</span>
+                                <span class="emotion-tag" data-emotion="overconfidence">Overconfidence</span>
+                                <span class="emotion-tag" data-emotion="impatience">Impatience</span>
+                                <span class="emotion-tag" data-emotion="doubt">Self-Doubt</span>
+                                <span class="emotion-tag" data-emotion="calm">Calm</span>
+                                <span class="emotion-tag" data-emotion="focused">Focused</span>
+                                <span class="emotion-tag" data-emotion="confident">Confident</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Common Mistakes -->
+                    <div class="form-section" id="mistakes-section">
+                        <h4>⚠️ Common Mistakes</h4>
+                        <div class="form-group full-width">
+                            <label>Select mistakes made in this trade (click to select multiple):</label>
+                            <div class="mistake-tags" id="mistake-tags">
+                                <!-- Mistake tags populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-section">
+                        <h4>Notes</h4>
+                        <textarea id="trade-notes" class="form-textarea" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-trade">Cancel</button>
+                <button class="btn btn-primary" id="save-trade">Save Trade</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Modal -->
+    <div class="modal" id="template-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="template-modal-title">Create Template</h3>
+                <button class="modal-close" id="close-template-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="template-form">
+                    <input type="hidden" id="template-id">
+                    <div class="form-group">
+                        <label for="template-name">Template Name</label>
+                        <input type="text" id="template-name" class="form-input" placeholder="e.g., C3 Long Setup" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="template-description">Description</label>
+                        <textarea id="template-description" class="form-textarea" rows="2" placeholder="Describe this trade setup..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Main Checklist Items</label>
+                        <div class="checklist-builder" id="checklist-builder">
+                            <div class="checklist-item-input" draggable="true">
+                                <span class="drag-handle">☰</span>
+                                <input type="text" class="form-input checklist-text" placeholder="Checklist item (e.g., C2/C3 structure present)">
+                                <button type="button" class="btn btn-small btn-danger remove-checklist">&times;</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-small btn-secondary" id="add-checklist-item">+ Add Item</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📊 4 Hour Profile Checklist</label>
+                        <div class="checklist-builder" id="profile4h-builder">
+                            <div class="checklist-item-input" draggable="true">
+                                <span class="drag-handle">☰</span>
+                                <input type="text" class="form-input profile4h-text" placeholder="4H Profile item (e.g., HTF PD Array identified)">
+                                <button type="button" class="btn btn-small btn-danger remove-profile4h">&times;</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-small btn-secondary" id="add-profile4h-item">+ Add 4H Profile Item</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🎯 Drivers Checklist</label>
+                        <div class="checklist-builder" id="drivers-builder">
+                            <div class="checklist-item-input" draggable="true">
+                                <span class="drag-handle">☰</span>
+                                <input type="text" class="form-input drivers-text" placeholder="Driver item (e.g., SMT/Divergence present)">
+                                <button type="button" class="btn btn-small btn-danger remove-drivers">&times;</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-small btn-secondary" id="add-drivers-item">+ Add Driver Item</button>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="template-default">
+                            Set as default template
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-template">Cancel</button>
+                <button class="btn btn-primary" id="save-template">Save Template</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mistakes Management Modal -->
+    <div class="modal" id="mistakes-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚠️ Manage Common Mistakes</h3>
+                <button class="modal-close" id="close-mistakes-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Define common mistakes that you can tag on trades to analyze patterns.</p>
+                <div class="mistakes-list" id="mistakes-list">
+                    <!-- Mistake items populated by JS -->
+                </div>
+                <div class="add-mistake-form">
+                    <h4>Add New Mistake</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="new-mistake-label" class="form-input" placeholder="Mistake description (e.g., 'Entered too early')">
+                        </div>
+                        <div class="form-group color-picker-group">
+                            <input type="color" id="new-mistake-color" class="form-color" value="#ef4444">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" id="add-mistake-item">+ Add Mistake</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-mistakes">Close</button>
+                <button class="btn btn-primary" id="save-mistakes">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accounts Management Modal -->
+    <div class="modal" id="accounts-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🏦 Manage Trading Accounts</h3>
+                <button class="modal-close" id="close-accounts-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Manage your prop firm and trading accounts. Each account tracks its own opening balance.</p>
+                <div class="accounts-list" id="accounts-list">
+                    <!-- Account items populated by JS -->
+                </div>
+                <div class="add-account-form">
+                    <h4>Add New Account</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Account Name</label>
+                            <input type="text" id="new-account-name" class="form-input" placeholder="e.g., 'Apex 50K' or 'Topstep 100K'">
+                        </div>
+                        <div class="form-group">
+                            <label>Opening Balance ($)</label>
+                            <input type="number" id="new-account-balance" class="form-input" placeholder="50000" step="0.01">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" id="add-account-item">+ Add Account</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-accounts">Close</button>
+                <button class="btn btn-primary" id="save-accounts">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="templates.js"></script>
+    <script src="psychology.js"></script>
+    <script src="statistics.js"></script>
+    <script src="mistakes.js"></script>
+    <script src="accounts.js"></script>
+    <script src="app.js"></script>
+    
+    <!-- Demo Auto-Reset -->
+    <script>
+        (function() {
+            const RESET_INTERVAL = 60 * 60 * 1000; // 1 hour
+            const LAST_RESET_KEY = 'edge_demo_last_reset';
+            
+            const now = Date.now();
+            const lastReset = parseInt(localStorage.getItem(LAST_RESET_KEY) || '0');
+            
+            if (!lastReset || (now - lastReset > RESET_INTERVAL)) {
+                // Clear all trading journal data
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && (key.startsWith('tradingJournal') || key.startsWith('tj_') || key.startsWith('edge_'))) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                localStorage.setItem(LAST_RESET_KEY, now.toString());
+                console.log('EDGE demo: Auto-reset performed');
+            }
+            
+            // Update timer if banner exists
+            function updateTimer() {
+                const timerEl = document.getElementById('demoResetTimer');
+                if (!timerEl) return;
+                const currentReset = parseInt(localStorage.getItem(LAST_RESET_KEY) || Date.now().toString());
+                const nextReset = currentReset + RESET_INTERVAL;
+                const remaining = nextReset - Date.now();
+                if (remaining <= 0) { location.reload(); return; }
+                const mins = Math.floor(remaining / 60000);
+                const secs = Math.floor((remaining % 60000) / 1000);
+                timerEl.textContent = `Resets in ${mins}m ${secs.toString().padStart(2, '0')}s`;
+            }
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        })();
+    </script>
+</body>
+</html>

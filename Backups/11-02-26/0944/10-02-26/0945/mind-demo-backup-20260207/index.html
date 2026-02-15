@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Mind</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="css/styles.css?v=2">
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-resize-handle" id="sidebarResizeHandle"></div>
+            
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon"><i class="ph ph-brain"></i></div>
+                    <span>Mind</span>
+                </div>
+            </div>
+
+            <div class="sidebar-search">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search notes...">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Clipped Pages Section -->
+                <div class="sidebar-section" id="clippedSectionContainer" style="display: none;">
+                    <div class="section-header" data-section="clipped">
+                        <span>Clipped Pages</span>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="clippedSection">
+                        <ul class="bookmark-list" id="clippedList"></ul>
+                    </div>
+                </div>
+
+                <!-- Favorites Section -->
+                <div class="sidebar-section" id="favoritesSectionContainer" style="display: none;">
+                    <div class="section-header" data-section="favorites">
+                        <span>Favorites</span>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="favoritesSection">
+                        <ul class="folder-tree" id="favoritesTree"></ul>
+                    </div>
+                </div>
+
+                <!-- Folders Section -->
+                <div class="sidebar-section">
+                    <div class="section-header" data-section="folders">
+                        <span>Folders</span>
+                        <div class="section-actions">
+                            <button class="section-action-btn add-folder" id="addFolderBtn" title="Add new folder">+</button>
+                            <span class="section-toggle">▼</span>
+                        </div>
+                    </div>
+                    <div class="section-content" id="foldersSection">
+                        <ul class="folder-tree" id="folderTree"></ul>
+                    </div>
+                </div>
+
+                <!-- Tags Section -->
+                <div class="sidebar-section">
+                    <div class="section-header" data-section="tags">
+                        <span>Tags</span>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="tagsSection">
+                        <div class="tags-search">
+                            <input type="text" class="tags-search-input" id="tagsSearch" placeholder="Search tags...">
+                        </div>
+                        <div class="tags-alphabetical" id="tagsAlphabetical"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-actions">
+                <button class="btn btn-secondary btn-icon" id="settingsBtn" title="Settings">
+                    <i class="ph ph-gear"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main" id="main">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="btn btn-icon hide-desktop" id="menuBtn" title="Menu" style="color: var(--text-secondary);"><i class="ph ph-list"></i></button>
+                    <div class="breadcrumb" id="breadcrumb">
+                        <span class="breadcrumb-item" data-folder="root">All Notes</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <span class="header-title" id="headerTitle"></span>
+                    <button class="btn btn-icon" id="themeBtn" title="Toggle Theme" style="color: var(--text-secondary);"><i class="ph ph-moon"></i></button>
+                </div>
+            </header>
+
+            <!-- AI Suggest Modal -->
+            <div class="modal-overlay" id="aiSuggestModal">
+                <div class="modal" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="ph ph-sparkle"></i> AI Suggest Edits</div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">What would you like help with?</label>
+                            <select class="form-select" id="aiSuggestType">
+                                <option value="improve">Improve writing</option>
+                                <option value="summarize">Summarize content</option>
+                                <option value="expand">Expand on key points</option>
+                                <option value="fix">Fix grammar & spelling</option>
+                                <option value="simplify">Simplify language</option>
+                                <option value="custom">Custom request...</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="aiCustomRequestGroup" style="display: none;">
+                            <label class="form-label">Your request</label>
+                            <textarea class="form-textarea" id="aiCustomRequest" rows="3" placeholder="e.g., Make this more professional, Add bullet points, Convert to meeting notes style..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Current content preview</label>
+                            <div id="aiContentPreview" style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-sm); font-size: 13px; max-height: 150px; overflow-y: auto; color: var(--text-secondary);"></div>
+                        </div>
+                        <div class="form-group" id="aiResultGroup" style="display: none;">
+                            <label class="form-label">Suggested edits</label>
+                            <div id="aiResult" style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-sm); font-size: 13px; max-height: 200px; overflow-y: auto; white-space: pre-wrap;"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="closeAiSuggest">Cancel</button>
+                        <button class="btn btn-primary" id="generateAiSuggest">Generate Suggestions</button>
+                        <button class="btn btn-primary" id="applyAiSuggest" style="display: none;">Apply Changes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clip Web Page Modal -->
+            <div class="modal-overlay" id="clipWebpageModal">
+                <div class="modal" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="ph ph-globe"></i> Clip Web Page</div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">Enter URL to clip</label>
+                            <input type="url" class="form-input" id="clipUrlInput" placeholder="https://example.com/article">
+                        </div>
+                        <div class="form-group" id="clipStatus" style="display: none;">
+                            <div id="clipStatusText" style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary);"></div>
+                        </div>
+                        <div class="form-group" style="font-size: 12px; color: var(--text-tertiary);">
+                            <p><strong>Note:</strong> Due to browser security (CORS), clipping may not work for all websites. For best results, copy and paste content directly.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="closeClipModal">Cancel</button>
+                        <button class="btn btn-primary" id="clipWebpageAction">Clip Page</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Import Wizard Modal -->
+            <div class="modal-overlay" id="importWizardModal">
+                <div class="modal" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="ph ph-upload-simple"></i> Import from Notion/Obsidian</div>
+                        <button class="modal-close" id="closeImportWizard">&times;</button>
+                    </div>
+                    <div class="modal-body" id="importWizardBody">
+                        <!-- Step 1: Choose Source -->
+                        <div id="importStep1">
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 16px; margin-bottom: 16px;">Where are you importing from?</label>
+                                <div style="display: flex; gap: 20px; margin-top: 16px;">
+                                    <div class="import-source-option" data-source="notion" style="flex: 1; padding: 32px 24px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; text-align: center; transition: all 0.2s;">
+                                        <div style="font-size: 40px; margin-bottom: 12px; color: var(--accent);"><i class="ph ph-file-text"></i></div>
+                                        <div style="font-weight: 600; font-size: 18px; margin-bottom: 6px;">Notion</div>
+                                        <div style="font-size: 14px; color: var(--text-secondary);">Export as Markdown</div>
+                                    </div>
+                                    <div class="import-source-option" data-source="obsidian" style="flex: 1; padding: 32px 24px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; text-align: center; transition: all 0.2s;">
+                                        <div style="font-size: 40px; margin-bottom: 12px; color: var(--accent);"><i class="ph ph-notebook"></i></div>
+                                        <div style="font-weight: 600; font-size: 18px; margin-bottom: 6px;">Obsidian</div>
+                                        <div style="font-size: 14px; color: var(--text-secondary);">Vault ZIP export</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Instructions -->
+                        <div id="importStep2" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 16px; margin-bottom: 12px;">Export Instructions</label>
+                                <div id="exportInstructions" style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 13px; line-height: 1.6;">
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding: 16px; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: var(--radius); font-size: 14px; color: var(--text-primary);">
+                                <strong style="color: var(--accent);"><i class="ph ph-warning"></i> Import Limitations:</strong>
+                                <ul style="margin: 12px 0 0 20px; padding: 0; color: var(--text-secondary);">
+                                    <li style="margin-bottom: 6px;">Text content and basic formatting only</li>
+                                    <li style="margin-bottom: 6px;">Images cannot be imported (external links will be preserved)</li>
+                                    <li style="margin-bottom: 6px;">Tables, databases, and embeds are not supported</li>
+                                    <li>Nested pages become separate notes</li>
+                                </ul>
+                            </div>
+                            <div class="form-group" style="text-align: center; margin-top: 24px;">
+                                <button class="btn btn-primary" id="goToImportStep3">I've Exported My Data</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Upload -->
+                        <div id="importStep3" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Upload your export file</label>
+                                <div id="importDropZone" style="border: 2px dashed var(--border); border-radius: var(--radius); padding: 48px; text-align: center; cursor: pointer;">
+                                    <i class="ph ph-cloud-arrow-up" style="font-size: 48px; color: var(--accent);"></i>
+                                    <p style="margin-top: 16px; color: var(--text-secondary);">Drop ZIP or Markdown files here</p>
+                                    <p style="font-size: 12px; color: var(--text-tertiary);">or click to browse</p>
+                                    <input type="file" id="importFileInput" accept=".zip,.md,.markdown" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="importFolders" checked>
+                                    Import folder structure
+                                </label>
+                                <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="importTags" checked>
+                                    Extract tags from YAML frontmatter
+                                </label>
+                                <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="convertLinks" checked>
+                                    Convert wiki-links to regular links
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4: Progress -->
+                        <div id="importStep4" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Importing...</label>
+                                <div style="padding: 24px; text-align: center;">
+                                    <div id="importProgressText" style="margin-bottom: 16px;">Reading files...</div>
+                                    <div style="width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;">
+                                        <div id="importProgressBar" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.3s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" id="importWizardFooter">
+                        <button class="btn btn-secondary" id="backImportStep" style="display: none;">Back</button>
+                        <button class="btn btn-secondary" id="cancelImportWizard">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Panel Modal -->
+            <div class="modal-overlay" id="aiPanelModal">
+                <div class="modal" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="ph ph-sparkle"></i> Mind AI</div>
+                        <button class="modal-close" id="closeAiPanel">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="padding: 12px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: var(--radius); margin-bottom: 20px; font-size: 13px;">
+                            <strong style="color: var(--accent);"><i class="ph ph-lightning"></i> Demo Mode:</strong> AI features are simulated. Connect a provider for real AI.
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">AI Provider</label>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--accent); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-rocket"></i> WebLLM (Recommended)</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. No installation. One-time 1.9GB download.</div>
+                                    </div>
+                                </label>
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-lightning"></i> Ollama Desktop</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">Better performance. Requires desktop app.</div>
+                                    </div>
+                                </label>
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="cloud" style="margin-top: 2px;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-cloud"></i> Cloud API</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">OpenAI/Anthropic. Requires API key.</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="webllmSection">
+                            <div class="form-group">
+                                <label class="form-label">Model Size</label>
+                                <select class="form-select" id="webllmModel">
+                                    <option value="tiny">Tiny (1B) - Fast, basic quality</option>
+                                    <option value="small" selected>Small (3B) - Balanced (1.9GB)</option>
+                                    <option value="medium">Medium (14B) - Better quality</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" id="downloadWebllmModel" style="width: 100%;">
+                                <i class="ph ph-download"></i> Download Model
+                            </button>
+                        </div>
+                        
+                        <div id="ollamaSection" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Ollama Status</label>
+                                <div id="ollamaStatus" style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 13px;">
+                                    Not connected. Install Ollama desktop app.
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary" id="testOllamaConnection" style="width: 100%;">
+                                <i class="ph ph-plugs"></i> Test Connection
+                            </button>
+                        </div>
+                        
+                        <div id="cloudSection" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">API Key</label>
+                                <input type="password" class="form-input" id="cloudApiKey" placeholder="sk-...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Provider</label>
+                                <select class="form-select" id="cloudProvider">
+                                    <option value="openai">OpenAI</option>
+                                    <option value="anthropic">Anthropic</option>
+                                    <option value="openrouter">OpenRouter</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 24px;">
+                            <label class="form-label">AI Features</label>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div class="ai-feature-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius);">
+                                    <i class="ph ph-text-t" style="color: var(--accent);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500;">Summarize Note</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Condense long content into key points</div>
+                                    </div>
+                                </div>
+                                <div class="ai-feature-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius);">
+                                    <i class="ph ph-tag" style="color: var(--accent);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500;">Suggest Tags</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Auto-generate relevant tags</div>
+                                    </div>
+                                </div>
+                                <div class="ai-feature-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius);">
+                                    <i class="ph ph-pencil-simple" style="color: var(--accent);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500;">Continue Writing</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Complete your thoughts</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="closeAiPanelBtn">Close</button>
+                        <button class="btn btn-primary" id="saveAiSettings">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="editor-container" id="editorContainer">
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-state-icon"><i class="ph ph-brain ph-xl"></i></div>
+                    <div class="empty-state-title">Welcome to Mind</div>
+                    <div class="empty-state-desc">
+                        Your private, offline knowledge management system.
+                        Create your first note to get started.
+                    </div>
+                    <button class="btn btn-primary" id="emptyNewNoteBtn">
+                        <i class="ph ph-plus"></i> Create First Note
+                    </button>
+                </div>
+
+                <div class="editor-toolbar hidden" id="editorToolbar" style="display: none !important;">
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="bold" title="Bold"><i class="ph ph-text-b"></i></button>
+                        <button class="toolbar-btn" data-command="italic" title="Italic"><i class="ph ph-text-italic"></i></button>
+                        <button class="toolbar-btn" data-command="underline" title="Underline"><i class="ph ph-text-underline"></i></button>
+                        <button class="toolbar-btn" data-command="strikeThrough" title="Strikethrough"><i class="ph ph-text-strikethrough"></i></button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="formatBlock" data-value="H1" title="Heading 1"><i class="ph ph-text-h-one"></i></button>
+                        <button class="toolbar-btn" data-command="formatBlock" data-value="H2" title="Heading 2"><i class="ph ph-text-h-two"></i></button>
+                        <button class="toolbar-btn" data-command="formatBlock" data-value="H3" title="Heading 3"><i class="ph ph-text-h-three"></i></button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List"><i class="ph ph-list-bullets"></i></button>
+                        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List"><i class="ph ph-list-numbers"></i></button>
+                        <button class="toolbar-btn" data-command="formatBlock" data-value="BLOCKQUOTE" title="Quote"><i class="ph ph-quotes"></i></button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" id="linkBtn" title="Insert Link"><i class="ph ph-link"></i></button>
+                        <button class="toolbar-btn" id="imageBtn" title="Insert Image"><i class="ph ph-image"></i></button>
+                        <button class="toolbar-btn" id="attachBtn" title="Attach File"><i class="ph ph-paperclip"></i></button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="removeFormat" title="Clear Formatting"><i class="ph ph-text-t-slash"></i></button>
+                    </div>
+                </div>
+
+                <!-- Tabs Bar -->
+                <div class="tabs-bar hidden" id="tabsBar">
+                    <div class="sidebar-toggle-tab" id="sidebarToggleTab" title="Toggle Sidebar">
+                        <i class="ph ph-sidebar"></i>
+                    </div>
+                    <div class="tabs-container" id="tabsContainer"></div>
+                    <button class="tabs-new-btn" id="newTabBtn" title="New Note"><i class="ph ph-plus"></i></button>
+                    <div style="flex: 1;"></div>
+                    <button class="toolbar-btn" id="moreBtn" title="More" style="padding: 6px 10px; background: transparent; border: 1px solid var(--border); border-radius: 4px; color: var(--text-secondary); cursor: pointer; font-size: 14px; margin-right: 20px; align-self: center;"><i class="ph ph-dots-three"></i></button>
+                </div>
+
+                <!-- Note Menu Dropdown -->
+                <div class="note-menu-dropdown" id="noteMenuDropdown">
+                    <div class="note-menu-fonts">
+                        <div class="note-menu-font-option active" data-font="default">
+                            <div class="note-menu-font-preview">Ag</div>
+                            <div class="note-menu-font-label">Default</div>
+                        </div>
+                        <div class="note-menu-font-option" data-font="serif">
+                            <div class="note-menu-font-preview serif">Ag</div>
+                            <div class="note-menu-font-label">Serif</div>
+                        </div>
+                        <div class="note-menu-font-option" data-font="mono">
+                            <div class="note-menu-font-preview mono">Ag</div>
+                            <div class="note-menu-font-label">Mono</div>
+                        </div>
+                    </div>
+                    <div class="note-menu-divider"></div>
+                    <div class="note-menu-item" data-action="copy">
+                        <span class="note-menu-icon"><i class="ph ph-copy"></i></span>
+                        <span>Copy Page Contents</span>
+                    </div>
+                    <div class="note-menu-item" data-action="duplicate">
+                        <span class="note-menu-icon"><i class="ph ph-copy-simple"></i></span>
+                        <span>Duplicate</span>
+                    </div>
+                    <div class="note-menu-item" data-action="pdf">
+                        <span class="note-menu-icon"><i class="ph ph-file-pdf"></i></span>
+                        <span>Convert to PDF</span>
+                    </div>
+                    <div class="note-menu-item" id="clipWebpageBtn">
+                        <span class="note-menu-icon"><i class="ph ph-globe"></i></span>
+                        <span>Clip Web Page</span>
+                    </div>
+                    <div class="note-menu-divider"></div>
+                    <div class="note-menu-toggle" data-toggle="smallText">
+                        <span class="note-menu-icon"><i class="ph ph-text-t"></i></span>
+                        <span>Small Text</span>
+                        <span class="note-menu-toggle-indicator" id="smallTextToggle">○</span>
+                    </div>
+                    <div class="note-menu-toggle" data-toggle="fullWidth">
+                        <span class="note-menu-icon"><i class="ph ph-arrows-left-right"></i></span>
+                        <span>Full Width</span>
+                        <span class="note-menu-toggle-indicator" id="fullWidthToggle">○</span>
+                    </div>
+                    <div class="note-menu-item" id="versionHistoryBtn">
+                        <span class="note-menu-icon"><i class="ph ph-clock-counter-clockwise"></i></span>
+                        <span>Version History</span>
+                    </div>
+                    <div class="note-menu-divider"></div>
+                    <div class="note-menu-item delete" data-action="delete">
+                        <span class="note-menu-icon"><i class="ph ph-trash"></i></span>
+                        <span>Move to Trash</span>
+                    </div>
+                </div>
+
+                <div class="editor-content-wrapper hidden" id="editorContentWrapper">
+                    <div class="editor-content">
+                        <input type="text" class="note-title-input" id="noteTitle" placeholder="Note Title">
+                        <div class="note-meta">
+                            <div class="note-meta-item">
+                                <span><i class="ph ph-calendar-blank"></i></span>
+                                <span id="noteDate">Created today</span>
+                            </div>
+                            <div class="note-meta-item">
+                                <span><i class="ph ph-tag"></i></span>
+                                <div class="note-tags-input" id="noteTagsInput">
+                                    <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
+                                    <div class="tag-autocomplete" id="tagAutocomplete" style="display: none;"></div>
+                                </div>
+                                <button class="btn btn-secondary" id="suggestTagsBtn" title="AI Suggest Tags" style="padding: 4px 8px; font-size: 11px; margin-left: 4px; background: transparent; border: 1px solid var(--border); color: #fbbf24;">
+                                    <i class="ph ph-sparkle"></i> AI Tags
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Note Tabs -->
+                        <div class="note-tabs" style="display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 16px;">
+                            <button class="note-tab active" data-tab="note" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid var(--accent); color: var(--text-primary); font-size: 13px; cursor: pointer;">Note</button>
+                            <button class="note-tab" data-tab="summary" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">Summary</button>
+                            <button class="note-tab" data-tab="tasks" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">Tasks</button>
+                        </div>
+                        <div class="note-tab-content" id="noteTabContent">
+                            <!-- Template Selector -->
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <select id="templateSelect" style="background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
+                                    <option value="">Template</option>
+                                    <option value="save-current">+ Save as Template</option>
+                                </select>
+                            </div>
+                            <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
+                        </div>
+                        <div class="note-tab-content" id="summaryTabContent" style="display: none;">
+                            <!-- AI Summary Button -->
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <button class="btn btn-secondary" id="summarizeBtn" title="AI Summarize Note" style="background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; color: #fbbf24; cursor: pointer;">
+                                    <i class="ph ph-sparkle"></i> AI Summary
+                                </button>
+                            </div>
+                            <div id="summaryContent" style="padding: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                                <div id="summaryEmptyState">
+                                    <p style="font-style: italic; color: var(--text-tertiary);">No summary yet. Click "AI Summary" to generate one from your note content.</p>
+                                </div>
+                                <div id="summaryResult" style="display: none;">
+                                    <div id="summaryText"></div>
+                                    <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border);">
+                                        <small style="color: var(--text-tertiary);">
+                                            <i class="ph ph-info"></i> Demo mode: Summary generated from keywords
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="note-tab-content" id="tasksTabContent" style="display: none;">
+                            <div id="tasksList" style="padding: 8px 0;"></div>
+                            <button class="btn btn-secondary" id="addFirstTaskBtn" style="margin-top: 12px; font-size: 12px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary);"><i class="ph ph-plus"></i> Add Task</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Selection Toolbar -->
+                    <div class="selection-toolbar" id="selectionToolbar">
+                        <button class="selection-toolbar-btn" data-command="bold" title="Bold">
+                            <i class="ph ph-text-b"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="italic" title="Italic">
+                            <i class="ph ph-text-italic"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="underline" title="Underline">
+                            <i class="ph ph-text-underline"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="strikeThrough" title="Strikethrough">
+                            <i class="ph ph-text-strikethrough"></i>
+                        </button>
+                        <span class="selection-toolbar-divider"></span>
+                        <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H1" title="Heading 1">
+                            <i class="ph ph-text-h-one"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H2" title="Heading 2">
+                            <i class="ph ph-text-h-two"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H3" title="Heading 3">
+                            <i class="ph ph-text-h-three"></i>
+                        </button>
+                        <span class="selection-toolbar-divider"></span>
+                        <button class="selection-toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+                            <i class="ph ph-list-bullets"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+                            <i class="ph ph-list-numbers"></i>
+                        </button>
+                        <span class="selection-toolbar-divider"></span>
+                        <button class="selection-toolbar-btn" id="toolbarLinkBtn" title="Insert Link">
+                            <i class="ph ph-link"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" id="toolbarImageBtn" title="Insert Image">
+                            <i class="ph ph-image"></i>
+                        </button>
+                        <span class="selection-toolbar-divider"></span>
+                        <button class="selection-toolbar-btn ai" id="askAiSelectionBtn" title="Ask AI">
+                            <i class="ph ph-sparkle"></i> Ask AI
+                        </button>
+                    </div>
+                </div>
+
+                <div class="backlinks-panel hidden" id="backlinksPanel">
+                    <div class="backlinks-title">Linked from</div>
+                    <div class="backlinks-list" id="backlinksList"></div>
+                </div>
+            </div>
+
+            <button class="exit-distraction-free" id="exitFocusBtn" title="Exit Focus Mode"><i class="ph ph-x"></i></button>
+        </main>
+
+        <!-- Version History Panel -->
+        <div class="version-history-panel" id="versionHistoryPanel">
+            <div class="version-history-header">
+                <div class="version-history-title">Version History</div>
+                <div class="version-history-close" id="closeVersionHistory"><i class="ph ph-x"></i></div>
+            </div>
+            <div class="version-history-list" id="versionHistoryList">
+                <!-- Versions will be rendered here -->
+            </div>
+            <div class="version-preview" id="versionPreview" style="display: none;">
+                <div class="version-preview-title">Preview</div>
+                <div class="version-preview-content" id="versionPreviewContent"></div>
+            </div>
+            <div class="version-history-footer">
+                <button class="btn btn-secondary" id="cancelVersionRestore">Cancel</button>
+                <button class="btn btn-primary" id="confirmVersionRestore">Restore</button>
+            </div>
+        </div>
+
+        <!-- Mobile Bottom Navigation -->
+        <nav class="mobile-nav">
+            <div class="mobile-nav-items">
+                <div class="mobile-nav-item active" data-view="notes">
+                    <span class="mobile-nav-icon"><i class="ph ph-file-text"></i></span>
+                    <span class="mobile-nav-label">Notes</span>
+                </div>
+                <div class="mobile-nav-item" data-view="folders">
+                    <span class="mobile-nav-icon"><i class="ph ph-folder"></i></span>
+                    <span class="mobile-nav-label">Folders</span>
+                </div>
+                <div class="mobile-nav-item" data-view="tags">
+                    <span class="mobile-nav-icon"><i class="ph ph-tag"></i></span>
+                    <span class="mobile-nav-label">Tags</span>
+                </div>
+                <div class="mobile-nav-item" data-view="search">
+                    <span class="mobile-nav-icon"><i class="ph ph-magnifying-glass"></i></span>
+                    <span class="mobile-nav-label">Search</span>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- New Note Modal -->
+    <div class="modal-overlay" id="newNoteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Create New Note</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Note Title</label>
+                    <input type="text" class="form-input" id="newNoteTitle" placeholder="Enter note title..." autofocus>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Folder</label>
+                    <select class="form-select" id="newNoteFolder"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelNewNote">Cancel</button>
+                <button class="btn btn-primary" id="confirmNewNote">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Folder Modal -->
+    <div class="modal-overlay" id="newFolderModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Create New Folder</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Folder Name</label>
+                    <input type="text" class="form-input" id="newFolderName" placeholder="Enter folder name...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Parent Folder</label>
+                    <select class="form-select" id="newFolderParent"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelNewFolder">Cancel</button>
+                <button class="btn btn-primary" id="confirmNewFolder">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Settings</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Theme</label>
+                    <select class="form-select" id="themeSelect">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="auto">Auto (System)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">AI Settings</label>
+                    <button class="btn btn-secondary" id="aiSettingsBtn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="ph ph-robot"></i> Configure AI
+                    </button>
+                    <small style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;">
+                        Set up WebLLM, Ollama, or Cloud AI providers
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data Management</label>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="exportJsonBtn">Export JSON</button>
+                        <button class="btn btn-secondary" id="exportMarkdownBtn">Export Markdown</button>
+                        <button class="btn btn-secondary" id="importBtn">Import Data</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data Recovery</label>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="checkBackupBtn">Check for Backups</button>
+                        <button class="btn btn-secondary" id="createBackupBtn">Create Backup Now</button>
+                    </div>
+                    <small id="backupStatus" style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;"></small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Trash</label>
+                    <button class="btn btn-secondary" id="trashBtn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="ph ph-trash"></i> View Trash
+                    </button>
+                    <small id="trashCount" style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;">0 items in trash</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Debug</label>
+                    <button class="btn btn-secondary" id="debugBtn">Show Debug Info</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Danger Zone</label>
+                    <button class="btn btn-secondary" id="clearAllBtn" style="color: var(--danger);">Clear All Data</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeSettings">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trash Modal -->
+    <div class="modal-overlay" id="trashModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ph ph-trash"></i> Trash</div>
+                <button class="modal-close" id="closeTrashModal">&times;</button>
+            </div>
+            <div class="modal-body" id="trashModalBody">
+                <div id="trashEmptyState" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                    <i class="ph ph-trash" style="font-size: 48px; opacity: 0.3; margin-bottom: 16px;"></i>
+                    <p>Trash is empty</p>
+                </div>
+                <div id="trashItemsList" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Items in Trash</label>
+                        <div id="trashItemsContainer" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px;">
+                            <!-- Trash items rendered here -->
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);">
+                        <button class="btn btn-secondary" id="emptyTrashNowBtn" style="width: 100%; color: var(--danger);">
+                            <i class="ph ph-trash"></i> Delete All Permanently
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeTrashBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Modal -->
+    <div class="modal-overlay" id="linkModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Insert Link</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Link Text</label>
+                    <input type="text" class="form-input" id="linkText" placeholder="Link text...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">URL or Note Title</label>
+                    <input type="text" class="form-input" id="linkUrl" placeholder="https://... or note title">
+                    <small style="color: var(--text-tertiary); font-size: 11px;">
+                        Type a note title to create an internal link
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelLink">Cancel</button>
+                <button class="btn btn-primary" id="confirmLink">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Selection Modal -->
+    <div class="modal-overlay" id="aiSelectionModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ph ph-sparkle"></i> Improve with AI</div>
+                <button class="modal-close" id="closeAiSelection">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Selected text</label>
+                    <div id="aiSelectedText" style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 14px; max-height: 100px; overflow-y: auto; color: var(--text-secondary);"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">What would you like to do?</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button class="btn btn-secondary ai-action-btn" data-action="improve">
+                            <i class="ph ph-text-t"></i> Improve writing
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="grammar">
+                            <i class="ph ph-check-circle"></i> Fix grammar & spelling
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="shorter">
+                            <i class="ph ph-text-align-left"></i> Make it shorter
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="longer">
+                            <i class="ph ph-text-align-justify"></i> Make it longer
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="simplify">
+                            <i class="ph ph-brain"></i> Simplify language
+                        </button>
+                        <button class="btn btn-secondary ai-action-btn" data-action="professional">
+                            <i class="ph ph-briefcase"></i> Make it more professional
+                        </button>
+                    </div>
+                </div>
+                <div id="aiSuggestionResult" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">AI Suggestion</label>
+                        <div id="aiSuggestionText" style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 15px; line-height: 1.6; border-left: 3px solid var(--accent);"></div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" id="acceptAiSuggestion" style="flex: 1;">
+                            <i class="ph ph-check"></i> Accept
+                        </button>
+                        <button class="btn btn-secondary" id="discardAiSuggestion" style="flex: 1;">
+                            <i class="ph ph-x"></i> Discard
+                        </button>
+                    </div>
+                </div>
+                <div id="aiLoadingState" style="display: none; text-align: center; padding: 24px;">
+                    <i class="ph ph-spinner" style="font-size: 32px; color: var(--accent); animation: spin 1s linear infinite;"></i>
+                    <p style="margin-top: 12px; color: var(--text-secondary);">Thinking...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" id="ctxRename"><i class="ph ph-pencil-simple"></i> Rename</div>
+        <div class="context-menu-item" id="ctxDuplicate"><i class="ph ph-copy"></i> Duplicate</div>
+        <div class="context-menu-item" id="ctxMove"><i class="ph ph-folder"></i> Move to...</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item danger" id="ctxDelete"><i class="ph ph-trash"></i> Delete</div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <input type="file" id="attachInput" hidden>
+    <input type="file" id="importInput" accept=".json,.md,.markdown" hidden>
+
+    <script src="js/app.js?v=2"></script>
+</body>
+</html>

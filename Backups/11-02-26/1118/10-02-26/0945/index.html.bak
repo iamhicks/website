@@ -1,0 +1,3992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Knowledge Base</title>
+    <style>
+        /* ==================== CSS VARIABLES & RESET ==================== */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f7;
+            --bg-tertiary: #e8e8ed;
+            --bg-sidebar: #f5f5f7;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-tertiary: #86868b;
+            --accent: #007aff;
+            --accent-hover: #0051d5;
+            --border: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(0, 0, 0, 0.08);
+            --success: #34c759;
+            --warning: #ff9500;
+            --danger: #ff3b30;
+            --tag-bg: #e8e8ed;
+            --tag-text: #1d1d1f;
+            --sidebar-width: 280px;
+            --header-height: 50px;
+            --bottom-nav-height: 60px;
+            --transition: 0.2s ease;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            --radius: 8px;
+            --radius-sm: 6px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1c1c1e;
+            --bg-secondary: #2c2c2e;
+            --bg-tertiary: #3a3a3c;
+            --bg-sidebar: #1c1c1e;
+            --text-primary: #ffffff;
+            --text-secondary: #8e8e93;
+            --text-tertiary: #636366;
+            --accent: #0a84ff;
+            --accent-hover: #409cff;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: rgba(0, 0, 0, 0.3);
+            --tag-bg: #3a3a3c;
+            --tag-text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ==================== APP LAYOUT ==================== */
+        #app {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            height: var(--header-height);
+        }
+
+        .logo {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .sidebar-search {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 8px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-header:hover {
+            color: var(--text-secondary);
+        }
+
+        .section-toggle {
+            transition: transform var(--transition);
+        }
+
+        .section-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+        
+        .section-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-action-btn {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--text-tertiary);
+            background: transparent;
+            border: none;
+            padding: 0;
+            transition: all var(--transition);
+        }
+        
+        .section-action-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .section-content {
+            padding-left: 4px;
+        }
+
+        .section-content.collapsed {
+            display: none;
+        }
+
+        /* ==================== FOLDER TREE ==================== */
+        .folder-tree {
+            list-style: none;
+        }
+
+        .folder-item {
+            position: relative;
+        }
+
+        .folder-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-primary);
+            transition: all var(--transition);
+            user-select: none;
+            position: relative;
+            min-height: 32px;
+        }
+
+        .folder-header:hover {
+            background: var(--bg-tertiary);
+        }
+        
+        .folder-header.drag-over {
+            background: var(--accent) !important;
+            color: white !important;
+        }
+        
+        .folder-header[draggable="true"] {
+            cursor: grab;
+        }
+        
+        .folder-header[draggable="true"]:active {
+            cursor: grabbing;
+        }
+        
+        .folder-header:hover .folder-actions {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .folder-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-left: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.15s ease, visibility 0.15s ease;
+        }
+        
+        .folder-action-btn {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 14px;
+            transition: all var(--transition);
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        
+        .folder-action-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .folder-action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .folder-action-btn.add-page::before {
+            content: '+';
+            font-size: 18px;
+            font-weight: 300;
+        }
+        
+        .folder-action-btn.more-menu::before {
+            content: '⋯';
+            font-size: 14px;
+            letter-spacing: -2px;
+        }
+        
+        .folder-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 4px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px var(--shadow);
+            min-width: 180px;
+            z-index: 1000;
+            padding: 4px;
+            display: none;
+        }
+        
+        .folder-dropdown.show {
+            display: block;
+        }
+        
+        .folder-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-primary);
+            transition: background var(--transition);
+        }
+        
+        .folder-dropdown-item:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .folder-dropdown-item.delete {
+            color: var(--danger);
+        }
+        
+        .folder-dropdown-item.delete:hover {
+            background: rgba(255, 59, 48, 0.1);
+        }
+        
+        .folder-dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+        
+        .folder-dropdown-icon {
+            width: 16px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .folder-header.active {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .folder-header.drag-over {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .folder-item.drag-over-top {
+            border-top: 2px solid var(--accent);
+        }
+        
+        .folder-item.drag-over-bottom {
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .folder-header.dragging {
+            opacity: 0.5;
+        }
+
+        .folder-toggle {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            transition: transform var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .folder-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .folder-icon {
+            font-size: 14px;
+            color: var(--accent);
+        }
+
+        .folder-header.active .folder-icon,
+        .folder-header.drag-over .folder-icon {
+            color: white;
+        }
+
+        .folder-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .folder-count {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .folder-header.active .folder-count,
+        .folder-header.drag-over .folder-count {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .folder-children {
+            padding-left: 20px;
+            list-style: none;
+        }
+
+        .folder-children.collapsed {
+            display: none;
+        }
+
+        .note-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px 6px 28px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            user-select: none;
+        }
+
+        .note-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .note-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .note-item.dragging {
+            opacity: 0.5;
+        }
+        
+        .note-item[draggable="true"] {
+            cursor: grab;
+        }
+        
+        .note-item[draggable="true"]:active {
+            cursor: grabbing;
+        }
+
+        /* Drop zones for folder drag/drop */
+        .root-drop-zone {
+            border: 2px dashed var(--border-color);
+        }
+
+        .root-drop-zone:hover {
+            border-color: var(--accent);
+        }
+
+        .folder-reorder-zone {
+            border: 2px dashed transparent;
+        }
+
+        .folder-reorder-zone:hover {
+            border-color: var(--border-color);
+        }
+
+        .note-icon {
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .note-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ==================== TAGS SECTION ==================== */
+        .tags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 4px 8px;
+        }
+
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+            user-select: none;
+        }
+
+        .tag-item:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tag-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tag-count {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        /* ==================== SIDEBAR ACTIONS ==================== */
+        .sidebar-actions {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            outline: none;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .btn-flex {
+            flex: 1;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+            min-width: 0;
+        }
+
+        .main-header {
+            height: var(--header-height);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: var(--bg-primary);
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .breadcrumb-item {
+            cursor: pointer;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--accent);
+        }
+
+        .breadcrumb-separator {
+            opacity: 0.5;
+        }
+
+        /* ==================== EDITOR ==================== */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-primary);
+            flex-wrap: wrap;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 4px;
+            border-right: 1px solid var(--border);
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+        }
+
+        .toolbar-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .toolbar-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .toolbar-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+            margin: 0 4px;
+        }
+
+        .editor-content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .editor-content {
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 100%;
+        }
+
+        .note-title-input {
+            width: 100%;
+            font-size: 32px;
+            font-weight: 700;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            padding: 0;
+            font-family: var(--font-sans);
+            line-height: 1.2;
+        }
+
+        .note-title-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .note-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .note-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .note-tags-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .note-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .note-tag-remove {
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+        .note-tag-remove:hover {
+            opacity: 1;
+        }
+
+        .tag-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 12px;
+            padding: 3px 0;
+            min-width: 80px;
+        }
+
+        .tag-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        /* WYSIWYG Editor */
+        .wysiwyg-editor {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            outline: none;
+            min-height: 400px;
+        }
+
+        .wysiwyg-editor:empty:before {
+            content: 'Start writing...';
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        .wysiwyg-editor h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 32px 0 16px;
+            line-height: 1.3;
+        }
+
+        .wysiwyg-editor h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 28px 0 14px;
+            line-height: 1.3;
+        }
+
+        .wysiwyg-editor h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 24px 0 12px;
+            line-height: 1.3;
+        }
+
+        .wysiwyg-editor p {
+            margin: 0 0 16px;
+        }
+
+        .wysiwyg-editor ul, .wysiwyg-editor ol {
+            margin: 0 0 16px 24px;
+        }
+
+        .wysiwyg-editor li {
+            margin: 4px 0;
+        }
+
+        .wysiwyg-editor blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 16px;
+            margin: 16px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .wysiwyg-editor code {
+            font-family: var(--font-mono);
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .wysiwyg-editor pre {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: var(--radius);
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .wysiwyg-editor pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .wysiwyg-editor a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .wysiwyg-editor a:hover {
+            text-decoration: underline;
+        }
+
+        .wysiwyg-editor img {
+            max-width: 100%;
+            border-radius: var(--radius);
+            margin: 16px 0;
+        }
+
+        .wysiwyg-editor hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 24px 0;
+        }
+
+        .wysiwyg-editor table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .wysiwyg-editor th, .wysiwyg-editor td {
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .wysiwyg-editor th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+        }
+
+        .wysiwyg-editor .internal-link {
+            color: var(--accent);
+            background: rgba(0, 122, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        [data-theme="dark"] .wysiwyg-editor .internal-link {
+            background: rgba(10, 132, 255, 0.2);
+        }
+
+        /* ==================== BACKLINKS PANEL ==================== */
+        .backlinks-panel {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 16px 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .backlinks-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+        }
+
+        .backlinks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .backlink-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all var(--transition);
+        }
+
+        .backlink-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .backlink-icon {
+            color: var(--text-tertiary);
+        }
+
+        /* ==================== EMPTY STATE ==================== */
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 24px;
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-desc {
+            font-size: 15px;
+            max-width: 400px;
+            margin-bottom: 24px;
+        }
+
+        /* ==================== MODALS ==================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            box-shadow: 0 20px 60px var(--shadow);
+            width: 90%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 20px 20px 0;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 0 20px 20px;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        /* ==================== SEARCH RESULTS ==================== */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 16px;
+            right: 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px var(--shadow);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 200;
+            display: none;
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background var(--transition);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .search-result-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .search-result-preview {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .search-result-meta {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        /* ==================== CONTEXT MENU ==================== */
+        .context-menu {
+            position: fixed;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px var(--shadow);
+            padding: 6px 0;
+            min-width: 160px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .context-menu.active {
+            display: block;
+        }
+
+        .context-menu-item {
+            padding: 8px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background var(--transition);
+        }
+
+        .context-menu-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .context-menu-item.danger {
+            color: var(--danger);
+        }
+
+        .context-menu-separator {
+            height: 1px;
+            background: var(--border);
+            margin: 6px 0;
+        }
+
+        /* ==================== MOBILE BOTTOM NAV ==================== */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottom-nav-height);
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .mobile-nav-items {
+            display: flex;
+            height: 100%;
+        }
+
+        .mobile-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .mobile-nav-item.active {
+            color: var(--accent);
+        }
+
+        .mobile-nav-icon {
+            font-size: 20px;
+        }
+
+        .mobile-nav-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* ==================== DISTRACTION FREE MODE ==================== */
+        .distraction-free .sidebar,
+        .distraction-free .main-header,
+        .distraction-free .editor-toolbar,
+        .distraction-free .backlinks-panel,
+        .distraction-free .mobile-nav {
+            display: none !important;
+        }
+
+        .distraction-free .main {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+        }
+
+        .distraction-free .editor-content-wrapper {
+            padding: 60px 40px;
+        }
+
+        .distraction-free .editor-content {
+            max-width: 720px;
+        }
+
+        .exit-distraction-free {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: none;
+            color: var(--text-secondary);
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity var(--transition);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .distraction-free .exit-distraction-free {
+            opacity: 1;
+        }
+
+        .exit-distraction-free:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* ==================== TOAST NOTIFICATIONS ==================== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px var(--shadow);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-icon {
+            font-size: 18px;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 100%;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: var(--bottom-nav-height);
+                transform: translateX(-100%);
+                width: 85%;
+                max-width: 320px;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 99;
+                opacity: 0;
+                visibility: hidden;
+                transition: all var(--transition);
+            }
+
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .mobile-nav {
+                display: block;
+            }
+
+            .main {
+                padding-bottom: var(--bottom-nav-height);
+            }
+
+            .editor-content-wrapper {
+                padding: 20px 16px;
+            }
+
+            .note-title-input {
+                font-size: 24px;
+            }
+
+            .wysiwyg-editor {
+                font-size: 15px;
+            }
+
+            .wysiwyg-editor h1 {
+                font-size: 22px;
+            }
+
+            .wysiwyg-editor h2 {
+                font-size: 20px;
+            }
+
+            .wysiwyg-editor h3 {
+                font-size: 18px;
+            }
+
+            .hide-mobile {
+                display: none !important;
+            }
+        }
+
+        /* ==================== SCROLLBAR STYLING ==================== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* ==================== SELECTION ==================== */
+        ::selection {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* ==================== UTILITY CLASSES ==================== */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">◈</div>
+                    <span>Knowledge Base</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search notes...">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Favorites Section -->
+                <div class="sidebar-section" id="favoritesSectionContainer" style="display: none;">
+                    <div class="section-header" data-section="favorites">
+                        <span>Favorites</span>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="favoritesSection">
+                        <ul class="folder-tree" id="favoritesTree"></ul>
+                    </div>
+                </div>
+                
+                <!-- Folders Section -->
+                <div class="sidebar-section">
+                    <div class="section-header" data-section="folders">
+                        <span>Folders</span>
+                        <div class="section-actions">
+                            <button class="section-action-btn add-folder" id="addFolderBtn" title="Add new folder">+</button>
+                            <span class="section-toggle">▼</span>
+                        </div>
+                    </div>
+                    <div class="section-content" id="foldersSection">
+                        <ul class="folder-tree" id="folderTree"></ul>
+                    </div>
+                </div>
+                
+                <!-- Tags Section -->
+                <div class="sidebar-section">
+                    <div class="section-header" data-section="tags">
+                        <span>Tags</span>
+                        <span class="section-toggle">▼</span>
+                    </div>
+                    <div class="section-content" id="tagsSection">
+                        <div class="tags-cloud" id="tagsCloud"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-actions">
+                <button class="btn btn-primary btn-flex" id="newNoteBtn">
+                    <span>+</span> New Note
+                </button>
+                <button class="btn btn-secondary btn-icon" id="settingsBtn" title="Settings">
+                    ⚙
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main" id="main">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="btn btn-icon hide-desktop" id="menuBtn">☰</button>
+                    <div class="breadcrumb" id="breadcrumb">
+                        <span class="breadcrumb-item" data-folder="root">All Notes</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <span class="header-title" id="headerTitle">Select a note</span>
+                    <button class="btn btn-icon" id="themeBtn" title="Toggle Theme">◐</button>
+                    <button class="btn btn-icon hide-mobile" id="focusBtn" title="Focus Mode">⊘</button>
+                    <button class="btn btn-icon" id="moreBtn" title="More">⋯</button>
+                </div>
+            </header>
+            
+            <div class="editor-container" id="editorContainer">
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-state-icon">◈</div>
+                    <div class="empty-state-title">Welcome to Knowledge Base</div>
+                    <div class="empty-state-desc">
+                        Your private, offline knowledge management system.
+                        Create your first note to get started.
+                    </div>
+                    <button class="btn btn-primary" id="emptyNewNoteBtn">
+                        <span>+</span> Create First Note
+                    </button>
+                </div>
+                
+                <div class="editor-toolbar hidden" id="editorToolbar">
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="bold" title="Bold">B</button>
+                        <button class="toolbar-btn" data-command="italic" title="Italic">I</button>
+                        <button class="toolbar-btn" data-command="underline" title="Underline">U</button>
+                        <button class="toolbar-btn" data-command="strikeThrough" title="Strikethrough">S</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="formatBlock" data-value="H1" title="Heading 1">H1</button>
+                        <button class="toolbar-btn" data-command="formatBlock" data-value="H2" title="Heading 2">H2</button>
+                        <button class="toolbar-btn" data-command="formatBlock" data-value="H3" title="Heading 3">H3</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List">•</button>
+                        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">1.</button>
+                        <button class="toolbar-btn" data-command="formatBlock" data-value="BLOCKQUOTE" title="Quote">"</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" id="linkBtn" title="Insert Link">🔗</button>
+                        <button class="toolbar-btn" id="imageBtn" title="Insert Image">🖼</button>
+                        <button class="toolbar-btn" id="attachBtn" title="Attach File">📎</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="toolbar-btn" data-command="removeFormat" title="Clear Formatting">✕</button>
+                    </div>
+                </div>
+                
+                <div class="editor-content-wrapper hidden" id="editorContentWrapper">
+                    <div class="editor-content">
+                        <input type="text" class="note-title-input" id="noteTitle" placeholder="Note Title">
+                        <div class="note-meta">
+                            <div class="note-meta-item">
+                                <span>📅</span>
+                                <span id="noteDate">Created today</span>
+                            </div>
+                            <div class="note-meta-item">
+                                <span>🏷</span>
+                                <div class="note-tags-input" id="noteTagsInput">
+                                    <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
+                    </div>
+                </div>
+                
+                <div class="backlinks-panel hidden" id="backlinksPanel">
+                    <div class="backlinks-title">Linked from</div>
+                    <div class="backlinks-list" id="backlinksList"></div>
+                </div>
+            </div>
+            
+            <button class="exit-distraction-free" id="exitFocusBtn" title="Exit Focus Mode">✕</button>
+        </main>
+
+        <!-- Mobile Bottom Navigation -->
+        <nav class="mobile-nav">
+            <div class="mobile-nav-items">
+                <div class="mobile-nav-item active" data-view="notes">
+                    <span class="mobile-nav-icon">📝</span>
+                    <span class="mobile-nav-label">Notes</span>
+                </div>
+                <div class="mobile-nav-item" data-view="folders">
+                    <span class="mobile-nav-icon">📁</span>
+                    <span class="mobile-nav-label">Folders</span>
+                </div>
+                <div class="mobile-nav-item" data-view="tags">
+                    <span class="mobile-nav-icon">🏷</span>
+                    <span class="mobile-nav-label">Tags</span>
+                </div>
+                <div class="mobile-nav-item" data-view="search">
+                    <span class="mobile-nav-icon">🔍</span>
+                    <span class="mobile-nav-label">Search</span>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- New Note Modal -->
+    <div class="modal-overlay" id="newNoteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Create New Note</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Note Title</label>
+                    <input type="text" class="form-input" id="newNoteTitle" placeholder="Enter note title..." autofocus>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Folder</label>
+                    <select class="form-select" id="newNoteFolder"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelNewNote">Cancel</button>
+                <button class="btn btn-primary" id="confirmNewNote">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Folder Modal -->
+    <div class="modal-overlay" id="newFolderModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Create New Folder</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Folder Name</label>
+                    <input type="text" class="form-input" id="newFolderName" placeholder="Enter folder name...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Parent Folder</label>
+                    <select class="form-select" id="newFolderParent"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelNewFolder">Cancel</button>
+                <button class="btn btn-primary" id="confirmNewFolder">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Settings</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Theme</label>
+                    <select class="form-select" id="themeSelect">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="auto">Auto (System)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data Management</label>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="exportJsonBtn">Export JSON</button>
+                        <button class="btn btn-secondary" id="exportMarkdownBtn">Export Markdown</button>
+                        <button class="btn btn-secondary" id="importBtn">Import Data</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data Recovery</label>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="checkBackupBtn">Check for Backups</button>
+                        <button class="btn btn-secondary" id="createBackupBtn">Create Backup Now</button>
+                    </div>
+                    <small id="backupStatus" style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;"></small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Debug</label>
+                    <button class="btn btn-secondary" id="debugBtn">Show Debug Info</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Danger Zone</label>
+                    <button class="btn btn-secondary" id="clearAllBtn" style="color: var(--danger);">Clear All Data</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeSettings">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Modal -->
+    <div class="modal-overlay" id="linkModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Insert Link</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Link Text</label>
+                    <input type="text" class="form-input" id="linkText" placeholder="Link text...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">URL or Note Title</label>
+                    <input type="text" class="form-input" id="linkUrl" placeholder="https://... or note title">
+                    <small style="color: var(--text-tertiary); font-size: 11px;">
+                        Type a note title to create an internal link
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelLink">Cancel</button>
+                <button class="btn btn-primary" id="confirmLink">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" id="ctxRename">✏ Rename</div>
+        <div class="context-menu-item" id="ctxDuplicate">📋 Duplicate</div>
+        <div class="context-menu-item" id="ctxMove">📁 Move to...</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item danger" id="ctxDelete">🗑 Delete</div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <input type="file" id="attachInput" hidden>
+    <input type="file" id="importInput" accept=".json,.md,.markdown" hidden>
+
+    <script>
+        // ==================== KNOWLEDGE BASE APP ====================
+        
+        class KnowledgeBase {
+            constructor() {
+                this.data = {
+                    folders: [
+                        { id: 'root', name: 'All Notes', parentId: null },
+                        { id: 'inbox', name: 'Inbox', parentId: null },
+                        { id: 'archive', name: 'Archive', parentId: null }
+                    ],
+                    notes: [],
+                    tags: [],
+                    settings: {
+                        theme: 'auto',
+                        sidebarCollapsed: {}
+                    }
+                };
+                this.currentNote = null;
+                this.currentFolder = 'root';
+                this.contextMenuTarget = null;
+                this.draggedNote = null;
+                this.draggedFolder = null;
+                this.db = null;
+                
+                this.init();
+            }
+            
+            async init() {
+                try {
+                    await this.initIndexedDB();
+                    this.loadData();
+                    this.autoBackup(); // Create backup on startup if data exists
+                    this.setupEventListeners();
+                    this.setupMobileGestures();
+                    this.applyTheme();
+                    this.render();
+                    
+                    // Create welcome note if empty
+                    if (this.data.notes.length === 0) {
+                        this.createWelcomeNote();
+                    }
+                    console.log('App initialized successfully');
+                } catch (err) {
+                    console.error('Initialization error:', err);
+                    alert('Error starting app: ' + err.message);
+                }
+            }
+            
+            autoBackup() {
+                // Silently create a backup if we have data
+                const data = localStorage.getItem('kb_data');
+                if (data && data.length > 100) { // Only backup if substantial data exists
+                    localStorage.setItem('kb_data_backup', data);
+                    localStorage.setItem('kb_backup_date', new Date().toISOString());
+                    console.log('Auto-backup created');
+                }
+            }
+            
+            // ==================== INDEXEDDB ====================
+            
+            initIndexedDB() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open('KnowledgeBase', 1);
+                    
+                    request.onerror = () => reject(request.error);
+                    request.onsuccess = () => {
+                        this.db = request.result;
+                        resolve();
+                    };
+                    
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains('attachments')) {
+                            db.createObjectStore('attachments', { keyPath: 'id' });
+                        }
+                    };
+                });
+            }
+            
+            async saveAttachment(id, data) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['attachments'], 'readwrite');
+                    const store = transaction.objectStore('attachments');
+                    const request = store.put({ id, data, timestamp: Date.now() });
+                    request.onsuccess = () => resolve();
+                    request.onerror = () => reject(request.error);
+                });
+            }
+            
+            async getAttachment(id) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['attachments'], 'readonly');
+                    const store = transaction.objectStore('attachments');
+                    const request = store.get(id);
+                    request.onsuccess = () => resolve(request.result?.data);
+                    request.onerror = () => reject(request.error);
+                });
+            }
+            
+            // ==================== DATA PERSISTENCE ====================
+            
+            loadData() {
+                const saved = localStorage.getItem('kb_data');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        // Validate data structure before merging
+                        if (parsed && typeof parsed === 'object') {
+                            this.data = { ...this.data, ...parsed };
+                            // Ensure critical arrays exist
+                            if (!Array.isArray(this.data.folders)) this.data.folders = [];
+                            if (!Array.isArray(this.data.notes)) this.data.notes = [];
+                            if (!Array.isArray(this.data.tags)) this.data.tags = [];
+                            if (!this.data.settings) this.data.settings = {};
+                            this.repairData();
+                        } else {
+                            console.error('Invalid data structure, using defaults');
+                        }
+                    } catch (e) {
+                        console.error('Failed to load data:', e);
+                        // Try to restore from backup
+                        const backup = localStorage.getItem('kb_data_backup');
+                        if (backup) {
+                            try {
+                                const parsed = JSON.parse(backup);
+                                this.data = { ...this.data, ...parsed };
+                                console.log('Restored from backup');
+                                this.showToast('Restored from backup', 'success');
+                            } catch (backupErr) {
+                                console.error('Backup also corrupted:', backupErr);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            repairData() {
+                // Fix corrupted parent references
+                this.data.folders.forEach(folder => {
+                    // Fix self-referencing folders (inbox parent = inbox, etc.)
+                    if (folder.parentId === folder.id) {
+                        console.log(`Repairing self-referencing folder: ${folder.name}`);
+                        folder.parentId = null;
+                    }
+                    // Fix folders pointing to 'root' - should be null
+                    if (folder.parentId === 'root') {
+                        folder.parentId = null;
+                    }
+                    // Fix folders pointing to non-existent parents
+                    if (folder.parentId && !this.data.folders.find(f => f.id === folder.parentId)) {
+                        console.log(`Repairing orphaned folder: ${folder.name}`);
+                        folder.parentId = null;
+                    }
+                });
+                this.saveData();
+            }
+            
+            saveData() {
+                localStorage.setItem('kb_data', JSON.stringify(this.data));
+            }
+            
+            // ==================== THEME ====================
+            
+            applyTheme() {
+                const theme = this.data.settings.theme;
+                if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                }
+                document.getElementById('themeSelect').value = theme;
+            }
+            
+            toggleTheme() {
+                const themes = ['light', 'dark', 'auto'];
+                const current = this.data.settings.theme;
+                const next = themes[(themes.indexOf(current) + 1) % themes.length];
+                this.data.settings.theme = next;
+                this.applyTheme();
+                this.saveData();
+            }
+            
+            setTheme(theme) {
+                this.data.settings.theme = theme;
+                this.applyTheme();
+                this.saveData();
+            }
+            
+            // ==================== FOLDER OPERATIONS ====================
+            
+            createFolder(name, parentId = null) {
+                const folder = {
+                    id: 'folder_' + Date.now(),
+                    name: name.trim(),
+                    parentId: parentId
+                };
+                this.data.folders.push(folder);
+                this.saveData();
+                this.render();
+                this.showToast('Folder created', 'success');
+                return folder;
+            }
+            
+            renameFolder(id, newName) {
+                const folder = this.data.folders.find(f => f.id === id);
+                if (folder && !this.isSystemFolder(id)) {
+                    folder.name = newName.trim();
+                    this.saveData();
+                    this.render();
+                    this.showToast('Folder renamed', 'success');
+                }
+            }
+            
+            moveFolder(folderId, newParentId) {
+                const folder = this.data.folders.find(f => f.id === folderId);
+                if (folder && !this.isSystemFolder(folderId)) {
+                    // Prevent moving into itself or its descendants
+                    if (newParentId === folderId || this.getChildFolderIds(folderId).includes(newParentId)) {
+                        this.showToast('Cannot move folder into itself', 'error');
+                        return;
+                    }
+                    folder.parentId = newParentId;
+                    this.saveData();
+                    this.render();
+                    this.showToast('Folder moved', 'success');
+                }
+            }
+            
+            isDescendant(ancestorId, descendantId) {
+                // Check if descendantId is a descendant of ancestorId (to prevent cycles)
+                let current = this.data.folders.find(f => f.id === descendantId);
+                while (current) {
+                    if (current.parentId === ancestorId) return true;
+                    current = this.data.folders.find(f => f.id === current.parentId);
+                }
+                return false;
+            }
+            
+            reorderFolder(draggedFolderId, targetFolderId, insertBefore) {
+                const draggedFolder = this.data.folders.find(f => f.id === draggedFolderId);
+                const targetFolder = this.data.folders.find(f => f.id === targetFolderId);
+                
+                if (!draggedFolder || !targetFolder) return;
+                
+                // Only reorder if same parent
+                if (draggedFolder.parentId !== targetFolder.parentId) {
+                    // Move to same parent as target
+                    draggedFolder.parentId = targetFolder.parentId;
+                }
+                
+                // Get folders with same parent
+                const siblings = this.data.folders.filter(f => f.parentId === targetFolder.parentId);
+                const draggedIndex = siblings.findIndex(f => f.id === draggedFolderId);
+                const targetIndex = siblings.findIndex(f => f.id === targetFolderId);
+                
+                if (draggedIndex === -1 || targetIndex === -1) return;
+                
+                // Remove dragged folder from current position
+                siblings.splice(draggedIndex, 1);
+                
+                // Calculate new index
+                let newIndex = targetIndex;
+                if (draggedIndex < targetIndex && !insertBefore) {
+                    newIndex = targetIndex;
+                } else if (draggedIndex > targetIndex && insertBefore) {
+                    newIndex = targetIndex;
+                } else if (draggedIndex < targetIndex && insertBefore) {
+                    newIndex = targetIndex - 1;
+                } else if (draggedIndex > targetIndex && !insertBefore) {
+                    newIndex = targetIndex + 1;
+                }
+                
+                // Insert at new position
+                siblings.splice(newIndex, 0, draggedFolder);
+                
+                // Update main array to match new order
+                const otherFolders = this.data.folders.filter(f => f.parentId !== targetFolder.parentId);
+                this.data.folders = [...otherFolders, ...siblings];
+                
+                this.saveData();
+                this.render();
+                this.showToast('Folder reordered', 'success');
+            }
+            
+            addFolderToFavorites(id) {
+                const folder = this.data.folders.find(f => f.id === id);
+                if (folder) {
+                    if (!this.data.settings.favoriteFolders) {
+                        this.data.settings.favoriteFolders = [];
+                    }
+                    if (!this.data.settings.favoriteFolders.includes(id)) {
+                        this.data.settings.favoriteFolders.push(id);
+                        this.saveData();
+                        this.renderFavorites();
+                        this.showToast('Added to favorites', 'success');
+                    } else {
+                        this.showToast('Already in favorites', 'info');
+                    }
+                }
+            }
+            
+            renderFavorites() {
+                const favoritesContainer = document.getElementById('favoritesSectionContainer');
+                const favoritesTree = document.getElementById('favoritesTree');
+                const favoriteIds = this.data.settings.favoriteFolders || [];
+                
+                if (favoriteIds.length === 0) {
+                    favoritesContainer.style.display = 'none';
+                    return;
+                }
+                
+                favoritesContainer.style.display = 'block';
+                favoritesTree.innerHTML = '';
+                
+                favoriteIds.forEach(folderId => {
+                    const folder = this.data.folders.find(f => f.id === folderId);
+                    if (folder) {
+                        const li = document.createElement('li');
+                        li.className = 'folder-item';
+                        
+                        const noteCount = this.data.notes.filter(n => n.folderId === folderId).length;
+                        
+                        li.innerHTML = `
+                            <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}" 
+                                 data-folder="${folder.id}"
+                                 style="padding-left: 8px;">
+                                <span class="folder-icon">⭐</span>
+                                <span class="folder-name">${this.escapeHtml(folder.name)}</span>
+                                <span class="folder-count">${noteCount}</span>
+                                <div class="folder-actions">
+                                    <button class="folder-action-btn more-menu" title="More options"></button>
+                                    <div class="folder-dropdown" id="dropdown-fav-${folder.id}">
+                                        <div class="folder-dropdown-item" data-action="remove-favorite">
+                                            <span class="folder-dropdown-icon">⭐</span>
+                                            <span>Remove from Favorites</span>
+                                        </div>
+                                        <div class="folder-dropdown-item" data-action="rename">
+                                            <span class="folder-dropdown-icon">✏️</span>
+                                            <span>Rename</span>
+                                        </div>
+                                        <div class="folder-dropdown-divider"></div>
+                                        <div class="folder-dropdown-item delete" data-action="delete">
+                                            <span class="folder-dropdown-icon">🗑️</span>
+                                            <span>Move to Trash</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        const header = li.querySelector('.folder-header');
+                        header.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('folder-action-btn')) return;
+                            this.selectFolder(folder.id);
+                        });
+                        
+                        // More menu button
+                        const moreMenuBtn = li.querySelector('.folder-action-btn.more-menu');
+                        const dropdown = li.querySelector(`#dropdown-fav-${folder.id}`);
+                        
+                        if (moreMenuBtn && dropdown) {
+                            moreMenuBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                document.querySelectorAll('.folder-dropdown.show').forEach(d => {
+                                    if (d !== dropdown) d.classList.remove('show');
+                                });
+                                dropdown.classList.toggle('show');
+                            });
+                            
+                            dropdown.querySelectorAll('.folder-dropdown-item').forEach(item => {
+                                item.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    const action = item.dataset.action;
+                                    dropdown.classList.remove('show');
+                                    
+                                    switch(action) {
+                                        case 'remove-favorite':
+                                            this.removeFolderFromFavorites(folder.id);
+                                            break;
+                                        case 'rename':
+                                            this.renameFolder(folder.id);
+                                            break;
+                                        case 'delete':
+                                            this.deleteFolder(folder.id);
+                                            break;
+                                    }
+                                });
+                            });
+                        }
+                        
+                        favoritesTree.appendChild(li);
+                    }
+                });
+            }
+            
+            removeFolderFromFavorites(id) {
+                if (this.data.settings.favoriteFolders) {
+                    this.data.settings.favoriteFolders = this.data.settings.favoriteFolders.filter(fId => fId !== id);
+                    this.saveData();
+                    this.renderFavorites();
+                    this.showToast('Removed from favorites', 'success');
+                }
+            }
+            
+            duplicateFolder(id) {
+                const folder = this.data.folders.find(f => f.id === id);
+                if (folder && !this.isSystemFolder(id)) {
+                    // Create duplicate folder
+                    const newFolder = {
+                        id: 'folder_' + Date.now(),
+                        name: folder.name + ' (Copy)',
+                        parentId: folder.parentId,
+                        created: new Date().toISOString()
+                    };
+                    this.data.folders.push(newFolder);
+                    
+                    // Duplicate notes in this folder
+                    const notesToDuplicate = this.data.notes.filter(n => n.folderId === id);
+                    notesToDuplicate.forEach(note => {
+                        const newNote = {
+                            id: 'note_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                            title: note.title,
+                            content: note.content,
+                            folderId: newFolder.id,
+                            tags: [...note.tags],
+                            created: new Date().toISOString(),
+                            updated: new Date().toISOString()
+                        };
+                        this.data.notes.push(newNote);
+                    });
+                    
+                    // Recursively duplicate child folders
+                    const childFolders = this.data.folders.filter(f => f.parentId === id);
+                    this.duplicateChildFolders(id, newFolder.id);
+                    
+                    this.saveData();
+                    this.render();
+                    this.showToast('Folder duplicated', 'success');
+                }
+            }
+            
+            duplicateChildFolders(parentId, newParentId) {
+                const childFolders = this.data.folders.filter(f => f.parentId === parentId);
+                childFolders.forEach(child => {
+                    const newChild = {
+                        id: 'folder_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        name: child.name,
+                        parentId: newParentId,
+                        created: new Date().toISOString()
+                    };
+                    this.data.folders.push(newChild);
+                    
+                    // Duplicate notes
+                    const notesToDuplicate = this.data.notes.filter(n => n.folderId === child.id);
+                    notesToDuplicate.forEach(note => {
+                        const newNote = {
+                            id: 'note_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                            title: note.title,
+                            content: note.content,
+                            folderId: newChild.id,
+                            tags: [...note.tags],
+                            created: new Date().toISOString(),
+                            updated: new Date().toISOString()
+                        };
+                        this.data.notes.push(newNote);
+                    });
+                    
+                    // Recurse
+                    this.duplicateChildFolders(child.id, newChild.id);
+                });
+            }
+            
+            renameFolder(id) {
+                const folder = this.data.folders.find(f => f.id === id);
+                if (folder) {
+                    const newName = prompt('Enter new folder name:', folder.name);
+                    if (newName && newName.trim()) {
+                        folder.name = newName.trim();
+                        this.saveData();
+                        this.render();
+                        this.showToast('Folder renamed', 'success');
+                    }
+                }
+            }
+            
+            deleteFolder(id) {
+                if (this.isSystemFolder(id)) {
+                    this.showToast('Cannot delete system folders', 'error');
+                    return;
+                }
+                
+                const notesInFolder = this.data.notes.filter(n => n.folderId === id);
+                if (notesInFolder.length > 0) {
+                    // Move notes to parent
+                    const folder = this.data.folders.find(f => f.id === id);
+                    const parentId = folder?.parentId || 'root';
+                    notesInFolder.forEach(n => n.folderId = parentId);
+                }
+                
+                // Move child folders to parent
+                const folder = this.data.folders.find(f => f.id === id);
+                const parentId = folder?.parentId || 'root';
+                this.data.folders.filter(f => f.parentId === id).forEach(f => f.parentId = parentId);
+                
+                this.data.folders = this.data.folders.filter(f => f.id !== id);
+                this.saveData();
+                this.render();
+                this.showToast('Folder deleted', 'success');
+            }
+            
+            isSystemFolder(id) {
+                return ['root', 'inbox', 'archive'].includes(id);
+            }
+            
+            getFolderPath(folderId) {
+                const path = [];
+                let current = this.data.folders.find(f => f.id === folderId);
+                while (current) {
+                    path.unshift(current);
+                    current = this.data.folders.find(f => f.id === current.parentId);
+                }
+                return path;
+            }
+            
+            // ==================== NOTE OPERATIONS ====================
+            
+            createNote(title, folderId = 'root') {
+                const note = {
+                    id: 'note_' + Date.now(),
+                    title: title?.trim() || 'Untitled Note',
+                    content: '',
+                    folderId: folderId,
+                    tags: [],
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+                this.data.notes.push(note);
+                this.saveData();
+                this.selectNote(note.id);
+                this.render();
+                this.showToast('Note created', 'success');
+                return note;
+            }
+            
+            createWelcomeNote() {
+                const welcomeContent = `
+                    <h1>Welcome to Knowledge Base!</h1>
+                    <p>This is your personal, offline knowledge management system. Here's how to get started:</p>
+                    <h2>📝 Creating Notes</h2>
+                    <ul>
+                        <li>Click "New Note" to create a note</li>
+                        <li>Use the toolbar to format your text</li>
+                        <li>Add tags to organize your notes</li>
+                    </ul>
+                    <h2>📁 Organizing with Folders</h2>
+                    <ul>
+                        <li>Right-click in the sidebar to create folders</li>
+                        <li>Drag and drop notes between folders</li>
+                        <li>Create nested folders for better organization</li>
+                    </ul>
+                    <h2>🔗 Linking Notes</h2>
+                    <p>Type <code>[[Note Title]]</code> or use the link button to create connections between notes. Backlinks are automatically tracked!</p>
+                    <h2>🏷 Tags</h2>
+                    <p>Add tags to your notes for cross-cutting organization. Click any tag in the sidebar to filter.</p>
+                    <h2>💡 Pro Tips</h2>
+                    <ul>
+                        <li>Use <strong>Cmd/Ctrl + K</strong> to quickly search</li>
+                        <li>Try Focus Mode for distraction-free writing</li>
+                        <li>Your data stays on your device - completely private</li>
+                    </ul>
+                    <p>Happy writing! ✨</p>
+                `;
+                
+                const note = {
+                    id: 'note_welcome',
+                    title: '👋 Welcome to Knowledge Base',
+                    content: welcomeContent,
+                    folderId: 'root',
+                    tags: ['getting-started', 'tutorial'],
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+                this.data.notes.push(note);
+                this.saveData();
+                this.selectNote(note.id);
+            }
+            
+            updateNote(id, updates) {
+                const note = this.data.notes.find(n => n.id === id);
+                if (note) {
+                    const titleChanged = updates.title && updates.title !== note.title;
+                    Object.assign(note, updates, { updatedAt: Date.now() });
+                    this.saveData();
+                    this.renderBacklinks();
+                    // Re-render sidebar if title changed to update folder tree
+                    if (titleChanged) {
+                        this.render();
+                    }
+                }
+            }
+            
+            deleteNote(id) {
+                this.data.notes = this.data.notes.filter(n => n.id !== id);
+                if (this.currentNote?.id === id) {
+                    this.currentNote = null;
+                    this.showEmptyState();
+                }
+                this.saveData();
+                this.render();
+                this.showToast('Note deleted', 'success');
+            }
+            
+            duplicateNote(id) {
+                const note = this.data.notes.find(n => n.id === id);
+                if (note) {
+                    const newNote = {
+                        ...note,
+                        id: 'note_' + Date.now(),
+                        title: note.title + ' (Copy)',
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    };
+                    this.data.notes.push(newNote);
+                    this.saveData();
+                    this.render();
+                    this.selectNote(newNote.id);
+                    this.showToast('Note duplicated', 'success');
+                }
+            }
+            
+            moveNote(noteId, folderId) {
+                const note = this.data.notes.find(n => n.id === noteId);
+                if (note) {
+                    note.folderId = folderId;
+                    this.saveData();
+                    this.render();
+                    this.showToast('Note moved', 'success');
+                }
+            }
+            
+            reorderNote(draggedId, targetId, insertBefore) {
+                const draggedIndex = this.data.notes.findIndex(n => n.id === draggedId);
+                const targetIndex = this.data.notes.findIndex(n => n.id === targetId);
+                
+                if (draggedIndex === -1 || targetIndex === -1) return;
+                
+                // Remove dragged note from array
+                const [draggedNote] = this.data.notes.splice(draggedIndex, 1);
+                
+                // Calculate new index after removal
+                let newIndex = this.data.notes.findIndex(n => n.id === targetId);
+                if (!insertBefore) newIndex++;
+                
+                // Insert at new position
+                this.data.notes.splice(newIndex, 0, draggedNote);
+                
+                this.saveData();
+                this.render();
+                this.showToast('Note reordered', 'success');
+            }
+            
+            selectNote(id) {
+                const note = this.data.notes.find(n => n.id === id);
+                if (!note) return;
+                
+                this.currentNote = note;
+                this.currentFolder = note.folderId;
+                
+                // Show editor
+                document.getElementById('emptyState').classList.add('hidden');
+                document.getElementById('editorToolbar').classList.remove('hidden');
+                document.getElementById('editorContentWrapper').classList.remove('hidden');
+                document.getElementById('backlinksPanel').classList.remove('hidden');
+                
+                // Populate fields
+                document.getElementById('noteTitle').value = note.title;
+                document.getElementById('wysiwygEditor').innerHTML = note.content;
+                document.getElementById('headerTitle').textContent = 'Editing';
+                
+                // Update date
+                const date = new Date(note.updatedAt);
+                document.getElementById('noteDate').textContent = 
+                    'Updated ' + date.toLocaleDateString() + ' at ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                // Update tags
+                this.renderNoteTags();
+                
+                // Update breadcrumb
+                this.renderBreadcrumb();
+                
+                // Update backlinks
+                this.renderBacklinks();
+                
+                // Update active states
+                this.updateActiveStates();
+                
+                // Auto-save on content change
+                this.setupAutoSave();
+            }
+            
+            showEmptyState() {
+                document.getElementById('emptyState').classList.remove('hidden');
+                document.getElementById('editorToolbar').classList.add('hidden');
+                document.getElementById('editorContentWrapper').classList.add('hidden');
+                document.getElementById('backlinksPanel').classList.add('hidden');
+                document.getElementById('headerTitle').textContent = 'Select a note';
+            }
+            
+            // ==================== TAG OPERATIONS ====================
+            
+            addTagToNote(noteId, tagName) {
+                const note = this.data.notes.find(n => n.id === noteId);
+                if (note && !note.tags.includes(tagName)) {
+                    note.tags.push(tagName);
+                    if (!this.data.tags.includes(tagName)) {
+                        this.data.tags.push(tagName);
+                    }
+                    this.saveData();
+                    this.renderNoteTags();
+                    this.renderTagsCloud();
+                }
+            }
+            
+            removeTagFromNote(noteId, tagName) {
+                const note = this.data.notes.find(n => n.id === noteId);
+                if (note) {
+                    note.tags = note.tags.filter(t => t !== tagName);
+                    this.saveData();
+                    this.renderNoteTags();
+                    this.renderTagsCloud();
+                }
+            }
+            
+            getAllTags() {
+                const tags = new Set();
+                this.data.notes.forEach(note => {
+                    note.tags.forEach(tag => tags.add(tag));
+                });
+                return Array.from(tags).sort();
+            }
+            
+            // ==================== RENDERING ====================
+            
+            render() {
+                this.renderFavorites();
+                this.renderFolderTree();
+                this.renderTagsCloud();
+                this.updateActiveStates();
+                
+                // Debug: Log folder state
+                console.log('Folders:', this.data.folders.map(f => ({id: f.id, name: f.name, parentId: f.parentId})));
+            }
+            
+            renderFolderTree() {
+                const tree = document.getElementById('folderTree');
+                if (!tree) {
+                    console.error('folderTree element not found!');
+                    return;
+                }
+                tree.innerHTML = '';
+                
+                console.log('Rendering folders:', this.data.folders.length);
+                
+                const renderFolder = (parentId, level = 0) => {
+                    const folders = this.data.folders.filter(f => f.parentId === parentId && f.id !== 'root');
+                    console.log(`Found ${folders.length} folders with parent ${parentId}`);
+                    
+                    if (folders.length === 0) return null;
+                    
+                    const ul = document.createElement('ul');
+                    ul.className = level === 0 ? 'folder-tree' : 'folder-children';
+                    if (level > 0) ul.style.paddingLeft = '16px';
+                    
+                    folders.forEach(folder => {
+                        const li = document.createElement('li');
+                        li.className = 'folder-item';
+                        
+                        const noteCount = this.data.notes.filter(n => {
+                            if (n.folderId === folder.id) return true;
+                            const childIds = this.getChildFolderIds(folder.id);
+                            return childIds.includes(n.folderId);
+                        }).length;
+                        
+                        const hasChildren = this.data.folders.some(f => f.parentId === folder.id);
+                        const isCollapsed = this.data.settings.sidebarCollapsed?.[folder.id];
+                        
+                        li.innerHTML = `
+                            <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}" 
+                                 data-folder="${folder.id}"
+                                 style="padding-left: ${8 + level * 4}px">
+                                ${hasChildren ? `<span class="folder-toggle ${isCollapsed ? 'collapsed' : ''}">▼</span>` : '<span class="folder-toggle" style="visibility: hidden;">▼</span>'}
+                                <span class="folder-icon">📁</span>
+                                <span class="folder-name">${this.escapeHtml(folder.name)}</span>
+                                <span class="folder-count">${noteCount}</span>
+                                <div class="folder-actions">
+                                    <button class="folder-action-btn add-page" title="Add a page inside"></button>
+                                    <button class="folder-action-btn more-menu" title="More options"></button>
+                                    <div class="folder-dropdown" id="dropdown-${folder.id}">
+                                        <div class="folder-dropdown-item" data-action="favorite">
+                                            <span class="folder-dropdown-icon">⭐</span>
+                                            <span>Add to Favorites</span>
+                                        </div>
+                                        <div class="folder-dropdown-item" data-action="duplicate">
+                                            <span class="folder-dropdown-icon">📋</span>
+                                            <span>Duplicate</span>
+                                        </div>
+                                        <div class="folder-dropdown-item" data-action="rename">
+                                            <span class="folder-dropdown-icon">✏️</span>
+                                            <span>Rename</span>
+                                        </div>
+                                        <div class="folder-dropdown-divider"></div>
+                                        <div class="folder-dropdown-item delete" data-action="delete">
+                                            <span class="folder-dropdown-icon">🗑️</span>
+                                            <span>Move to Trash</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        const header = li.querySelector('.folder-header');
+                        
+                        // Click to toggle expand/collapse (if has children) or select
+                        header.addEventListener('click', (e) => {
+                            // Ignore clicks on buttons
+                            if (e.target.classList.contains('folder-action-btn') || 
+                                e.target.closest('.folder-dropdown')) return;
+                            
+                            // Always toggle collapse state on click
+                            if (!this.data.settings.sidebarCollapsed) {
+                                this.data.settings.sidebarCollapsed = {};
+                            }
+                            this.data.settings.sidebarCollapsed[folder.id] = !isCollapsed;
+                            this.saveData();
+                            this.renderFolderTree();
+                        });
+                        
+                        // Context menu
+                        header.addEventListener('contextmenu', (e) => {
+                            e.preventDefault();
+                            this.showContextMenu(e, 'folder', folder.id);
+                        });
+                        
+                        // DROP ZONE: Allow notes to be dropped onto this folder
+                        header.addEventListener('dragover', (e) => {
+                            if (!this.draggedNote) return;
+                            e.preventDefault();
+                            e.dataTransfer.dropEffect = 'move';
+                            header.classList.add('drag-over');
+                        });
+                        
+                        header.addEventListener('dragleave', () => {
+                            header.classList.remove('drag-over');
+                        });
+                        
+                        header.addEventListener('drop', (e) => {
+                            if (!this.draggedNote) return;
+                            e.preventDefault();
+                            e.stopPropagation();
+                            header.classList.remove('drag-over');
+                            
+                            const note = this.data.notes.find(n => n.id === this.draggedNote);
+                            if (note && note.folderId !== folder.id) {
+                                note.folderId = folder.id;
+                                this.saveData();
+                                this.render();
+                                this.showToast(`Moved to ${folder.name}`, 'success');
+                            }
+                            this.draggedNote = null;
+                        });
+                        
+                        // FOLDER DRAG/DROP - all folders can receive drops
+                        // DROP: Move folder to be a child of this folder
+                        header.addEventListener('dragover', (e) => {
+                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            const dragged = this.data.folders.find(f => f.id === this.draggedFolder);
+                            if (!dragged) return;
+                            
+                            // Prevent dropping a parent into its own child (would create cycle)
+                            if (this.isDescendant(folder.id, dragged.id)) return;
+                            
+                            // Shift key forces "nest as child" mode
+                            const forceNest = e.shiftKey;
+                            
+                            // Different behavior based on same parent vs different
+                            if (dragged.parentId === folder.parentId && !forceNest) {
+                                // Same level - reorder mode
+                                e.preventDefault();
+                                e.dataTransfer.dropEffect = 'move';
+                                
+                                const rect = header.getBoundingClientRect();
+                                const midY = rect.top + rect.height / 2;
+                                
+                                if (e.clientY < midY) {
+                                    header.style.borderTop = '2px solid var(--accent)';
+                                    header.style.borderBottom = '';
+                                    header.title = 'Drop to reorder (hold Shift to nest inside)';
+                                } else {
+                                    header.style.borderTop = '';
+                                    header.style.borderBottom = '2px solid var(--accent)';
+                                    header.title = 'Drop to reorder (hold Shift to nest inside)';
+                                }
+                            } else {
+                                // Different level OR Shift held - move as child (highlight entire header)
+                                e.preventDefault();
+                                e.dataTransfer.dropEffect = 'move';
+                                header.classList.add('drag-over');
+                                header.title = forceNest ? 'Drop to nest inside' : 'Drop to move as child';
+                            }
+                        });
+                        
+                        header.addEventListener('dragleave', () => {
+                            header.style.borderTop = '';
+                            header.style.borderBottom = '';
+                            header.classList.remove('drag-over');
+                            header.title = '';
+                        });
+                        
+                        header.addEventListener('drop', (e) => {
+                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            const dragged = this.data.folders.find(f => f.id === this.draggedFolder);
+                            if (!dragged) return;
+                            
+                            // Prevent dropping a parent into its own child
+                            if (this.isDescendant(folder.id, dragged.id)) return;
+                            
+                            e.preventDefault();
+                            e.stopPropagation();
+                            header.style.borderTop = '';
+                            header.style.borderBottom = '';
+                            header.classList.remove('drag-over');
+                            header.title = '';
+                            
+                            // Check if Shift was held during drop
+                            const forceNest = e.shiftKey;
+                            
+                            if (dragged.parentId === folder.parentId && !forceNest) {
+                                // Same level - reorder
+                                const rect = header.getBoundingClientRect();
+                                const midY = rect.top + rect.height / 2;
+                                const insertBefore = e.clientY < midY;
+                                
+                                this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
+                            } else {
+                                // Move as child of this folder
+                                dragged.parentId = folder.id;
+                                this.saveData();
+                                this.render();
+                                this.showToast(`Moved into ${folder.name}`, 'success');
+                            }
+                            this.draggedFolder = null;
+                        });
+                            
+                            if (dragged.parentId === folder.parentId) {
+                                // Same level - reorder
+                                const rect = header.getBoundingClientRect();
+                                const midY = rect.top + rect.height / 2;
+                                const insertBefore = e.clientY < midY;
+                                
+                                this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
+                            } else {
+                                // Move as child of this folder
+                                dragged.parentId = folder.id;
+                                this.saveData();
+                                this.render();
+                                this.showToast(`Moved into ${folder.name}`, 'success');
+                            }
+                            this.draggedFolder = null;
+                        });
+                        
+                        // DRAG: Only non-system folders can be dragged
+                        if (!this.isSystemFolder(folder.id)) {
+                            header.draggable = true;
+                            
+                            header.addEventListener('dragstart', (e) => {
+                                this.draggedFolder = folder.id;
+                                header.style.opacity = '0.5';
+                                e.dataTransfer.effectAllowed = 'move';
+                            });
+                            
+                            header.addEventListener('dragend', () => {
+                                header.style.opacity = '';
+                                this.draggedFolder = null;
+                                document.querySelectorAll('.folder-header').forEach(h => {
+                                    h.style.borderTop = '';
+                                    h.style.borderBottom = '';
+                                    h.classList.remove('drag-over');
+                                });
+                            });
+                        }
+                        
+                        // Add page button (plus icon)
+                        const addPageBtn = li.querySelector('.folder-action-btn.add-page');
+                        if (addPageBtn) {
+                            addPageBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                this.createNote('', folder.id);
+                            });
+                        }
+                        
+                        // More menu button (three dots)
+                        const moreMenuBtn = li.querySelector('.folder-action-btn.more-menu');
+                        const dropdown = li.querySelector(`#dropdown-${folder.id}`);
+                        
+                        if (moreMenuBtn && dropdown) {
+                            moreMenuBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                // Close other dropdowns
+                                document.querySelectorAll('.folder-dropdown.show').forEach(d => {
+                                    if (d !== dropdown) d.classList.remove('show');
+                                });
+                                dropdown.classList.toggle('show');
+                            });
+                            
+                            // Handle dropdown item clicks
+                            dropdown.querySelectorAll('.folder-dropdown-item').forEach(item => {
+                                item.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    const action = item.dataset.action;
+                                    dropdown.classList.remove('show');
+                                    
+                                    switch(action) {
+                                        case 'favorite':
+                                            this.addFolderToFavorites(folder.id);
+                                            break;
+                                        case 'duplicate':
+                                            this.duplicateFolder(folder.id);
+                                            break;
+                                        case 'rename':
+                                            this.renameFolder(folder.id);
+                                            break;
+                                        case 'delete':
+                                            this.deleteFolder(folder.id);
+                                            break;
+                                    }
+                                });
+                            });
+                        }
+                        
+                        // Close dropdown when clicking outside
+                        document.addEventListener('click', () => {
+                            if (dropdown) dropdown.classList.remove('show');
+                        });
+                        
+                        // Drag and drop: Header = move as child, List item = reorder
+                        
+                        // DRAG AND DROP DISABLED - TOO BUGGY
+                        // Simple drag indicators only - no actual drag functionality
+                        /*
+                        li.draggable = true;
+                        
+                        li.addEventListener('dragstart', (e) => {
+                            this.draggedFolder = folder.id;
+                            li.style.opacity = '0.5';
+                            e.dataTransfer.effectAllowed = 'move';
+                        });
+                        
+                        li.addEventListener('dragend', () => {
+                            li.style.opacity = '1';
+                            document.querySelectorAll('.folder-item').forEach(item => {
+                                item.style.borderTop = '';
+                                item.style.borderBottom = '';
+                            });
+                            this.draggedFolder = null;
+                        });
+                        
+                        li.addEventListener('dragover', (e) => {
+                            e.preventDefault();
+                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            
+                            const rect = li.getBoundingClientRect();
+                            const midY = rect.top + rect.height / 2;
+                            
+                            if (e.clientY < midY) {
+                                li.style.borderTop = '2px solid var(--accent)';
+                                li.style.borderBottom = '';
+                            } else {
+                                li.style.borderTop = '';
+                                li.style.borderBottom = '2px solid var(--accent)';
+                            }
+                        });
+                        
+                        li.addEventListener('dragleave', () => {
+                            li.style.borderTop = '';
+                            li.style.borderBottom = '';
+                        });
+                        
+                        li.addEventListener('drop', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            li.style.borderTop = '';
+                            li.style.borderBottom = '';
+                            
+                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            
+                            const draggedFolder = this.data.folders.find(f => f.id === this.draggedFolder);
+                            if (!draggedFolder) return;
+                            
+                            // Move to same parent as target
+                            if (draggedFolder.parentId !== folder.parentId) {
+                                draggedFolder.parentId = folder.parentId;
+                            }
+                            
+                            const rect = li.getBoundingClientRect();
+                            const midY = rect.top + rect.height / 2;
+                            const insertBefore = e.clientY < midY;
+                            
+                            this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
+                            this.draggedFolder = null;
+                        });
+                        */
+                        
+                        // Render children
+                        if (hasChildren && !isCollapsed) {
+                            const children = renderFolder(folder.id, level + 1);
+                            li.appendChild(children);
+                        }
+                        
+                        // Render notes in this folder (only if expanded)
+                        if (!isCollapsed) {
+                            const notes = this.data.notes.filter(n => n.folderId === folder.id);
+                            if (notes.length > 0) {
+                                const notesUl = document.createElement('ul');
+                                notesUl.className = 'folder-children';
+                                notes.forEach(note => {
+                                    const noteLi = document.createElement('li');
+                                    noteLi.className = `note-item ${this.currentNote?.id === note.id ? 'active' : ''}`;
+                                    noteLi.draggable = true;
+                                    noteLi.dataset.noteId = note.id;
+                                    noteLi.innerHTML = `
+                                        <span class="note-icon">📝</span>
+                                        <span class="note-title">${this.escapeHtml(note.title)}</span>
+                                    `;
+                                    
+                                    noteLi.addEventListener('click', () => this.selectNote(note.id));
+                                    noteLi.addEventListener('contextmenu', (e) => {
+                                        e.preventDefault();
+                                        this.showContextMenu(e, 'note', note.id);
+                                    });
+                                    
+                                    // Drag start
+                                    noteLi.addEventListener('dragstart', (e) => {
+                                        this.draggedNote = note.id;
+                                        this.draggedNoteSourceFolder = folder.id;
+                                        noteLi.classList.add('dragging');
+                                        e.dataTransfer.effectAllowed = 'move';
+                                    });
+                                    
+                                    noteLi.addEventListener('dragend', () => {
+                                        noteLi.classList.remove('dragging');
+                                        this.draggedNote = null;
+                                        this.draggedNoteSourceFolder = null;
+                                        // Clear all drop indicators
+                                        document.querySelectorAll('.note-item').forEach(el => {
+                                            el.style.borderTop = '';
+                                            el.style.borderBottom = '';
+                                        });
+                                    });
+                                    
+                                    // Drag over for reordering within same folder
+                                    noteLi.addEventListener('dragover', (e) => {
+                                        if (!this.draggedNote || this.draggedNote === note.id) return;
+                                        // Only allow reordering if from same folder
+                                        if (this.draggedNoteSourceFolder !== folder.id) return;
+                                        
+                                        e.preventDefault();
+                                        e.dataTransfer.dropEffect = 'move';
+                                        
+                                        const rect = noteLi.getBoundingClientRect();
+                                        const midY = rect.top + rect.height / 2;
+                                        
+                                        if (e.clientY < midY) {
+                                            noteLi.style.borderTop = '2px solid var(--accent)';
+                                            noteLi.style.borderBottom = '';
+                                        } else {
+                                            noteLi.style.borderTop = '';
+                                            noteLi.style.borderBottom = '2px solid var(--accent)';
+                                        }
+                                    });
+                                    
+                                    noteLi.addEventListener('dragleave', () => {
+                                        noteLi.style.borderTop = '';
+                                        noteLi.style.borderBottom = '';
+                                    });
+                                    
+                                    noteLi.addEventListener('drop', (e) => {
+                                        if (!this.draggedNote || this.draggedNote === note.id) return;
+                                        // Only allow reordering if from same folder
+                                        if (this.draggedNoteSourceFolder !== folder.id) return;
+                                        
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        noteLi.style.borderTop = '';
+                                        noteLi.style.borderBottom = '';
+                                        
+                                        const rect = noteLi.getBoundingClientRect();
+                                        const midY = rect.top + rect.height / 2;
+                                        const insertBefore = e.clientY < midY;
+                                        
+                                        this.reorderNote(this.draggedNote, note.id, insertBefore);
+                                    });
+                                    
+                                    notesUl.appendChild(noteLi);
+                                });
+                                li.appendChild(notesUl);
+                            }
+                        }
+                        
+                        ul.appendChild(li);
+                    });
+                    
+                    return ul;
+                };
+                
+                const rootUl = renderFolder(null);
+                
+                // TOP DROP ZONE for reordering main folders at the top
+                const topDropZone = document.createElement('div');
+                topDropZone.className = 'folder-reorder-zone';
+                topDropZone.style.cssText = 'height: 8px; margin-bottom: 4px; border-radius: 4px; transition: all 0.2s;';
+                topDropZone.title = 'Drop here to move folder to top';
+                
+                topDropZone.addEventListener('dragover', (e) => {
+                    if (!this.draggedFolder) return;
+                    const dragged = this.data.folders.find(f => f.id === this.draggedFolder);
+                    if (!dragged || dragged.parentId !== null) return; // Only for main folders
+                    
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    topDropZone.style.background = 'var(--accent)';
+                    topDropZone.style.height = '20px';
+                });
+                
+                topDropZone.addEventListener('dragleave', () => {
+                    topDropZone.style.background = '';
+                    topDropZone.style.height = '8px';
+                });
+                
+                topDropZone.addEventListener('drop', (e) => {
+                    if (!this.draggedFolder) return;
+                    const dragged = this.data.folders.find(f => f.id === this.draggedFolder);
+                    if (!dragged || dragged.parentId !== null) return;
+                    
+                    e.preventDefault();
+                    topDropZone.style.background = '';
+                    topDropZone.style.height = '8px';
+                    
+                    // Get main folders
+                    const mainFolders = this.data.folders.filter(f => f.parentId === null && f.id !== 'root');
+                    if (mainFolders.length < 2) return;
+                    
+                    // Move dragged to first position
+                    const draggedIndex = this.data.folders.findIndex(f => f.id === this.draggedFolder);
+                    const [movedFolder] = this.data.folders.splice(draggedIndex, 1);
+                    
+                    // Find insert position (after root, before first non-root main folder)
+                    const rootIndex = this.data.folders.findIndex(f => f.id === 'root');
+                    let insertIndex = rootIndex + 1;
+                    this.data.folders.splice(insertIndex, 0, movedFolder);
+                    
+                    this.saveData();
+                    this.render();
+                    this.showToast('Folder moved to top', 'success');
+                    this.draggedFolder = null;
+                });
+                
+                tree.appendChild(topDropZone);
+                
+                if (rootUl) {
+                    tree.appendChild(rootUl);
+                    console.log('Folder tree rendered successfully');
+                } else {
+                    console.log('No root folders found');
+                    tree.innerHTML = '<div style="padding: 20px; color: var(--text-tertiary); text-align: center;">No folders found</div>';
+                }
+                
+                // ROOT DROP ZONE: Move folders to become main folders (parentId: null)
+                const rootDropZone = document.createElement('div');
+                rootDropZone.className = 'root-drop-zone';
+                rootDropZone.style.cssText = 'height: 20px; margin-top: 10px; border-radius: 4px; transition: all 0.2s;';
+                rootDropZone.title = 'Drop folder here to make it a main folder';
+                
+                rootDropZone.addEventListener('dragover', (e) => {
+                    if (!this.draggedFolder) return;
+                    const dragged = this.data.folders.find(f => f.id === this.draggedFolder);
+                    if (!dragged || dragged.parentId === null) return; // Already a main folder
+                    
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    rootDropZone.style.background = 'var(--accent)';
+                    rootDropZone.style.height = '40px';
+                });
+                
+                rootDropZone.addEventListener('dragleave', () => {
+                    rootDropZone.style.background = '';
+                    rootDropZone.style.height = '20px';
+                });
+                
+                rootDropZone.addEventListener('drop', (e) => {
+                    if (!this.draggedFolder) return;
+                    const dragged = this.data.folders.find(f => f.id === this.draggedFolder);
+                    if (!dragged || dragged.parentId === null) return;
+                    
+                    e.preventDefault();
+                    rootDropZone.style.background = '';
+                    rootDropZone.style.height = '20px';
+                    
+                    // Move to root level
+                    dragged.parentId = null;
+                    this.saveData();
+                    this.render();
+                    this.showToast('Moved to main folders', 'success');
+                    this.draggedFolder = null;
+                });
+                
+                tree.appendChild(rootDropZone);
+            }
+            
+            getChildFolderIds(parentId) {
+                const ids = [];
+                const children = this.data.folders.filter(f => f.parentId === parentId);
+                children.forEach(child => {
+                    ids.push(child.id);
+                    ids.push(...this.getChildFolderIds(child.id));
+                });
+                return ids;
+            }
+            
+            renderTagsCloud() {
+                const cloud = document.getElementById('tagsCloud');
+                const tags = this.getAllTags();
+                
+                cloud.innerHTML = tags.map(tag => {
+                    const count = this.data.notes.filter(n => n.tags.includes(tag)).length;
+                    return `<span class="tag-item" data-tag="${this.escapeHtml(tag)}">${this.escapeHtml(tag)} <span class="tag-count">${count}</span></span>`;
+                }).join('');
+                
+                cloud.querySelectorAll('.tag-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const tag = el.dataset.tag;
+                        this.filterByTag(tag);
+                    });
+                });
+            }
+            
+            renderNoteTags() {
+                const container = document.getElementById('noteTagsInput');
+                const input = document.getElementById('tagInput');
+                
+                // Clear existing tags (keep input)
+                Array.from(container.children).forEach(child => {
+                    if (!child.classList.contains('tag-input')) {
+                        child.remove();
+                    }
+                });
+                
+                // Add tags before input
+                if (this.currentNote) {
+                    this.currentNote.tags.forEach(tag => {
+                        const tagEl = document.createElement('span');
+                        tagEl.className = 'note-tag';
+                        tagEl.innerHTML = `
+                            ${this.escapeHtml(tag)}
+                            <span class="note-tag-remove" data-tag="${this.escapeHtml(tag)}">×</span>
+                        `;
+                        container.insertBefore(tagEl, input);
+                        
+                        tagEl.querySelector('.note-tag-remove').addEventListener('click', () => {
+                            this.removeTagFromNote(this.currentNote.id, tag);
+                        });
+                    });
+                }
+            }
+            
+            renderBreadcrumb() {
+                const breadcrumb = document.getElementById('breadcrumb');
+                if (!this.currentNote) {
+                    breadcrumb.innerHTML = '<span class="breadcrumb-item" data-folder="root">All Notes</span>';
+                    return;
+                }
+                
+                const path = this.getFolderPath(this.currentNote.folderId);
+                breadcrumb.innerHTML = path.map((folder, i) => `
+                    <span class="breadcrumb-item" data-folder="${folder.id}">${this.escapeHtml(folder.name)}</span>
+                    ${i < path.length - 1 ? '<span class="breadcrumb-separator">/</span>' : ''}
+                `).join('');
+                
+                breadcrumb.querySelectorAll('.breadcrumb-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                        this.selectFolder(el.dataset.folder);
+                    });
+                });
+            }
+            
+            renderBacklinks() {
+                const panel = document.getElementById('backlinksPanel');
+                const list = document.getElementById('backlinksList');
+                
+                if (!this.currentNote) {
+                    panel.classList.add('hidden');
+                    return;
+                }
+                
+                // Find notes that link to this note
+                const noteTitle = this.currentNote.title;
+                const backlinks = this.data.notes.filter(n => {
+                    if (n.id === this.currentNote.id) return false;
+                    const linkPattern = new RegExp(`\\[\\[${this.escapeRegex(noteTitle)}\\]\\]|href=["']note:${this.escapeRegex(this.currentNote.id)}["']`, 'i');
+                    return linkPattern.test(n.content);
+                });
+                
+                if (backlinks.length === 0) {
+                    panel.classList.add('hidden');
+                    return;
+                }
+                
+                panel.classList.remove('hidden');
+                list.innerHTML = backlinks.map(note => `
+                    <div class="backlink-item" data-note="${note.id}">
+                        <span class="backlink-icon">📝</span>
+                        <span>${this.escapeHtml(note.title)}</span>
+                    </div>
+                `).join('');
+                
+                list.querySelectorAll('.backlink-item').forEach(el => {
+                    el.addEventListener('click', () => this.selectNote(el.dataset.note));
+                });
+            }
+            
+            updateActiveStates() {
+                // Update folder active states
+                document.querySelectorAll('.folder-header').forEach(el => {
+                    el.classList.toggle('active', el.dataset.folder === this.currentFolder);
+                });
+                
+                // Update note active states
+                document.querySelectorAll('.note-item').forEach(el => {
+                    el.classList.toggle('active', el.dataset.noteId === this.currentNote?.id);
+                });
+            }
+            
+            // ==================== SELECTION & FILTERING ====================
+            
+            selectFolder(folderId) {
+                this.currentFolder = folderId;
+                this.currentNote = null;
+                this.showEmptyState();
+                this.renderFolderTree();
+                this.updateActiveStates();
+                
+                // Update header title
+                const folder = this.data.folders.find(f => f.id === folderId);
+                document.getElementById('headerTitle').textContent = folder?.name || 'Select a note';
+            }
+            
+            filterByTag(tag) {
+                // Show notes with this tag
+                this.currentFolder = 'tag:' + tag;
+                this.currentNote = null;
+                this.showEmptyState();
+                
+                // Update UI
+                document.querySelectorAll('.tag-item').forEach(el => {
+                    el.classList.toggle('active', el.dataset.tag === tag);
+                });
+                
+                document.getElementById('headerTitle').textContent = `Tag: ${tag}`;
+                
+                // Re-render folder tree to show filtered notes
+                this.renderFolderTreeForTag(tag);
+            }
+            
+            renderFolderTreeForTag(tag) {
+                const tree = document.getElementById('folderTree');
+                tree.innerHTML = '';
+                
+                const notes = this.data.notes.filter(n => n.tags.includes(tag));
+                
+                const ul = document.createElement('ul');
+                ul.className = 'folder-tree';
+                
+                notes.forEach(note => {
+                    const li = document.createElement('li');
+                    li.className = 'folder-item';
+                    li.innerHTML = `
+                        <div class="note-item" data-note-id="${note.id}" style="padding-left: 8px;">
+                            <span class="note-icon">📝</span>
+                            <span class="note-title">${this.escapeHtml(note.title)}</span>
+                        </div>
+                    `;
+                    
+                    li.querySelector('.note-item').addEventListener('click', () => this.selectNote(note.id));
+                    ul.appendChild(li);
+                });
+                
+                tree.appendChild(ul);
+            }
+            
+            // ==================== SEARCH ====================
+            
+            search(query) {
+                if (!query.trim()) {
+                    document.getElementById('searchResults').classList.remove('active');
+                    return;
+                }
+                
+                const q = query.toLowerCase();
+                const results = this.data.notes.filter(note => {
+                    return note.title.toLowerCase().includes(q) || 
+                           note.content.toLowerCase().includes(q) ||
+                           note.tags.some(t => t.toLowerCase().includes(q));
+                }).slice(0, 10);
+                
+                const resultsEl = document.getElementById('searchResults');
+                
+                if (results.length === 0) {
+                    resultsEl.innerHTML = '<div class="search-result-item"><div class="search-result-preview">No results found</div></div>';
+                } else {
+                    resultsEl.innerHTML = results.map(note => {
+                        const preview = this.stripHtml(note.content).substring(0, 100);
+                        return `
+                            <div class="search-result-item" data-note="${note.id}">
+                                <div class="search-result-title">${this.escapeHtml(note.title)}</div>
+                                <div class="search-result-preview">${this.escapeHtml(preview)}${preview.length >= 100 ? '...' : ''}</div>
+                                <div class="search-result-meta">${note.tags.map(t => '#' + t).join(' ')}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+                
+                resultsEl.classList.add('active');
+                
+                resultsEl.querySelectorAll('.search-result-item[data-note]').forEach(el => {
+                    el.addEventListener('click', () => {
+                        this.selectNote(el.dataset.note);
+                        resultsEl.classList.remove('active');
+                        document.getElementById('searchInput').value = '';
+                    });
+                });
+            }
+            
+            // ==================== EDITOR OPERATIONS ====================
+            
+            execCommand(command, value = null) {
+                document.execCommand(command, false, value);
+                document.getElementById('wysiwygEditor').focus();
+                this.updateToolbarState();
+            }
+            
+            updateToolbarState() {
+                const commands = ['bold', 'italic', 'underline', 'strikeThrough'];
+                commands.forEach(cmd => {
+                    const btn = document.querySelector(`[data-command="${cmd}"]`);
+                    if (btn) {
+                        btn.classList.toggle('active', document.queryCommandState(cmd));
+                    }
+                });
+            }
+            
+            insertLink() {
+                const selection = window.getSelection().toString();
+                document.getElementById('linkText').value = selection;
+                document.getElementById('linkUrl').value = '';
+                document.getElementById('linkModal').classList.add('active');
+            }
+            
+            confirmLink() {
+                const text = document.getElementById('linkText').value;
+                const url = document.getElementById('linkUrl').value;
+                
+                if (!url) return;
+                
+                // Check if it's an internal link (note title)
+                const linkedNote = this.data.notes.find(n => 
+                    n.title.toLowerCase() === url.toLowerCase()
+                );
+                
+                if (linkedNote) {
+                    // Internal link
+                    const html = `<a href="note:${linkedNote.id}" class="internal-link">${text || linkedNote.title}</a>`;
+                    this.execCommand('insertHTML', html);
+                } else {
+                    // External link
+                    this.execCommand('createLink', url);
+                }
+                
+                document.getElementById('linkModal').classList.remove('active');
+            }
+            
+            async insertImage() {
+                const input = document.getElementById('fileInput');
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = async (event) => {
+                        const base64 = event.target.result;
+                        const id = 'img_' + Date.now();
+                        
+                        // Save to IndexedDB if large
+                        if (base64.length > 50000) {
+                            await this.saveAttachment(id, base64);
+                            this.execCommand('insertImage', base64);
+                        } else {
+                            this.execCommand('insertImage', base64);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                };
+                input.click();
+            }
+            
+            setupAutoSave() {
+                const editor = document.getElementById('wysiwygEditor');
+                const titleInput = document.getElementById('noteTitle');
+                
+                let timeout;
+                const save = () => {
+                    if (this.currentNote) {
+                        this.updateNote(this.currentNote.id, {
+                            title: titleInput.value || 'Untitled Note',
+                            content: editor.innerHTML
+                        });
+                    }
+                };
+                
+                editor.oninput = () => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(save, 1000);
+                };
+                
+                titleInput.oninput = () => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(save, 500);
+                };
+            }
+            
+            // ==================== EXPORT/IMPORT ====================
+            
+            exportJSON() {
+                const data = JSON.stringify(this.data, null, 2);
+                this.downloadFile(data, 'knowledge-base-backup.json', 'application/json');
+                this.showToast('Exported as JSON', 'success');
+            }
+            
+            exportMarkdown() {
+                let md = '# Knowledge Base Export\n\n';
+                
+                this.data.notes.forEach(note => {
+                    md += `## ${note.title}\n\n`;
+                    md += `*Folder: ${this.getFolderPath(note.folderId).map(f => f.name).join(' / ')}*\n\n`;
+                    if (note.tags.length) {
+                        md += `Tags: ${note.tags.join(', ')}\n\n`;
+                    }
+                    md += this.htmlToMarkdown(note.content);
+                    md += '\n\n---\n\n';
+                });
+                
+                this.downloadFile(md, 'knowledge-base-export.md', 'text/markdown');
+                this.showToast('Exported as Markdown', 'success');
+            }
+            
+            importData() {
+                const input = document.getElementById('importInput');
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            if (file.name.endsWith('.json')) {
+                                const data = JSON.parse(event.target.result);
+                                if (data.notes && data.folders) {
+                                    this.data = { ...this.data, ...data };
+                                    this.saveData();
+                                    this.render();
+                                    this.showToast('Data imported successfully', 'success');
+                                }
+                            } else if (file.name.endsWith('.md') || file.name.endsWith('.markdown')) {
+                                this.importMarkdown(event.target.result);
+                            }
+                        } catch (err) {
+                            this.showToast('Import failed: ' + err.message, 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                input.click();
+            }
+            
+            checkForBackups() {
+                const statusEl = document.getElementById('backupStatus');
+                const saved = localStorage.getItem('kb_data');
+                const backup = localStorage.getItem('kb_data_backup');
+                
+                let message = '';
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        const folderCount = data.folders ? data.folders.length : 0;
+                        const noteCount = data.notes ? data.notes.length : 0;
+                        message += `Current data: ${folderCount} folders, ${noteCount} notes. `;
+                    } catch (e) {
+                        message += 'Current data: corrupted. ';
+                    }
+                } else {
+                    message += 'No current data found. ';
+                }
+                
+                if (backup) {
+                    try {
+                        const data = JSON.parse(backup);
+                        const folderCount = data.folders ? data.folders.length : 0;
+                        const noteCount = data.notes ? data.notes.length : 0;
+                        message += `Backup found: ${folderCount} folders, ${noteCount} notes.`;
+                        
+                        if (confirm('Backup found! Would you like to restore it?')) {
+                            localStorage.setItem('kb_data', backup);
+                            this.loadData();
+                            this.render();
+                            this.showToast('Backup restored!', 'success');
+                        }
+                    } catch (e) {
+                        message += 'Backup: corrupted.';
+                    }
+                } else {
+                    message += 'No backup found.';
+                }
+                
+                statusEl.textContent = message;
+            }
+            
+            createBackup() {
+                const data = localStorage.getItem('kb_data');
+                if (data) {
+                    localStorage.setItem('kb_data_backup', data);
+                    localStorage.setItem('kb_backup_date', new Date().toISOString());
+                    document.getElementById('backupStatus').textContent = 'Backup created at ' + new Date().toLocaleString();
+                    this.showToast('Backup created successfully', 'success');
+                } else {
+                    document.getElementById('backupStatus').textContent = 'No data to backup';
+                }
+            }
+            
+            importMarkdown(content) {
+                // Simple markdown import - create one note per file
+                const title = content.match(/^#\s+(.+)$/m)?.[1] || 'Imported Note';
+                const note = this.createNote(title, 'inbox');
+                note.content = this.markdownToHtml(content);
+                this.saveData();
+                this.selectNote(note.id);
+                this.showToast('Markdown imported', 'success');
+            }
+            
+            downloadFile(content, filename, type) {
+                const blob = new Blob([content], { type });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+            
+            clearAllData() {
+                if (confirm('Are you sure you want to delete ALL data? This cannot be undone.')) {
+                    localStorage.removeItem('kb_data');
+                    this.data = {
+                        folders: [
+                            { id: 'root', name: 'All Notes', parentId: null },
+                            { id: 'inbox', name: 'Inbox', parentId: null },
+                            { id: 'archive', name: 'Archive', parentId: null }
+                        ],
+                        notes: [],
+                        tags: [],
+                        settings: { theme: 'auto', sidebarCollapsed: {} }
+                    };
+                    this.currentNote = null;
+                    this.currentFolder = 'root';
+                    this.showEmptyState();
+                    this.render();
+                    this.showToast('All data cleared', 'success');
+                }
+            }
+            
+            // ==================== UI HELPERS ====================
+            
+            showContextMenu(e, type, id) {
+                this.contextMenuTarget = { type, id };
+                const menu = document.getElementById('contextMenu');
+                
+                // Position menu
+                const x = Math.min(e.clientX, window.innerWidth - 180);
+                const y = Math.min(e.clientY, window.innerHeight - 150);
+                menu.style.left = x + 'px';
+                menu.style.top = y + 'px';
+                menu.classList.add('active');
+            }
+            
+            hideContextMenu() {
+                document.getElementById('contextMenu').classList.remove('active');
+                this.contextMenuTarget = null;
+            }
+            
+            showToast(message, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <span class="toast-icon">${type === 'success' ? '✓' : '✕'}</span>
+                    <span class="toast-message">${this.escapeHtml(message)}</span>
+                    <button class="toast-close">×</button>
+                `;
+                
+                container.appendChild(toast);
+                
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    toast.remove();
+                });
+                
+                setTimeout(() => toast.remove(), 4000);
+            }
+            
+            toggleFocusMode() {
+                document.body.classList.toggle('distraction-free');
+            }
+            
+            toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('open');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+            }
+            
+            // ==================== EVENT LISTENERS ====================
+            
+            setupEventListeners() {
+                console.log('Setting up event listeners...');
+                
+                // Settings - set up first for debugging
+                const settingsBtn = document.getElementById('settingsBtn');
+                const settingsModal = document.getElementById('settingsModal');
+                if (settingsBtn && settingsModal) {
+                    settingsBtn.addEventListener('click', () => {
+                        console.log('Settings button clicked');
+                        settingsModal.classList.add('active');
+                    });
+                } else {
+                    console.error('Settings elements not found:', {settingsBtn, settingsModal});
+                }
+                
+                const closeSettings = document.getElementById('closeSettings');
+                if (closeSettings && settingsModal) {
+                    closeSettings.addEventListener('click', () => {
+                        settingsModal.classList.remove('active');
+                    });
+                }
+                
+                // New note
+                document.getElementById('newNoteBtn').addEventListener('click', () => {
+                    this.populateFolderSelect();
+                    document.getElementById('newNoteModal').classList.add('active');
+                    document.getElementById('newNoteTitle').focus();
+                });
+                
+                // Add new folder
+                document.getElementById('addFolderBtn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const name = prompt('Enter folder name:');
+                    if (name && name.trim()) {
+                        this.createFolder(name.trim(), null);
+                    }
+                });
+                
+                document.getElementById('emptyNewNoteBtn').addEventListener('click', () => {
+                    this.populateFolderSelect();
+                    document.getElementById('newNoteModal').classList.add('active');
+                    document.getElementById('newNoteTitle').focus();
+                });
+                
+                document.getElementById('confirmNewNote').addEventListener('click', () => {
+                    const title = document.getElementById('newNoteTitle').value;
+                    const folderId = document.getElementById('newNoteFolder').value;
+                    if (title.trim()) {
+                        this.createNote(title, folderId);
+                        document.getElementById('newNoteModal').classList.remove('active');
+                        document.getElementById('newNoteTitle').value = '';
+                    }
+                });
+                
+                document.getElementById('cancelNewNote').addEventListener('click', () => {
+                    document.getElementById('newNoteModal').classList.remove('active');
+                });
+                
+                // Theme select
+                document.getElementById('themeSelect').addEventListener('change', (e) => {
+                    this.setTheme(e.target.value);
+                });
+                
+                document.getElementById('themeBtn').addEventListener('click', () => this.toggleTheme());
+                
+                // Export/Import
+                document.getElementById('exportJsonBtn').addEventListener('click', () => this.exportJSON());
+                document.getElementById('exportMarkdownBtn').addEventListener('click', () => this.exportMarkdown());
+                document.getElementById('importBtn').addEventListener('click', () => this.importData());
+                document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllData());
+                
+                // Debug button
+                const debugBtn = document.getElementById('debugBtn');
+                if (debugBtn) {
+                    debugBtn.addEventListener('click', () => {
+                        const folderInfo = this.data.folders.map(f => `  - ${f.name} (id: ${f.id}, parent: ${f.parentId})`).join('\n');
+                        const noteInfo = this.data.notes.map(n => `  - ${n.title} (folder: ${n.folderId})`).join('\n');
+                        const debugOutput = `FOLDERS (${this.data.folders.length}):\n${folderInfo}\n\nNOTES (${this.data.notes.length}):\n${noteInfo || '  (none)'}`;
+                        console.log('=== DEBUG INFO ===');
+                        console.log(debugOutput);
+                        console.log('==================');
+                        // Also copy to clipboard
+                        navigator.clipboard.writeText(debugOutput).then(() => {
+                            this.showToast('Debug info copied to clipboard!', 'success');
+                        }).catch(() => {
+                            this.showToast('Debug info logged to console (F12)', 'success');
+                        });
+                    });
+                }
+                
+                // Backup buttons
+                document.getElementById('checkBackupBtn').addEventListener('click', () => this.checkForBackups());
+                document.getElementById('createBackupBtn').addEventListener('click', () => this.createBackup());
+                
+                // Focus mode
+                document.getElementById('focusBtn').addEventListener('click', () => this.toggleFocusMode());
+                document.getElementById('exitFocusBtn').addEventListener('click', () => this.toggleFocusMode());
+                
+                // Mobile menu
+                document.getElementById('menuBtn').addEventListener('click', () => this.toggleSidebar());
+                document.getElementById('sidebarOverlay').addEventListener('click', () => this.toggleSidebar());
+                
+                // Toolbar
+                document.querySelectorAll('.toolbar-btn[data-command]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const command = btn.dataset.command;
+                        const value = btn.dataset.value || null;
+                        this.execCommand(command, value);
+                    });
+                });
+                
+                document.getElementById('linkBtn').addEventListener('click', () => this.insertLink());
+                document.getElementById('imageBtn').addEventListener('click', () => this.insertImage());
+                document.getElementById('confirmLink').addEventListener('click', () => this.confirmLink());
+                document.getElementById('cancelLink').addEventListener('click', () => {
+                    document.getElementById('linkModal').classList.remove('active');
+                });
+                
+                // Search
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.search(e.target.value);
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.sidebar-search')) {
+                        document.getElementById('searchResults').classList.remove('active');
+                    }
+                });
+                
+                // Tags input
+                document.getElementById('tagInput').addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ',') {
+                        e.preventDefault();
+                        const tag = e.target.value.trim();
+                        if (tag && this.currentNote) {
+                            this.addTagToNote(this.currentNote.id, tag);
+                            e.target.value = '';
+                        }
+                    }
+                });
+                
+                // Context menu
+                document.getElementById('ctxRename').addEventListener('click', () => {
+                    if (this.contextMenuTarget?.type === 'folder') {
+                        const folder = this.data.folders.find(f => f.id === this.contextMenuTarget.id);
+                        const newName = prompt('Rename folder:', folder?.name);
+                        if (newName) this.renameFolder(this.contextMenuTarget.id, newName);
+                    }
+                    this.hideContextMenu();
+                });
+                
+                document.getElementById('ctxDuplicate').addEventListener('click', () => {
+                    if (this.contextMenuTarget?.type === 'note') {
+                        this.duplicateNote(this.contextMenuTarget.id);
+                    }
+                    this.hideContextMenu();
+                });
+                
+                document.getElementById('ctxMove').addEventListener('click', () => {
+                    if (this.contextMenuTarget?.type === 'note') {
+                        const folderId = prompt('Enter folder ID (root, inbox, archive, or custom):', 'root');
+                        if (folderId) this.moveNote(this.contextMenuTarget.id, folderId);
+                    }
+                    this.hideContextMenu();
+                });
+                
+                document.getElementById('ctxDelete').addEventListener('click', () => {
+                    if (this.contextMenuTarget?.type === 'note') {
+                        this.deleteNote(this.contextMenuTarget.id);
+                    } else if (this.contextMenuTarget?.type === 'folder') {
+                        this.deleteFolder(this.contextMenuTarget.id);
+                    }
+                    this.hideContextMenu();
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.context-menu')) {
+                        this.hideContextMenu();
+                    }
+                });
+                
+                // Collapsible sections
+                document.querySelectorAll('.section-header').forEach(header => {
+                    header.addEventListener('click', () => {
+                        const section = header.dataset.section;
+                        const content = document.getElementById(section + 'Section');
+                        const toggle = header.querySelector('.section-toggle');
+                        content.classList.toggle('collapsed');
+                        toggle.classList.toggle('collapsed');
+                    });
+                });
+                
+                // Section toggles
+                document.querySelectorAll('.section-toggle').forEach(toggle => {
+                    toggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const section = toggle.closest('.section-header').dataset.section;
+                        const content = document.getElementById(section + 'Section');
+                        content.classList.toggle('collapsed');
+                        toggle.classList.toggle('collapsed');
+                    });
+                });
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    // Cmd/Ctrl + K for search
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                        e.preventDefault();
+                        document.getElementById('searchInput').focus();
+                    }
+                    
+                    // Cmd/Ctrl + N for new note
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+                        e.preventDefault();
+                        document.getElementById('newNoteBtn').click();
+                    }
+                    
+                    // Escape to close modals
+                    if (e.key === 'Escape') {
+                        document.querySelectorAll('.modal-overlay.active').forEach(m => {
+                            m.classList.remove('active');
+                        });
+                    }
+                });
+                
+                // More button (placeholder for additional actions)
+                document.getElementById('moreBtn').addEventListener('click', () => {
+                    // Could show a dropdown with additional options
+                    this.showToast('More options coming soon!', 'success');
+                });
+                
+                // Handle internal link clicks
+                document.getElementById('wysiwygEditor').addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A' && e.target.classList.contains('internal-link')) {
+                        e.preventDefault();
+                        const noteId = e.target.getAttribute('href').replace('note:', '');
+                        const note = this.data.notes.find(n => n.id === noteId);
+                        if (note) {
+                            this.selectNote(note.id);
+                        }
+                    }
+                });
+                
+                // Auto-create internal links on [[text]]
+                document.getElementById('wysiwygEditor').addEventListener('input', (e) => {
+                    const editor = e.target;
+                    const text = editor.innerText;
+                    
+                    // Check for [[text]] pattern
+                    const match = text.match(/\[\[([^\]]+)\]\](?![^(]*\))/);
+                    if (match && !e.isComposing) {
+                        const linkText = match[1];
+                        const linkedNote = this.data.notes.find(n => 
+                            n.title.toLowerCase() === linkText.toLowerCase()
+                        );
+                        
+                        if (linkedNote) {
+                            // Replace the pattern with a link
+                            const html = editor.innerHTML;
+                            const newHtml = html.replace(
+                                new RegExp(`\\[\\[${this.escapeRegex(linkText)}\\]\\]`),
+                                `<a href="note:${linkedNote.id}" class="internal-link">${linkedNote.title}</a>`
+                            );
+                            editor.innerHTML = newHtml;
+                            
+                            // Move cursor to end
+                            const range = document.createRange();
+                            range.selectNodeContents(editor);
+                            range.collapse(false);
+                            const sel = window.getSelection();
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                        }
+                    }
+                });
+            }
+            
+            setupMobileGestures() {
+                let touchStartX = 0;
+                let touchEndX = 0;
+                
+                document.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+                
+                document.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    this.handleSwipe(touchStartX, touchEndX);
+                }, { passive: true });
+            }
+            
+            handleSwipe(startX, endX) {
+                const threshold = 100;
+                const diff = endX - startX;
+                
+                // Swipe right to open sidebar
+                if (diff > threshold && startX < 50) {
+                    document.getElementById('sidebar').classList.add('open');
+                    document.getElementById('sidebarOverlay').classList.add('active');
+                }
+                
+                // Swipe left to close sidebar
+                if (diff < -threshold) {
+                    document.getElementById('sidebar').classList.remove('open');
+                    document.getElementById('sidebarOverlay').classList.remove('active');
+                }
+            }
+            
+            populateFolderSelect() {
+                const select = document.getElementById('newNoteFolder');
+                select.innerHTML = this.data.folders.map(f => 
+                    `<option value="${f.id}">${this.escapeHtml(f.name)}</option>`
+                ).join('');
+                select.value = this.currentFolder;
+            }
+            
+            // ==================== UTILITY FUNCTIONS ====================
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            escapeRegex(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+            
+            stripHtml(html) {
+                const tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                return tmp.textContent || tmp.innerText || '';
+            }
+            
+            htmlToMarkdown(html) {
+                let md = html
+                    .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n\n')
+                    .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n\n')
+                    .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n\n')
+                    .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
+                    .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+                    .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+                    .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+                    .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+                    .replace(/<code[^>]*>(.*?)<\/code>/gi, '`$1`')
+                    .replace(/<pre[^>]*>(.*?)<\/pre>/gis, '```\n$1\n```\n\n')
+                    .replace(/<a[^>]*href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, '[$2]($1)')
+                    .replace(/<img[^>]*src=["']([^"']*)["'][^>]*>/gi, '![]($1)')
+                    .replace(/<br\s*\/?>/gi, '\n')
+                    .replace(/<[^>]+>/g, '');
+                return md;
+            }
+            
+            markdownToHtml(md) {
+                let html = md
+                    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                    .replace(/`(.+?)`/g, '<code>$1</code>')
+                    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+                    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br>');
+                return '<p>' + html + '</p>';
+            }
+        }
+        
+        // ==================== INITIALIZE ====================
+        
+        const app = new KnowledgeBase();
+    </script>
+</body>
+</html>

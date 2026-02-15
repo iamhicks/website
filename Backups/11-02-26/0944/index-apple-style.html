@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i_am_Hicks — Define yourself</title>
+    <meta name="description" content="Beautiful, offline-first productivity tools. MIND for notes and knowledge. FLOW for tasks and focus. Buy once, own forever. No subscriptions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #fafafa;
+            --bg-secondary: #f5f5f7;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent-blue: #0071e3;
+            --accent-blue-hover: #0077ed;
+            --accent-green: #34c759;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-weight: 400;
+            letter-spacing: -0.015em;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            z-index: 9999;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .nav-content {
+            max-width: 1024px;
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            font-weight: 300;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .nav-cta {
+            background: var(--accent-blue);
+            color: #fff !important;
+            padding: 6px 14px;
+            border-radius: 980px;
+            font-weight: 500;
+        }
+
+        .nav-cta:hover {
+            background: var(--accent-blue-hover);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 140px 40px 80px;
+            position: relative;
+            background: linear-gradient(180deg, var(--bg-primary) 0%, #fff 50%, var(--bg-secondary) 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 113, 227, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(52, 199, 89, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 113, 227, 0.08);
+            color: var(--accent-blue);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 32px;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero h1 {
+            font-size: clamp(56px, 10vw, 112px);
+            font-weight: 800;
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #1d1d1f 0%, #434344 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero h1 span {
+            font-weight: 300;
+        }
+
+        .hero-tagline {
+            font-size: clamp(18px, 2.5vw, 24px);
+            font-weight: 300;
+            color: var(--text-secondary);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .hero-subhead {
+            font-size: clamp(18px, 2.5vw, 22px);
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 980px;
+            font-size: 17px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(0, 113, 227, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 113, 227, 0.4);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-demo {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-demo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+        }
+
+        .hero-apps {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-app-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #fff;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .hero-app-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-blue);
+        }
+
+        .hero-app-link .icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .hero-app-link.mind .icon {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+        }
+
+        .hero-app-link.flow .icon {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+            color: white;
+        }
+
+        /* Products Section */
+        .products {
+            padding: 120px 40px;
+            background: #fff;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 80px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            font-size: 19px;
+            color: var(--text-secondary);
+        }
+
+        .products-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 32px;
+        }
+
+        .product-card {
+            background: var(--bg-secondary);
+            border-radius: 28px;
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .product-card.mind::before {
+            background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+        }
+
+        .product-card.flow::before {
+            background: linear-gradient(90deg, #f97316 0%, #fb923c 100%);
+        }
+
+        .product-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 24px;
+        }
+
+        .product-card.mind .product-icon {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        }
+
+        .product-card.flow .product-icon {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+            box-shadow: 0 8px 24px rgba(249, 115, 22, 0.3);
+        }
+
+        .product-card h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .product-card .tagline {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .product-features li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .product-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .price-note {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .product-actions .btn {
+            padding: 12px 24px;
+            font-size: 15px;
+        }
+
+        /* Bundle Section */
+        .bundle {
+            padding: 100px 40px;
+            background: linear-gradient(135deg, #1d1d1f 0%, #2d2d2f 100%);
+            color: #fff;
+            text-align: center;
+        }
+
+        .bundle-content {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .bundle-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .bundle h2 {
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .bundle p {
+            font-size: 19px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 32px;
+        }
+
+        .bundle-price {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .bundle-price .current {
+            font-size: 56px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .bundle-price .original {
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: line-through;
+        }
+
+        .bundle-price .save {
+            background: var(--accent-green);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .bundle .btn-primary {
+            background: #fff;
+            color: #1d1d1f;
+            font-size: 18px;
+            padding: 18px 40px;
+        }
+
+        .bundle .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Built Different Section */
+        .built-different {
+            padding: 120px 40px;
+            background: #fff;
+        }
+
+        .built-different .section-header {
+            margin-bottom: 64px;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 32px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+            background: #fff;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Stats */
+        .stats {
+            padding: 80px 40px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .stats-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1d1d1f 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 120px 40px;
+            background: #fff;
+        }
+
+        .faq-grid {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border-light);
+            padding: 24px 0;
+        }
+
+        .faq-item h4 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .faq-item p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 40px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-logo {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-logo span {
+            font-weight: 300;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .footer-copy {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 120px 24px 60px;
+            }
+
+            .hero-apps {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-card {
+                padding: 32px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .bundle-price {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <a href="/" class="nav-logo"><span>i_am_</span>Hicks</a>
+            <div class="nav-links">
+                <a href="#products">Products</a>
+                <a href="#faq">FAQ</a>
+                <a href="/about/">About</a>
+                <a href="https://gumroad.com" class="nav-cta">Buy Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                Now Available
+            </div>
+            <h1><span>i_am_</span>Hicks</h1>
+            <p class="hero-tagline">Define yourself</p>
+            <p class="hero-subhead">Beautiful, offline-first productivity tools you actually own. No subscriptions. No surveillance. Just focus.</p>
+            
+            <div class="hero-cta-group">
+                <a href="https://gumroad.com" class="btn btn-primary">Buy Now — $49 Bundle</a>
+                <a href="#products" class="btn btn-secondary">Explore Products</a>
+            </div>
+
+            <div class="hero-apps">
+                <a href="/mind-demo/" class="hero-app-link mind">
+                    <span class="icon">🧠</span>
+                    <span>Try MIND Demo</span>
+                </a>
+                <a href="/flow-demo/" class="hero-app-link flow">
+                    <span class="icon">⚡</span>
+                    <span>Try FLOW Demo</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="section-header">
+            <h2>Two apps. Infinite focus.</h2>
+            <p>Everything you need to think clearly and execute relentlessly.</p>
+        </div>
+
+        <div class="products-grid">
+            <!-- MIND -->
+            <div class="product-card mind">
+                <div class="product-icon">🧠</div>
+                <h3>MIND</h3>
+                <p class="tagline">i am Clear</p>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">Your second brain, actually private. Notes, bookmarks, and knowledge — organized and searchable.</p>
+                
+                <ul class="product-features">
+                    <li>Rich text editor, no markdown to learn</li>
+                    <li>Save bookmarks with full-text search</li>
+                    <li>Nested folders & tag-based organization</li>
+                    <li>100% offline — data never leaves device</li>
+                    <li>Export to Markdown / JSON anytime</li>
+                </ul>
+
+                <div class="product-price">
+                    <span class="price">$29</span>
+                    <span class="price-note">One-time • Lifetime updates</span>
+                </div>
+
+                <div class="product-actions">
+                    <a href="https://gumroad.com" class="btn btn-primary">Buy MIND</a>
+                    <a href="/mind-demo/" class="btn btn-demo">Try Demo</a>
+                    <a href="/mind/" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+
+            <!-- FLOW -->
+            <div class="product-card flow">
+                <div class="product-icon">⚡</div>
+                <h3>FLOW</h3>
+                <p class="tagline">i am Focus</p>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">The Kanban board that actually ships. Manage projects, track tasks, plan your work.</p>
+                
+                <ul class="product-features">
+                    <li>Infinite Kanban boards with drag-and-drop</li>
+                    <li>Recurring tasks & calendar view</li>
+                    <li>Custom labels, priorities & checklists</li>
+                    <li>Works offline — no internet required</li>
+                    <li>Export/Import — own your data</li>
+                </ul>
+
+                <div class="product-price">
+                    <span class="price">$29</span>
+                    <span class="price-note">One-time • Lifetime updates</span>
+                </div>
+
+                <div class="product-actions">
+                    <a href="https://gumroad.com" class="btn btn-primary">Buy FLOW</a>
+                    <a href="/flow-demo/" class="btn btn-demo">Try Demo</a>
+                    <a href="/flow/" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bundle Section -->
+    <section class="bundle">
+        <div class="bundle-content">
+            <div class="bundle-badge">Best Value</div>
+            <h2>The Complete Package</h2>
+            <p>Get both MIND and FLOW. Everything you need to capture ideas and execute on them.</p>
+            
+            <div class="bundle-price">
+                <span class="current">$49</span>
+                <span class="original">$58</span>
+                <span class="save">Save $9</span>
+            </div>
+
+            <a href="https://gumroad.com" class="btn btn-primary">Buy the Bundle</a>
+        </div>
+    </section>
+
+    <!-- Built Different Section -->
+    <section class="built-different">
+        <div class="section-header">
+            <h2>Built Different</h2>
+            <p>Most software sells your data, locks you into subscriptions, or disappears when the startup folds. We don't play those games.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>i am Private</h3>
+                <p>Your data stays on your device. No cloud syncing. No data mining. No "analytics." Just pure, private productivity.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>i am Free</h3>
+                <p>One purchase. Lifetime access. All future updates included. No monthly fees. No surprise charges. Ever.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>i am Fast</h3>
+                <p>Single HTML files that load instantly. No bloated Electron apps. No waiting for servers. Just click and go.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>i am Portable</h3>
+                <p>Any device with a browser. Mac, PC, Linux, Chromebook. Your data exports with you. True portability.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>i am Focused</h3>
+                <p>Thoughtfully crafted interfaces that make you want to use them. Beautiful by default. No clutter. Just focus.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>i am Professional</h3>
+                <p>Built by a 20-year UI/UX veteran who actually uses these tools daily. Every feature solves a real problem.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Subscriptions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Powerful Apps</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Private</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Possibilities</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="section-header">
+            <h2>Questions? Answered.</h2>
+        </div>
+        
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>How do I install these apps?</h4>
+                <p>Simple. Download the HTML file, save it anywhere on your computer, and double-click to open in your browser. That's it. No installers, no admin rights, no fuss.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Where is my data stored?</h4>
+                <p>Right on your computer, in your browser's local storage. It never touches our servers — because we don't have any. Export anytime as JSON for backup or moving to another device.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I use these on multiple devices?</h4>
+                <p>Absolutely. Copy the HTML file to any device. Use the export/import feature to move your data. Your license covers all your personal devices.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Do you offer refunds?</h4>
+                <p>Yes. 30-day money-back guarantee, no questions asked. If these tools don't improve your workflow, you shouldn't pay for them.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Will there be updates?</h4>
+                <p>Yes. All updates are free for life. When you buy, you're added to our update list. Just re-download the file when we announce new versions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo"><span>i_am_</span>Hicks</div>
+            <div class="footer-links">
+                <a href="/mind/">MIND</a>
+                <a href="/flow/">FLOW</a>
+                <a href="/about/">About</a>
+                <a href="mailto:hello@iamhicks.com">Contact</a>
+            </div>
+            <div class="footer-copy">© 2026 i_am_Hicks. Define yourself.</div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Kai Mission Control</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #252525;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border: #3d3d3d;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .login-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .login-box h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .login-box p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .login-btn:hover {
+            background: #2563eb;
+        }
+        
+        .login-error {
+            color: var(--accent-red);
+            margin-top: 12px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        /* Main Dashboard (hidden until login) */
+        .dashboard {
+            display: none;
+        }
+        
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            align-items: center;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-dot.online { background: var(--accent-green); }
+        .status-dot.offline { background: var(--accent-red); }
+        
+        .logout-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .logout-btn:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .stat-title {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+        
+        .panel-content {
+            padding: 16px 20px;
+        }
+        
+        .list {
+            list-style: none;
+        }
+        
+        .list-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+        
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+        
+        .log-output {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            color: var(--text-secondary);
+        }
+        
+        .log-line {
+            margin-bottom: 4px;
+        }
+        
+        .log-time {
+            color: #6b7280;
+        }
+        
+        .refresh-btn {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .refresh-btn:hover {
+            background: var(--border);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h1>🔒 Mission Control</h1>
+            <p>Enter password to access dashboard</p>
+            <input type="password" class="login-input" id="passwordInput" placeholder="Password" onkeypress="if(event.key==='Enter')doLogin()">
+            <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
+            <div class="login-error" id="loginError">Incorrect password</div>
+        </div>
+    </div>
+    
+    <!-- Dashboard (hidden until login) -->
+    <div class="dashboard" id="dashboard">
+        <header class="header">
+            <div class="logo">
+                <span>🚀 Mission Control</span>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-dot online" id="gatewayStatus"></span>
+                    <span>System Online</span>
+                </div>
+                <button class="logout-btn" onclick="doLogout()">Logout</button>
+            </div>
+        </header>
+        
+        <main class="container">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Gateway Status</div>
+                    <div class="stat-value" style="color: var(--accent-green);" id="gatewayStat">Online</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Active Jobs</div>
+                    <div class="stat-value" id="activeJobs">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Uptime</div>
+                    <div class="stat-value" id="uptimeVal">--</div>
+                </div>
+            </div>
+            
+            <!-- Cron Jobs -->
+            <div class="panel">
+                <div class="panel-header">
+                    Scheduled Tasks
+                    <button class="refresh-btn" onclick="loadData()" style="float: right; margin-top: -4px;">Refresh</button>
+                </div>
+                <div class="panel-content">
+                    <ul class="list" id="cronList">
+                        <li class="empty-state">Loading...</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Activity Log -->
+            <div class="panel">
+                <div class="panel-header">Recent Activity</div>
+                <div class="panel-content">
+                    <div class="log-output" id="activityLog">
+                        <div class="log-line">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Simple password protection (not military grade but stops casual browsing)
+        // CHANGE THIS PASSWORD - default is insecure!
+        const ADMIN_PASSWORD = 'kai2024';
+        
+        function doLogin() {
+            const input = document.getElementById('passwordInput').value;
+            if (input === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                localStorage.setItem('missionControlAuth', 'true');
+                loadData();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+        
+        function doLogout() {
+            localStorage.removeItem('missionControlAuth');
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        }
+        
+        // Check if already logged in
+        if (localStorage.getItem('missionControlAuth') === 'true') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }
+        
+        // Load dashboard data
+        async function loadData() {
+            try {
+                const response = await fetch('data.json?t=' + Date.now());
+                if (!response.ok) throw new Error('Failed to load');
+                const data = await response.json();
+                
+                renderStats(data.system);
+                renderCronJobs(data.cronJobs);
+                renderActivityLog(data.recentLogs);
+            } catch (err) {
+                console.error('Error:', err);
+                document.getElementById('cronList').innerHTML = '<li class="empty-state">Error loading data. Run export-data.sh first.</li>';
+            }
+        }
+        
+        function renderStats(system) {
+            const isOnline = system.gatewayStatus === 'online';
+            document.getElementById('gatewayStatus').className = 'status-dot ' + (isOnline ? 'online' : 'offline');
+            document.getElementById('gatewayStat').textContent = isOnline ? 'Online' : 'Offline';
+            document.getElementById('gatewayStat').style.color = isOnline ? 'var(--accent-green)' : 'var(--accent-red)';
+            document.getElementById('uptimeVal').textContent = system.gatewayUptime || '--';
+        }
+        
+        function renderCronJobs(jobs) {
+            const activeCount = jobs.filter(j => j.enabled !== false).length;
+            document.getElementById('activeJobs').textContent = activeCount;
+            
+            const list = document.getElementById('cronList');
+            
+            if (!jobs || jobs.length === 0) {
+                list.innerHTML = '<li class="empty-state">No scheduled tasks</li>';
+                return;
+            }
+            
+            list.innerHTML = jobs.map(job => {
+                const status = job.enabled !== false ? 'active' : 'disabled';
+                const badgeClass = job.enabled !== false ? 'badge-success' : 'badge-warning';
+                const schedule = job.schedule ? job.schedule.expr : 'Unknown';
+                
+                return `
+                    <li class="list-item">
+                        <span>${job.name}</span>
+                        <span class="badge ${badgeClass}">${status}</span>
+                    </li>
+                `;
+            }).join('');
+        }
+        
+        function renderActivityLog(logs) {
+            const container = document.getElementById('activityLog');
+            
+            if (!logs || logs.length === 0) {
+                container.innerHTML = '<div class="log-line">No recent activity</div>';
+                return;
+            }
+            
+            // Show last 10 log entries
+            container.innerHTML = logs.slice(-10).map(line => {
+                const match = line.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})/);
+                const time = match ? match[1].replace('T', ' ') + ' GMT' : '';
+                const message = line.replace(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z\s+\[[^\]]+\]\s*/, '');
+                
+                return `<div class="log-line">
+                    <span class="log-time">[${time}]</span> ${escapeHtml(message.substring(0, 80))}${message.length > 80 ? '...' : ''}
+                </div>`;
+            }).join('');
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>

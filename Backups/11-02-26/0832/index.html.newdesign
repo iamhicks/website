@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I am Hicks — Tools for Traders &amp; Makers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --apple-bg: #f5f5f7;
+            --apple-dark: #1d1d1f;
+            --apple-gray: #86868b;
+            --apple-blue: #0071e3;
+            --apple-blue-hover: #0077ed;
+            --section-padding: 120px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fff;
+            color: var(--apple-dark);
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 52px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-content {
+            max-width: 1024px;
+            width: 100%;
+            padding: 0 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: -0.01em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 20px;
+            background: #000;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(0, 113, 227, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 980px;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.015em;
+            margin-bottom: 16px;
+            background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subhead {
+            font-size: clamp(21px, 3vw, 28px);
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 980px;
+            font-size: 17px;
+            font-weight: 400;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--apple-blue);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--apple-blue-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-demo {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            border: none;
+        }
+
+        .btn-demo:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .hero .btn-secondary {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            font-size: 15px;
+            padding: 10px 20px;
+        }
+
+        .hero .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.9);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Section Styles */
+        section {
+            padding: var(--section-padding) 20px;
+        }
+
+        .section-content {
+            max-width: 980px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .section-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--apple-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .section-headline {
+            font-size: clamp(40px, 5vw, 56px);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.005em;
+            margin-bottom: 24px;
+        }
+
+        .section-subhead {
+            font-size: 21px;
+            color: var(--apple-gray);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        /* Product Sections */
+        .product-section {
+            background: var(--apple-bg);
+        }
+
+        .product-section:nth-child(even) {
+            background: #fff;
+        }
+
+        .product-showcase {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 60px;
+        }
+
+        @media (min-width: 900px) {
+            .product-showcase {
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                text-align: left;
+            }
+            
+            .product-showcase.reverse {
+                direction: rtl;
+            }
+            
+            .product-showcase.reverse > * {
+                direction: ltr;
+            }
+        }
+
+        .product-visual {
+            background: linear-gradient(135deg, #1d1d1f 0%, #2d2d2f 100%);
+            border-radius: 28px;
+            padding: 40px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .app-preview {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 16/10;
+            background: #0f172a;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .app-header {
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 8px;
+        }
+
+        .app-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .app-dot.red { background: #ff5f57; }
+        .app-dot.yellow { background: #febc2e; }
+        .app-dot.green { background: #28c840; }
+
+        .app-body {
+            flex: 1;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .app-card-header {
+            height: 8px;
+            width: 60%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .app-card-line {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            margin-bottom: 8px;
+        }
+
+        .app-card-line.short {
+            width: 70%;
+        }
+
+        .product-details {
+            padding: 20px 0;
+        }
+
+        .product-name {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.015em;
+        }
+
+        .product-tagline {
+            font-size: 24px;
+            color: var(--apple-gray);
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            font-size: 17px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--apple-blue);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .price-block {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 600;
+        }
+
+        .price-note {
+            font-size: 15px;
+            color: var(--apple-gray);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            padding: 40px;
+            background: #fff;
+            border-radius: 20px;
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--apple-bg);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 21px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            font-size: 17px;
+            color: var(--apple-gray);
+            line-height: 1.5;
+        }
+
+        /* Why Section */
+        .why-section {
+            background: #000;
+            color: #fff;
+        }
+
+        .why-section .section-headline {
+            color: #fff;
+        }
+
+        .why-section .section-subhead {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 64px;
+            font-weight: 700;
+            background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.5) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 17px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* FAQ Section */
+        .faq-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 24px 0;
+            text-align: left;
+        }
+
+        .faq-question {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            font-size: 17px;
+            color: var(--apple-gray);
+            line-height: 1.5;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(180deg);
+        }
+
+        .faq-question::after {
+            content: '⌄';
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            background: var(--apple-bg);
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .footer-cta h2 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-cta p {
+            font-size: 21px;
+            color: var(--apple-gray);
+            margin-bottom: 40px;
+        }
+
+        /* Footer */
+        footer {
+            background: #f5f5f7;
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--apple-gray);
+        }
+
+        .footer-content {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--apple-gray);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 80px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 20px;
+            }
+
+            .product-showcase {
+                gap: 40px;
+            }
+
+            .product-visual {
+                min-height: 300px;
+                padding: 24px;
+            }
+
+            .product-name {
+                font-size: 36px;
+            }
+
+            .features-grid {
+                gap: 20px;
+            }
+
+            .feature-card {
+                padding: 24px;
+            }
+
+            .stats-row {
+                gap: 24px;
+            }
+
+            .stat-number {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <div class="nav-logo">I am Hicks</div>
+            <div class="nav-links">
+                <a href="#trading-journal">Trading Journal</a>
+                <a href="#taskmaster">TaskMaster</a>
+                <a href="#mind">MIND</a>
+                <a href="#why">Why Us</a>
+                <a href="#faq">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="animate-in"><span style="font-weight: 300;">i_am_</span><span style="font-weight: 700;">Hicks</span></h1>
+            <p class="hero-subhead animate-in delay-1">Your data. Your device. Your control. Professional tools without the surveillance.</p>
+            <div class="cta-group animate-in delay-2">
+                <a href="#trading-journal" class="btn btn-secondary">EDGE</a>
+                <a href="#taskmaster" class="btn btn-secondary">FLOW</a>
+                <a href="#mind" class="btn btn-secondary">MIND</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trading Journal Section -->
+    <section id="trading-journal" class="product-section">
+        <div class="section-content">
+            <div class="section-label">i am Trading</div>
+            <h2 class="section-headline">EDGE</h2>
+            <p class="section-subhead">The journal that actually improves your edge. Track every trade, analyze your psychology, and discover what really drives your profitability.</p>
+            
+            <div class="product-showcase">
+                <div class="product-visual">
+                    <div class="app-preview">
+                        <div class="app-header">
+                            <div class="app-dot red"></div>
+                            <div class="app-dot yellow"></div>
+                            <div class="app-dot green"></div>
+                        </div>
+                        <div class="app-body">
+                            <div class="app-card">
+                                <div class="app-card-header"></div>
+                                <div class="app-card-line"></div>
+                                <div class="app-card-line short"></div>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-header"></div>
+                                <div class="app-card-line"></div>
+                                <div class="app-card-line short"></div>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-header"></div>
+                                <div class="app-card-line"></div>
+                                <div class="app-card-line short"></div>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-header"></div>
+                                <div class="app-card-line"></div>
+                                <div class="app-card-line short"></div>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-header"></div>
+                                <div class="app-card-line"></div>
+                                <div class="app-card-line short"></div>
+                            </div>
+                            <div class="app-card">
+                                <div class="app-card-header"></div>
+                                <div class="app-card-line"></div>
+                                <div class="app-card-line short"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <h3 class="product-name">i am Trading</h3>
+                    <p class="product-tagline" style="color: #0071e3; font-weight: 600; font-size: 32px;">EDGE</p>
+                    <p class="product-tagline">Stop guessing. Start knowing.</p>
+                    <ul class="feature-list">
+                        <li>Trade logging with psychology tracking — understand your mental state before and after each trade</li>
+                        <li>Custom checklist templates — build your edge with structured pre-trade analysis</li>
+                        <li>4H Profile &amp; Drivers checklists — institutional-grade market analysis built-in</li>
+                        <li>Common mistakes tracking — tag errors and see which ones cost you most</li>
+                        <li>Advanced statistics — expectancy, R-multiples, win rates by setup type</li>
+                        <li>Target hit rate analysis — see how often you reach your profit targets</li>
+                        <li>Multi-account support — track prop firm accounts separately</li>
+                        <li>100% private — your data never leaves your computer</li>
+                    </ul>
+                    <div class="price-block">
+                        <span class="price">$49</span>
+                        <span class="price-note">One-time purchase • Lifetime updates</span>
+                    </div>
+                    <a href="#" class="btn btn-primary" onclick="alert('Redirect to Gumroad checkout')">Buy on Gumroad</a>
+                    <a href="/edge-demo/" class="btn btn-demo" style="margin-left: 12px;">Try Demo</a>
+                    <a href="edge-features.html" class="btn btn-secondary" style="margin-left: 12px;">See all features →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TaskMaster Section -->
+    <section id="taskmaster" class="product-section">
+        <div class="section-content">
+            <div class="section-label">i am Focus</div>
+            <h2 class="section-headline">FLOW</h2>
+            <p class="section-subhead">The Kanban board that actually ships. Manage projects, track bugs, plan content — all in one beautiful, offline app.</p>
+            
+            <div class="product-showcase reverse">
+                <div class="product-details">
+                    <h3 class="product-name">i am Focus</h3>
+                    <p class="product-tagline" style="color: #0071e3; font-weight: 600; font-size: 32px;">FLOW</p>
+                    <p class="product-tagline">Organize everything. Miss nothing.</p>
+                    <ul class="feature-list">
+                        <li>Infinite Kanban boards — as many projects as you need</li>
+                        <li>Drag-and-drop simplicity — move cards between columns effortlessly</li>
+                        <li>Recurring tasks — daily, weekly, monthly automation</li>
+                        <li>Calendar view — see deadlines at a glance</li>
+                        <li>Custom labels &amp; priorities — color-code your workflow</li>
+                        <li>File attachments — link relevant documents to any card</li>
+                        <li>Board templates — start fast with Todo, Kanban, Sprint, Bug Tracker layouts</li>
+                        <li>Export/Import — backup your data, move between devices</li>
+                        <li>Works offline — no internet required, ever</li>
+                    </ul>
+                    <div class="price-block">
+                        <span class="price">$29</span>
+                        <span class="price-note">One-time purchase • Lifetime updates</span>
+                    </div>
+                    <a href="#" class="btn btn-primary" onclick="alert('Redirect to Gumroad checkout')">Buy on Gumroad</a>
+                    <a href="/flow-demo/" class="btn btn-demo" style="margin-left: 12px;">Try Demo</a>
+                    <a href="flow-features.html" class="btn btn-secondary" style="margin-left: 12px;">See all features →</a>
+                </div>
+                <div class="product-visual">
+                    <div class="app-preview">
+                        <div class="app-header">
+                            <div class="app-dot red"></div>
+                            <div class="app-dot yellow"></div>
+                            <div class="app-dot green"></div>
+                        </div>
+                        <div class="app-body" style="display: flex; gap: 12px; align-items: stretch;">
+                            <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px;">
+                                <div style="height: 8px; width: 50%; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 12px;"></div>
+                                <div style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 12px; margin-bottom: 8px;">
+                                    <div style="height: 4px; width: 80%; background: rgba(255,255,255,0.1); border-radius: 2px;"></div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 12px;">
+                                    <div style="height: 4px; width: 60%; background: rgba(255,255,255,0.1); border-radius: 2px;"></div>
+                                </div>
+                            </div>
+                            <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px;">
+                                <div style="height: 8px; width: 50%; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 12px;"></div>
+                                <div style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 12px;">
+                                    <div style="height: 4px; width: 70%; background: rgba(255,255,255,0.1); border-radius: 2px;"></div>
+                                </div>
+                            </div>
+                            <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px;">
+                                <div style="height: 8px; width: 40%; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 12px;"></div>
+                                <div style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 12px; margin-bottom: 8px;">
+                                    <div style="height: 4px; width: 90%; background: rgba(255,255,255,0.1); border-radius: 2px;"></div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 12px;">
+                                    <div style="height: 4px; width: 75%; background: rgba(255,255,255,0.1); border-radius: 2px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MIND Section -->
+    <section id="mind" class="product-section">
+        <div class="section-content">
+            <div class="section-label" style="color: #8b5cf6;">i am Clear</div>
+            <h2 class="section-headline">MIND</h2>
+            <p class="section-subhead">Your second brain, actually private. Notes + bookmarks + AI that works 100% offline. No cloud. No subscriptions. Just your thoughts, organized.</p>
+            
+            <div class="product-showcase">
+                <div class="product-visual" style="background: linear-gradient(135deg, #1d1d1f 0%, #2d1f4f 100%);">
+                    <div class="app-preview" style="max-width: 400px;">
+                        <div style="padding: 30px; text-align: left;">
+                            <div style="font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px;">Trading Psychology Insights</div>
+                            <div style="font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 24px;">Last edited 2 hours ago</div>
+                            
+                            <div style="color: rgba(255,255,255,0.9); font-size: 15px; line-height: 1.6;">
+                                <div style="margin-bottom: 12px;"><strong>Key takeaways from today's reading:</strong></div>
+                                <div style="margin-bottom: 8px;">• Fear is evolutionary — brains aren't built for trading</div>
+                                <div style="margin-bottom: 8px;">• Solution: recognize fear, don't eliminate it</div>
+                                <div style="margin-bottom: 8px;">• Small position sizing reduces emotional response</div>
+                                <div style="font-size: 13px; color: rgba(139,92,246,0.8); margin-top: 12px;">💾 Auto-saved from: twitter.com/psychology-thread</div>
+                            </div>
+                            
+                            <div style="margin-top: 24px; display: flex; gap: 8px;">
+                                <span style="background: rgba(139,92,246,0.3); color: #8b5cf6; padding: 6px 12px; border-radius: 12px; font-size: 12px;">#trading</span>
+                                <span style="background: rgba(52,199,89,0.3); color: #34c759; padding: 6px 12px; border-radius: 12px; font-size: 12px;">#psychology</span>
+                                <span style="background: rgba(245,158,11,0.3); color: #f59e0b; padding: 6px 12px; border-radius: 12px; font-size: 12px;">#bookmark</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <h3 class="product-name">i am Clear</h3>
+                    <p class="product-tagline" style="color: #8b5cf6; font-weight: 600; font-size: 32px;">MIND</p>
+                    <p class="product-tagline">Everything you read, write, and save — organized, searchable, and actually private.</p>
+                    
+                    <ul class="feature-list">
+                        <li><strong>Write notes</strong> — Rich text editor, no Markdown to learn</li>
+                        <li><strong>Save bookmarks</strong> — Auto-archives page content for offline reading and search <a href="mind-browser-extension.html" style="color: #8b5cf6; text-decoration: none;">See mockup →</a></li>
+                        <li><strong>Ask your MIND</strong> — Local AI searches everything you've saved (Pro)</li>
+                        <li><strong>Nested folders</strong> — Organize notes and bookmarks your way</li>
+                        <li><strong>Full-text search</strong> — Find any word in any saved page or note</li>
+                        <li><strong>Tags & backlinks</strong> — Connect thoughts, see relationships</li>
+                        <li><strong>100% offline</strong> — Works without internet, data never leaves device</li>
+                        <li><strong>Export anytime</strong> — Your data is always yours</li>
+                    </ul>
+                    
+                    <div class="price-block">
+                        <span class="price">$29</span>
+                        <span class="price-note">One-time purchase • Lifetime updates<br>Pro with AI: $59 • Bookmarks: $49</span>
+                    </div>
+                    
+                    <a href="#" class="btn btn-primary" onclick="alert('Redirect to Gumroad checkout')" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">Buy MIND</a>
+                    <a href="/mind-demo/" class="btn btn-demo" style="margin-left: 12px;">Try Demo</a>
+                    <a href="mind-landing.html" class="btn btn-secondary" style="margin-left: 12px;">See all features →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="why" class="why-section">
+        <div class="section-content">
+            <div class="section-label">Why I am Hicks</div>
+            <h2 class="section-headline">Built Different</h2>
+            <p class="section-subhead">Most software sells your data, locks you into subscriptions, or disappears when the startup folds. We don't play those games.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f;">i am Private</h3>
+                    <p class="feature-desc" style="color: #86868b;">Your data stays on your device. No cloud syncing. No data mining. No "analytics." Just pure, private productivity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f;">i am Free</h3>
+                    <p class="feature-desc" style="color: #86868b;">One purchase. Lifetime access. All future updates included. No monthly fees. No surprise charges. Ever.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f;">i am Fast</h3>
+                    <p class="feature-desc" style="color: #86868b;">Single HTML files that load instantly. No bloated Electron apps. No waiting for servers. Just click and go.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f;">i am Portable</h3>
+                    <p class="feature-desc" style="color: #86868b;">Any device with a browser. Mac, PC, Linux, Chromebook. Your data exports with you. True portability.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f;">i am Focused</h3>
+                    <p class="feature-desc" style="color: #86868b;">Thoughtfully crafted interfaces that make you want to use them. Dark mode by default. No clutter. Just focus.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f;">i am Professional</h3>
+                    <p class="feature-desc" style="color: #86868b;">Built by a trader who actually uses these tools daily. Every feature solves a real problem. No bloat.</p>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Subscriptions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Powerful Apps</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Private</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Possibilities</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq">
+        <div class="section-content">
+            <h2 class="section-headline">Questions? Answered.</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">How do I install these apps?</div>
+                <div class="faq-answer">Simple. Download the HTML file, save it anywhere on your computer, and double-click to open in your browser. That's it. No installers, no admin rights, no fuss.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Where is my data stored?</div>
+                <div class="faq-answer">Right on your computer, in your browser's local storage. It never touches our servers — because we don't have any. Export anytime as JSON for backup or moving to another device.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I use these on multiple devices?</div>
+                <div class="faq-answer">Absolutely. Copy the HTML file to any device. Use the export/import feature to move your data. Your license covers all your personal devices.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Do you offer refunds?</div>
+                <div class="faq-answer">Yes. 30-day money-back guarantee, no questions asked. If these tools don't improve your workflow, you shouldn't pay for them.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Will there be updates?</div>
+                <div class="faq-answer">Yes. All updates are free for life. When you buy, you're added to our update list. Just re-download the file when we announce new versions.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I get a bundle discount?</div>
+                <div class="faq-answer">Buy all four together and save $57. The Complete Bundle is just $99 — that's four professional tools for less than the price of four months of most subscription apps.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="footer-cta">
+        <h2>Ready to level up?</h2>
+        <p>Join thousands who've ditched subscriptions for software that respects them.</p>
+        <div class="cta-group">
+            <a href="#trading-journal" class="btn btn-primary">EDGE — $49</a>
+            <a href="#taskmaster" class="btn btn-secondary">FLOW — $29</a>
+            <a href="#mind" class="btn btn-secondary" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #fff; border: none;">MIND — $29+</a>
+        </div>
+        <p style="margin-top: 24px; font-size: 15px; color: var(--apple-gray);">Or grab the <strong>Complete Bundle for $79</strong> (save $28)</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Support</a>
+                <a href="#">Twitter</a>
+            </div>
+            <p>© 2026 I am Hicks. Built with obsession in Wales.</p>
+            <p style="margin-top: 8px;">Not affiliated with Apple Inc. Apple-style design used for educational purposes.</p>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('active');
+            });
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

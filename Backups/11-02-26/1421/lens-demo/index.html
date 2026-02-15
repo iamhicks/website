@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LENS — Trading Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F1F1F1;
+            --text: #1B1B1D;
+            --text-secondary: #6B6B6E;
+            --border: #D1D1D3;
+            --accent: #1B1B1D;
+            --success: #2D5A3D;
+            --warning: #8B6914;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .badge {
+            background: var(--text);
+            color: var(--bg);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Main Layout */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 32px;
+            padding: 32px 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 32px;
+            height: fit-content;
+        }
+
+        .capture-btn {
+            width: 100%;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            padding: 16px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .capture-btn:hover {
+            opacity: 0.85;
+        }
+
+        .filter-section {
+            margin-bottom: 24px;
+        }
+
+        .filter-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-tag {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tag:hover,
+        .filter-tag.active {
+            background: var(--text);
+            color: var(--bg);
+            border-color: var(--text);
+        }
+
+        .stats-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat-value {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        .main-content {
+            min-height: 600px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .timeline-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 16px;
+            min-width: 280px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            width: 100%;
+            background: transparent;
+        }
+
+        /* Entry Cards */
+        .entry-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .entry-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+
+        .entry-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            background: #FAFAFA;
+        }
+
+        .entry-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .entry-time {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .entry-type {
+            background: var(--bg);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .entry-phase {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .phase-entry { background: #E8F5E9; color: var(--success); }
+        .phase-management { background: #FFF8E1; color: var(--warning); }
+        .phase-exit { background: #FFEBEE; color: #C62828; }
+
+        .entry-body {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 20px;
+        }
+
+        .screenshot-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--bg);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .screenshot-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .screenshot-placeholder {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .entry-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .entry-note {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .entry-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .entry-tag {
+            background: var(--bg);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(27, 27, 29, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 24px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 640px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .screenshot-upload {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .screenshot-upload:hover {
+            border-color: var(--text);
+        }
+
+        .screenshot-upload.has-image {
+            border-style: solid;
+            border-color: var(--success);
+            padding: 20px;
+        }
+
+        .upload-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+        }
+
+        .phase-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .phase-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .phase-btn:hover,
+        .phase-btn.active {
+            background: var(--text);
+            color: var(--bg);
+            border-color: var(--text);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--text);
+        }
+
+        .voice-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .voice-btn:hover {
+            background: var(--bg);
+        }
+
+        .voice-btn.recording {
+            background: #FFEBEE;
+            border-color: #C62828;
+            color: #C62828;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .modal-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-primary {
+            background: var(--text);
+            border: none;
+            color: var(--bg);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 64px 0 48px;
+        }
+
+        .hero-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 56px;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--text);
+            color: var(--bg);
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .hero-note {
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Demo banner */
+        .demo-banner {
+            background: var(--text);
+            color: var(--bg);
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .entry-body {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        Demo Preview — Try capturing a trade below
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">LENS</div>
+                <span class="badge">Demo</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">See your edge.</h1>
+            <p class="hero-subtitle">Screenshot your setup. Talk through your trade. Never lose the context. The trading journal that actually understands your charts.</p>
+            <a href="#app" class="hero-cta">Try the Demo</a>
+            <p class="hero-note">$29 one-time · Offline-first · No subscriptions</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="app-layout" id="app">
+            <aside class="sidebar">
+                <button class="capture-btn" onclick="openModal()">
+                    <span>+</span> Capture Trade
+                </button>
+
+                <div class="stats-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Trades This Week</div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stat-value">68%</div>
+                    <div class="stat-label">Win Rate</div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">Instrument</div>
+                    <div class="filter-tags">
+                        <button class="filter-tag active" onclick="filterEntries('all')">All</button>
+                        <button class="filter-tag" onclick="filterEntries('US100')">US100</button>
+                        <button class="filter-tag" onclick="filterEntries('US500')">US500</button>
+                        <button class="filter-tag" onclick="filterEntries('XAUUSD')">XAUUSD</button>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">Setup</div>
+                    <div class="filter-tags">
+                        <button class="filter-tag" onclick="filterEntries('breakout')">Breakout</button>
+                        <button class="filter-tag" onclick="filterEntries('support')">Support</button>
+                        <button class="filter-tag" onclick="filterEntries('flag')">Flag</button>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">Phase</div>
+                    <div class="filter-tags">
+                        <button class="filter-tag" onclick="filterEntries('entry')">Entry</button>
+                        <button class="filter-tag" onclick="filterEntries('management')">Management</button>
+                        <button class="filter-tag" onclick="filterEntries('exit')">Exit</button>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <div class="timeline-header">
+                    <h2 class="timeline-title">This Week</h2>
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="text" placeholder="Search trades..." id="searchInput" onkeyup="searchEntries()">
+                    </div>
+                </div>
+
+                <div class="entry-list" id="entryList">
+                    <!-- Entries will be populated by JavaScript -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Capture Modal -->
+    <div class="modal-overlay" id="captureModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Capture Trade</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Screenshot</label>
+                    <div class="screenshot-upload" id="screenshotUpload" onclick="document.getElementById('fileInput').click()">
+                        <div class="screenshot-placeholder">
+                            <div style="font-size: 32px; margin-bottom: 8px;">📷</div>
+                            <div>Click to upload screenshot</div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">or paste from clipboard</div>
+                        </div>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none" onchange="handleFileUpload(event)">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Trade Phase</label>
+                    <div class="phase-selector">
+                        <button class="phase-btn active" onclick="selectPhase(this, 'entry')">Entry</button>
+                        <button class="phase-btn" onclick="selectPhase(this, 'management')">Management</button>
+                        <button class="phase-btn" onclick="selectPhase(this, 'exit')">Exit</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Voice Note</label>
+                    <button class="voice-btn" id="voiceBtn" onclick="toggleRecording()">
+                        <span id="voiceIcon">🎤</span>
+                        <span id="voiceText">Click to record voice note</span>
+                    </button>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 8px;">
+                        Or type your note below
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Note</label>
+                    <textarea id="tradeNote" placeholder="Describe your trade setup, entry, management, or exit...
+
+Example: Long US100 at 18950 support. 5min bull flag forming. 1% risk, targeting 19020."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveEntry()">Save Trade</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample entries for demo
+        const sampleEntries = [
+            {
+                id: 1,
+                time: 'Today, 2:34 PM',
+                phase: 'entry',
+                phaseLabel: 'Entry',
+                note: 'Long US100 at 18950 support. 5min bull flag forming. 1% risk, targeting 19020. Clean setup, waiting for breakout confirmation.',
+                tags: ['US100', 'long', 'support', 'flag', '5min'],
+                image: null
+            },
+            {
+                id: 2,
+                time: 'Today, 11:15 AM',
+                phase: 'exit',
+                phaseLabel: 'Exit',
+                note: 'Stopped out on US500 short. Premature entry, should have waited for the retest. -12pts. Lesson: patience on breakouts.',
+                tags: ['US500', 'short', 'breakout', 'loss'],
+                image: null
+            },
+            {
+                id: 3,
+                time: 'Yesterday, 3:45 PM',
+                phase: 'management',
+                phaseLabel: 'Management',
+                note: 'Moved stop to breakeven on XAUUSD long. Price hit 1R, protecting capital now. Letting winner run.',
+                tags: ['XAUUSD', 'long', 'management', 'breakeven'],
+                image: null
+            },
+            {
+                id: 4,
+                time: 'Yesterday, 9:20 AM',
+                phase: 'entry',
+                phaseLabel: 'Entry',
+                note: 'Short US500 at 5900 resistance. Double top on 15min, divergence on RSI. 1.5% risk.',
+                tags: ['US500', 'short', 'resistance', '15min', 'divergence'],
+                image: null
+            }
+        ];
+
+        let entries = [...sampleEntries];
+        let currentFilter = 'all';
+        let isRecording = false;
+        let uploadedImage = null;
+        let selectedPhase = 'entry';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEntries();
+        });
+
+        // Render entries
+        function renderEntries() {
+            const entryList = document.getElementById('entryList');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            let filteredEntries = entries.filter(entry => {
+                const matchesSearch = searchTerm === '' || 
+                    entry.note.toLowerCase().includes(searchTerm) ||
+                    entry.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                
+                const matchesFilter = currentFilter === 'all' || 
+                    entry.tags.includes(currentFilter) ||
+                    entry.phase === currentFilter;
+
+                return matchesSearch && matchesFilter;
+            });
+
+            entryList.innerHTML = filteredEntries.map(entry => `
+                <div class="entry-card">
+                    <div class="entry-header">
+                        <div class="entry-meta">
+                            <span class="entry-time">${entry.time}</span>
+                            <span class="entry-type">Trade</span>
+                        </div>
+                        <span class="entry-phase phase-${entry.phase}">${entry.phaseLabel}</span>
+                    </div>
+                    <div class="entry-body">
+                        <div class="screenshot-thumb">
+                            ${entry.image ? 
+                                `<img src="${entry.image}" alt="Chart screenshot">` : 
+                                `<span class="screenshot-placeholder">📷 No screenshot</span>`
+                            }
+                        </div>
+                        <div class="entry-content">
+                            <div class="entry-note">${entry.note}</div>
+                            <div class="entry-tags">
+                                ${entry.tags.map(tag => `<span class="entry-tag">#${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter entries
+        function filterEntries(filter) {
+            currentFilter = filter;
+            
+            // Update active state on filter buttons
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.classList.remove('active');
+                if (tag.textContent.toLowerCase() === filter.toLowerCase() || 
+                    (filter === 'all' && tag.textContent === 'All')) {
+                    tag.classList.add('active');
+                }
+            });
+
+            renderEntries();
+        }
+
+        // Search entries
+        function searchEntries() {
+            renderEntries();
+        }
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('captureModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('captureModal').classList.remove('active');
+            resetForm();
+        }
+
+        function resetForm() {
+            document.getElementById('tradeNote').value = '';
+            uploadedImage = null;
+            const uploadDiv = document.getElementById('screenshotUpload');
+            uploadDiv.innerHTML = `
+                <div class="screenshot-placeholder">
+                    <div style="font-size: 32px; margin-bottom: 8px;">📷</div>
+                    <div>Click to upload screenshot</div>
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">or paste from clipboard</div>
+                </div>
+            `;
+            uploadDiv.classList.remove('has-image');
+        }
+
+        // File upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    uploadedImage = e.target.result;
+                    const uploadDiv = document.getElementById('screenshotUpload');
+                    uploadDiv.innerHTML = `<img src="${uploadedImage}" class="upload-preview" alt="Upload preview">`;
+                    uploadDiv.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Phase selection
+        function selectPhase(btn, phase) {
+            selectedPhase = phase;
+            document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Voice recording simulation
+        function toggleRecording() {
+            const btn = document.getElementById('voiceBtn');
+            const icon = document.getElementById('voiceIcon');
+            const text = document.getElementById('voiceText');
+            const noteArea = document.getElementById('tradeNote');
+
+            if (!isRecording) {
+                // Start recording
+                isRecording = true;
+                btn.classList.add('recording');
+                icon.textContent = '⏹';
+                text.textContent = 'Recording... Click to stop';
+                
+                // Simulate recording after 3 seconds
+                setTimeout(() => {
+                    if (isRecording) {
+                        toggleRecording();
+                    }
+                }, 3000);
+            } else {
+                // Stop recording
+                isRecording = false;
+                btn.classList.remove('recording');
+                icon.textContent = '✓';
+                text.textContent = 'Voice captured!';
+                
+                // Insert simulated transcription
+                const transcriptions = [
+                    "Long US100 at support, targeting previous high. Clean setup."
+                ];
+                if (!noteArea.value) {
+                    noteArea.value = transcriptions[0];
+                }
+                
+                setTimeout(() => {
+                    icon.textContent = '🎤';
+                    text.textContent = 'Click to record voice note';
+                }, 2000);
+            }
+        }
+
+        // Save entry
+        function saveEntry() {
+            const note = document.getElementById('tradeNote').value;
+            if (!note.trim()) {
+                alert('Please add a note about your trade');
+                return;
+            }
+
+            // Auto-generate tags from note
+            const tags = [];
+            const instruments = ['US100', 'US500', 'XAUUSD', 'XAGUSD', 'US30', 'EURUSD'];
+            const patterns = ['support', 'resistance', 'breakout', 'flag', 'divergence'];
+            const directions = ['long', 'short'];
+
+            instruments.forEach(inst => {
+                if (note.toLowerCase().includes(inst.toLowerCase())) tags.push(inst);
+            });
+            patterns.forEach(pat => {
+                if (note.toLowerCase().includes(pat.toLowerCase())) tags.push(pat);
+            });
+            directions.forEach(dir => {
+                if (note.toLowerCase().includes(dir.toLowerCase())) tags.push(dir);
+            });
+
+            // Add timeframe if mentioned
+            const timeframes = ['1min', '5min', '15min', '1h', '4h', 'daily'];
+            timeframes.forEach(tf => {
+                if (note.toLowerCase().includes(tf.toLowerCase())) tags.push(tf);
+            });
+
+            const newEntry = {
+                id: entries.length + 1,
+                time: 'Just now',
+                phase: selectedPhase,
+                phaseLabel: selectedPhase.charAt(0).toUpperCase() + selectedPhase.slice(1),
+                note: note,
+                tags: tags.length > 0 ? tags : ['trade'],
+                image: uploadedImage
+            };
+
+            entries.unshift(newEntry);
+            renderEntries();
+            closeModal();
+
+            // Update stats
+            document.querySelector('.stat-value').textContent = entries.length;
+        }
+
+        // Keyboard shortcut for capture
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'S') {
+                e.preventDefault();
+                openModal();
+            }
+        });
+
+        // Close modal on overlay click
+        document.getElementById('captureModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

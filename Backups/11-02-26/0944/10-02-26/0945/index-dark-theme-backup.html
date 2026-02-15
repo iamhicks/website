@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i_am_Hicks — Tools I built for myself</title>
+    <meta name="description" content="I was paying $200/month for productivity apps. So I built my own. MIND + FLOW. $49 total. Own them forever.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-warm: #faf8f5;
+            --bg-cream: #f5f0e8;
+            --text-dark: #1a1a1a;
+            --text-body: #4a4a4a;
+            --text-muted: #7a7a7a;
+            --accent-terracotta: #c75b39;
+            --accent-ochre: #d4a574;
+            --accent-sage: #7a9e7e;
+            --accent-lavender: #9b8aa5;
+            --border-warm: rgba(0,0,0,0.06);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-warm);
+            color: var(--text-body);
+            line-height: 1.7;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-warm);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-dark);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo span {
+            font-weight: 300;
+            opacity: 0.6;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-terracotta);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 140px 40px 100px;
+            background: var(--bg-warm);
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent-terracotta);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 40px;
+            letter-spacing: 0.02em;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 600;
+            line-height: 1.0;
+            color: var(--text-dark);
+            margin-bottom: 32px;
+            letter-spacing: -0.03em;
+        }
+
+        .hero h1 span {
+            font-weight: 300;
+            opacity: 0.7;
+        }
+
+        .hero-letter {
+            font-size: clamp(18px, 2.5vw, 21px);
+            line-height: 1.8;
+            color: var(--text-body);
+            margin-bottom: 48px;
+            text-align: left;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-letter p {
+            margin-bottom: 1.2em;
+        }
+
+        .hero-letter p:last-child {
+            margin-bottom: 0;
+        }
+
+        .hero-letter strong {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .signature {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-top: 32px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 48px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.25s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--text-dark);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-terracotta);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-body);
+            border: 1.5px solid var(--border-warm);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-dark);
+            color: var(--text-dark);
+        }
+
+        /* Products */
+        .products {
+            padding: 100px 40px;
+            background: var(--bg-cream);
+        }
+
+        .section-intro {
+            max-width: 600px;
+            margin: 0 auto 80px;
+            text-align: center;
+        }
+
+        .section-intro h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .section-intro p {
+            font-size: 17px;
+            color: var(--text-muted);
+        }
+
+        .products-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 40px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 48px;
+            position: relative;
+            border: 1px solid var(--border-warm);
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+
+        .product-number {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .product-header {
+            margin-bottom: 32px;
+        }
+
+        .product-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+        }
+
+        .product-tagline {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .product-desc {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+            color: var(--text-body);
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-warm);
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .product-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .product-actions .btn {
+            padding: 12px 24px;
+            font-size: 14px;
+        }
+
+        /* Bundle */
+        .bundle {
+            padding: 100px 40px;
+            background: var(--text-dark);
+            color: #fff;
+        }
+
+        .bundle-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .bundle h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(32px, 5vw, 44px);
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .bundle > div > p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .bundle-price {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .bundle-price .current {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 64px;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+        }
+
+        .bundle-price .original {
+            font-size: 28px;
+            color: rgba(255,255,255,0.3);
+            text-decoration: line-through;
+        }
+
+        .bundle .btn-primary {
+            background: #fff;
+            color: var(--text-dark);
+            font-size: 16px;
+            padding: 18px 40px;
+        }
+
+        .bundle .btn-primary:hover {
+            background: var(--accent-ochre);
+        }
+
+        /* Principles */
+        .principles {
+            padding: 100px 40px;
+            background: var(--bg-warm);
+        }
+
+        .principles-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 48px;
+        }
+
+        .principle {
+            padding: 32px;
+            border-left: 2px solid var(--accent-ochre);
+        }
+
+        .principle h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .principle p {
+            font-size: 15px;
+            color: var(--text-body);
+            line-height: 1.7;
+        }
+
+        /* Quote */
+        .quote {
+            padding: 120px 40px;
+            background: var(--bg-cream);
+            text-align: center;
+        }
+
+        .quote-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .quote blockquote {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(24px, 4vw, 32px);
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--text-dark);
+            margin-bottom: 32px;
+            letter-spacing: -0.01em;
+        }
+
+        .quote cite {
+            font-style: normal;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 100px 40px;
+            background: #fff;
+        }
+
+        .faq-grid {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            padding: 32px 0;
+            border-bottom: 1px solid var(--border-warm);
+        }
+
+        .faq-item h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .faq-item p {
+            font-size: 15px;
+            color: var(--text-body);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 40px;
+            background: var(--text-dark);
+            color: rgba(255,255,255,0.6);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .footer-logo span {
+            font-weight: 300;
+            opacity: 0.7;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 24px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 120px 24px 80px;
+            }
+
+            .hero-letter {
+                text-align: left;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-card {
+                padding: 32px;
+            }
+
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bundle-price .current {
+                font-size: 48px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="/" class="nav-logo"><span>i_am_</span>Hicks</a>
+            <div class="nav-links">
+                <a href="#tools">The Tools</a>
+                <a href="#faq">FAQ</a>
+                <a href="/about/">About</a>
+                <a href="https://gumroad.com" style="color: var(--accent-terracotta);">Buy — $49</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Now Available</div>
+            
+            <h1><span>i_am_</span>Hicks</h1>
+            
+            <div class="hero-letter">
+                <p>Hi, I'm Pete. For the past 5 years, I've been paying <strong>$200 every month</strong> for productivity software. Notion Pro. Todoist Premium. A dozen others.</p>
+                
+                <p>Last month I audited my subscriptions and realized something: <strong>I'm renting my own thoughts.</strong> My notes, my tasks, my ideas — locked behind paywalls, stored on someone else's servers, subject to their terms.</p>
+                
+                <p>So I built my own. Two simple tools that do exactly what I need, nothing more. No subscriptions. No cloud. No surveillance. Just <strong>MIND</strong> for thinking and <strong>FLOW</strong> for doing.</p>
+                
+                <p>They work offline. They load instantly. And I actually own them.</p>
+                
+                <p class="signature">— Pete</p>
+            </div>
+
+            <div class="hero-cta">
+                <a href="https://gumroad.com" class="btn btn-primary">Get both for $49</a>
+                <a href="#tools" class="btn btn-secondary">See what I built</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="products" id="tools">
+        <div class="section-intro">
+            <h2>Two tools. One purpose.</h2>
+            <p>Everything I need to capture ideas and actually finish projects.</p>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <span class="product-number">01</span>
+                <div class="product-header">
+                    <div class="product-name">MIND</div>
+                    <div class="product-tagline">for thinking clearly</div>
+                </div>
+                
+                <p class="product-desc">A place for everything I read, write, and want to remember. Notes with rich text, bookmarks that archive the full page for offline reading, and search that actually finds things. No markdown to learn. No folders that become a mess. Just a clear space for my thoughts.</p>
+                
+                <div class="product-meta">
+                    <span>📦 Single HTML file</span>
+                    <span>🔒 100% offline</span>
+                    <span>💾 Exports to Markdown</span>
+                </div>
+
+                <div class="product-actions">
+                    <a href="/mind-demo/" class="btn btn-secondary">Try the demo</a>
+                    <a href="/mind/" class="btn btn-secondary">Learn more</a>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="product-number">02</span>
+                
+                <div class="product-header">
+                    <div class="product-name">FLOW</div>
+                    <div class="product-tagline">for shipping work</div>
+                </div>
+                
+                <p class="product-desc">The Kanban board that actually helps me finish things. Drag tasks between columns, set up recurring todos for habits, see deadlines on a calendar. It's the system that keeps my projects moving without the complexity of enterprise tools.</p>
+                
+                <div class="product-meta">
+                    <span>📦 Single HTML file</span>
+                    <span>🔄 Recurring tasks</span>
+                    <span>📅 Calendar view</span>
+                </div>
+
+                <div class="product-actions">
+                    <a href="/flow-demo/" class="btn btn-secondary">Try the demo</a>
+                    <a href="/flow/" class="btn btn-secondary">Learn more</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bundle">
+        <div class="bundle-content">
+            <h2>Get both. Save $9.</h2>
+            
+            <p>MIND + FLOW together. Everything I use daily to think, plan, and execute. Your license covers all your devices — laptop, desktop, work computer, whatever you use.</p>
+            
+            <div class="bundle-price">
+                <span class="current">$49</span>
+                <span class="original">$58</span>
+            </div>
+
+            <a href="https://gumroad.com" class="btn btn-primary">Buy the bundle</a>
+        </div>
+    </section>
+
+    <section class="principles">
+        <div class="section-intro">
+            <h2>How I build things</h2>
+            <p>A few principles I won't compromise on</p>
+        </div>
+
+        <div class="principles-grid">
+            <div class="principle">
+                <h3>Own your data</h3>
+                <p>Everything lives on your device. No cloud to hack, no company to sell your data, no "we updated our terms of service." Export anytime as JSON or Markdown.</p>
+            </div>
+            
+            <div class="principle">
+                <h3>Buy once, keep forever</h3>
+                <p>I'm tired of renting software. $29 one-time. All future updates included. Use it for 10 years, your cost is still $29.</p>
+            </div>
+            
+            <div class="principle">
+                <h3>Works without internet</h3>
+                <p>Planes, trains, remote cabins, spotty wifi — your tools work exactly the same. No loading spinners, no "syncing...", no surprises.</p>
+            </div>
+            
+            <div class="principle">
+                <h3>Fast and simple</h3>
+                <p>Single HTML files. Double-click and they open. No installers, no updates that break things, no Electron apps eating your RAM.</p>
+            </div>
+            
+            <div class="principle">
+                <h3>Actually private</h3>
+                <p>No analytics. No tracking pixels. No "we're collecting data to improve your experience." Your business is none of my business.</p>
+            </div>
+            
+            <div class="principle">
+                <h3>Built for humans</h3>
+                <p>Every feature exists because I needed it. No bloat, no complexity for complexity's sake. Tools that get out of your way.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="quote">
+        <div class="quote-content">
+            <blockquote>
+                "The best tools are the ones you forget you're using."
+            </blockquote>
+            <cite>— What I'm aiming for</cite>
+        </div>
+    </section>
+
+    <section class="faq" id="faq">
+        <div class="section-intro">
+            <h2>Questions?</h2>
+        </div>
+        
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>How do I install this?</h4>
+                <p>Download the HTML file. Double-click it. That's it. It opens in your browser like any webpage, but everything is stored locally on your computer. Save it anywhere — Desktop, Documents, a folder called "Tools" — wherever makes sense for you.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>What if I get a new computer?</h4>
+                <p>Copy the HTML file to your new computer. Use the Export button inside the app to save your data as a JSON file, then Import it on the new machine. Your license covers all your personal devices.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>Is this really a one-time payment?</h4>
+                <p>Yes. $29 per app, or $49 for both. That's it. No monthly fees, no "Pro" upgrades, no surprise charges. When I release updates, you get them free.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>What if I don't like it?</h4>
+                <p>30-day money-back guarantee. No questions asked. Just email me and I'll refund you. I only want your money if you're actually getting value from these tools.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>Can you add [feature]?</h4>
+                <p>Maybe! I built these for myself first, but I'm always interested in making them better. Send me an email with what you need. If it fits the "simple but powerful" philosophy, I'll consider it.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo"><span>i_am_</span>Hicks</div>
+            
+            <div class="footer-links">
+                <a href="/mind/">MIND</a>
+                <a href="/flow/">FLOW</a>
+                <a href="/about/">About</a>
+                <a href="mailto:hello@iamhicks.com">hello@iamhicks.com</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
