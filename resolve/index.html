@@ -16,6 +16,7 @@
             --color-text-muted: #9B9B9B;
             --color-white: #FFFFFF;
             --color-border: #E3E3E3;
+            --color-accent: #F59E0B;
             --font-heading: 'Fraunces', serif;
             --font-body: 'Inter', sans-serif;
         }
@@ -103,20 +104,6 @@
             border: 1px solid var(--color-border);
         }
 
-        .hero-badge::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: #2ECC71;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
         .hero h1 {
             font-family: var(--font-heading);
             font-size: clamp(48px, 8vw, 96px);
@@ -178,107 +165,18 @@
             border-color: var(--color-text);
         }
 
-        .hero-visual {
-            width: 100%;
-            max-width: 1200px;
-            aspect-ratio: 16/10;
-            background: var(--color-white);
-            border-radius: 16px;
-            border: 1px solid var(--color-border);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-            display: flex;
-            overflow: hidden;
+        .btn-accent {
+            background: var(--color-accent);
+            color: var(--color-text);
         }
 
-        .hero-visual-sidebar {
-            width: 240px;
-            background: var(--color-bg);
-            border-right: 1px solid var(--color-border);
-            padding: 24px;
+        .btn-accent:hover {
+            background: #f97316;
+            transform: translateY(-2px);
         }
 
-        .hero-visual-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .hero-visual-toolbar {
-            height: 48px;
-            border-bottom: 1px solid var(--color-border);
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-        }
-
-        .hero-visual-content {
-            flex: 1;
-            display: flex;
-        }
-
-        .hero-visual-workspace {
-            flex: 1;
-            padding: 24px;
-        }
-
-        .hero-visual-chat {
-            width: 280px;
-            border-left: 1px solid var(--color-border);
-            background: var(--color-bg);
-            padding: 16px;
-        }
-
-        .mock-nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: var(--color-text-light);
-            margin-bottom: 4px;
-        }
-
-        .mock-nav-item.active {
-            background: var(--color-bg-dark);
-            color: var(--color-white);
-        }
-
-        .mock-card {
-            background: var(--color-bg);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid var(--color-border);
-        }
-
-        .mock-card-title {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .mock-card-meta {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
-
-        .mock-message {
-            background: var(--color-white);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 8px;
-            font-size: 12px;
-            border: 1px solid var(--color-border);
-        }
-
-        .mock-message.ai {
-            background: var(--color-bg-dark);
-            color: var(--color-white);
-        }
-
-        /* Features Section */
-        .features {
+        /* Tiers Section */
+        .tiers {
             padding: 120px 40px;
             background: var(--color-white);
         }
@@ -299,6 +197,148 @@
         .section-header p {
             font-size: 18px;
             color: var(--color-text-light);
+        }
+
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .tier-card {
+            padding: 48px;
+            border-radius: 24px;
+            border: 2px solid var(--color-border);
+            background: var(--color-bg);
+        }
+
+        .tier-card.featured {
+            border-color: var(--color-accent);
+            background: var(--color-white);
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--color-bg-dark);
+            color: var(--color-white);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .tier-card.featured .tier-badge {
+            background: var(--color-accent);
+            color: var(--color-text);
+        }
+
+        .tier-card h3 {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .tier-desc {
+            color: var(--color-text-light);
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .tier-price {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .tier-price span {
+            font-size: 16px;
+            color: var(--color-text-light);
+            font-weight: 400;
+        }
+
+        .tier-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .tier-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .tier-features li:last-child {
+            border-bottom: none;
+        }
+
+        .tier-features li::before {
+            content: '✓';
+            color: #2ECC71;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .tier-features li.highlight::before {
+            content: '★';
+            color: var(--color-accent);
+        }
+
+        /* Templates Section */
+        .templates {
+            padding: 120px 40px;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .template-card {
+            padding: 24px;
+            background: var(--color-white);
+            border-radius: 16px;
+            border: 1px solid var(--color-border);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .template-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .template-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .template-card h4 {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .template-card p {
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 40px;
+            background: var(--color-white);
         }
 
         .features-grid {
@@ -342,54 +382,6 @@
             line-height: 1.6;
         }
 
-        /* How It Works */
-        .how-it-works {
-            padding: 120px 40px;
-        }
-
-        .steps {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .step {
-            display: flex;
-            gap: 32px;
-            padding: 32px;
-            background: var(--color-white);
-            border-radius: 16px;
-            border: 1px solid var(--color-border);
-        }
-
-        .step-number {
-            width: 48px;
-            height: 48px;
-            background: var(--color-bg-dark);
-            color: var(--color-white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-heading);
-            font-size: 20px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .step-content h3 {
-            font-family: var(--font-heading);
-            font-size: 24px;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .step-content p {
-            color: var(--color-text-light);
-        }
-
         /* Comparison */
         .comparison {
             padding: 120px 40px;
@@ -416,7 +408,7 @@
 
         .comparison-row {
             display: grid;
-            grid-template-columns: 1fr 120px 120px;
+            grid-template-columns: 1fr 140px 140px;
             padding: 20px 32px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
@@ -432,75 +424,12 @@
 
         .comparison-row span:last-child {
             text-align: right;
+            color: #2ECC71;
         }
 
         .comparison-row span:nth-child(2) {
             text-align: center;
-            opacity: 0.5;
-        }
-
-        .comparison-row span:nth-child(3) {
-            text-align: right;
-            color: #2ECC71;
-        }
-
-        /* Pricing */
-        .pricing {
-            padding: 120px 40px;
-            background: var(--color-white);
-        }
-
-        .pricing-card {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 48px;
-            background: var(--color-bg);
-            border-radius: 24px;
-            border: 1px solid var(--color-border);
-            text-align: center;
-        }
-
-        .pricing-card h3 {
-            font-family: var(--font-heading);
-            font-size: 32px;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .pricing-card .price {
-            font-size: 64px;
-            font-weight: 600;
-            margin: 24px 0;
-        }
-
-        .pricing-card .price span {
-            font-size: 20px;
-            color: var(--color-text-light);
-            font-weight: 400;
-        }
-
-        .pricing-features {
-            text-align: left;
-            margin: 32px 0;
-        }
-
-        .pricing-features li {
-            list-style: none;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--color-border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .pricing-features li:last-child {
-            border-bottom: none;
-        }
-
-        .pricing-features li::before {
-            content: '✓';
-            color: #2ECC71;
-            font-weight: 600;
+            opacity: 0.7;
         }
 
         /* Footer */
@@ -508,6 +437,7 @@
             padding: 60px 40px;
             text-align: center;
             border-top: 1px solid var(--color-border);
+            background: var(--color-white);
         }
 
         .footer p {
@@ -535,26 +465,21 @@
                 max-width: 320px;
             }
 
+            .tiers,
+            .templates,
             .features,
-            .how-it-works,
-            .comparison,
-            .pricing {
+            .comparison {
                 padding: 80px 24px;
             }
 
-            .step {
-                flex-direction: column;
-                gap: 16px;
+            .tiers-grid {
+                grid-template-columns: 1fr;
             }
 
             .comparison-row {
-                grid-template-columns: 1fr 80px 80px;
+                grid-template-columns: 1fr 100px 100px;
                 padding: 16px 20px;
                 font-size: 14px;
-            }
-
-            .hero-visual {
-                display: none;
             }
         }
     </style>
@@ -564,75 +489,122 @@
     <nav class="nav">
         <a href="/" class="nav-logo">i am <span>RESOLVE</span></a>
         <div class="nav-links">
+            <a href="#tiers">Pricing</a>
+            <a href="#templates">Templates</a>
             <a href="#features">Features</a>
-            <a href="#how-it-works">How it works</a>
-            <a href="#pricing">Pricing</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-badge">Now Available</div>
+        <div class="hero-badge">From intention to resolution</div>
         <h1>Turn ideas <em>into outcomes</em></h1>
         <p class="hero-tagline">
-            The unified workspace where your notes, tasks, and AI assistant work as one. 
-            No more switching apps. No more lost context.
+            Choose your path: Self-directed tools, or AI-augmented assistance. 
+            Your knowledge, your workflow, your resolution.
         </p>
         <div class="hero-cta">
-            <a href="#pricing" class="btn btn-primary">Get RESOLVE — $49</a>
-            <a href="#features" class="btn btn-secondary">See how it works</a>
+            <a href="#tiers" class="btn btn-primary">Get Started</a>
+            <a href="#templates" class="btn btn-secondary">Explore Templates</a>
+        </div>
+    </section>
+
+    <!-- Tiers Section -->
+    <section class="tiers" id="tiers">
+        <div class="section-header">
+            <h2>Two ways to resolve</h2>
+            <p>Start simple. Add intelligence when you're ready.</p>
         </div>
         
-        <!-- App Preview -->
-        <div class="hero-visual">
-            <div class="hero-visual-sidebar">
-                <div style="font-weight: 600; margin-bottom: 16px; font-size: 14px;">🧠 i am RESOLVE</div>
-                <div class="mock-nav-item active">📊 Dashboard</div>
-                <div class="mock-nav-item">📝 Notes</div>
-                <div class="mock-nav-item">📋 Board</div>
-                <div class="mock-nav-item">💬 Chat</div>
-                <div class="mock-nav-item">🏛️ Vault</div>
+        <div class="tiers-grid">
+            <div class="tier-card">
+                <div class="tier-badge">Manual</div>
+                <h3>i am RESOLVE</h3>
+                <p class="tier-desc">Self-directed tools for focused work. Your data stays local.</p>
+                <div class="tier-price">$49 <span>one-time</span></div>
+                <ul class="tier-features">
+                    <li>AI-powered notes with wiki-links</li>
+                    <li>Kanban board for workflow</li>
+                    <li>8 niche templates (trader, writer, etc.)</li>
+                    <li>Local AI chat (bring your own API)</li>
+                    <li>Unified search across everything</li>
+                    <li>Lifetime updates</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="width: 100%; justify-content: center;">Get RESOLVE</a>
             </div>
-            <div class="hero-visual-main">
-                <div class="hero-visual-toolbar">
-                    <span style="font-weight: 600;">Q1 Product Launch</span>
-                </div>
-                <div class="hero-visual-content">
-                    <div class="hero-visual-workspace">
-                        <div style="display: flex; gap: 16px; margin-bottom: 16px;">
-                            <div style="flex: 1; background: #FFE4E1; border-radius: 8px; padding: 16px;">
-                                <div style="font-weight: 600; margin-bottom: 12px;">📝 Notes</div>
-                                <div class="mock-card">
-                                    <div class="mock-card-title">Launch Strategy</div>
-                                    <div class="mock-card-meta">Updated 2h ago</div>
-                                </div>
-                                <div class="mock-card">
-                                    <div class="mock-card-title">Customer Research</div>
-                                    <div class="mock-card-meta">Updated yesterday</div>
-                                </div>
-                            </div>
-                            <div style="flex: 1; background: #E1F5FE; border-radius: 8px; padding: 16px;">
-                                <div style="font-weight: 600; margin-bottom: 12px;">📋 Tasks</div>
-                                <div class="mock-card">
-                                    <div class="mock-card-title">Design landing page</div>
-                                    <div class="mock-card-meta">Due tomorrow</div>
-                                </div>
-                                <div class="mock-card">
-                                    <div class="mock-card-title">Write copy</div>
-                                    <div class="mock-card-meta">Due Friday</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hero-visual-chat">
-                        <div style="font-weight: 600; margin-bottom: 12px; font-size: 13px;">🤖 Kai</div>
-                        <div class="mock-message">What's the status of the launch?</div>
-                        <div class="mock-message ai">Based on your notes and board: Landing page 80% done, copy needs review. 2 tasks pending.</div>
-                        <div style="margin-top: 12px; display: flex; gap: 8px;">
-                            <input type="text" placeholder="Ask anything..." style="flex: 1; padding: 8px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 12px;">
-                        </div>
-                    </div>
-                </div>
+            
+            <div class="tier-card featured">
+                <div class="tier-badge">Automated</div>
+                <h3>RESOLVE + Kai</h3>
+                <p class="tier-desc">Everything in Manual, plus your own AI agent that learns and helps.</p>
+                <div class="tier-price">$99 <span>one-time + subscription</span></div>
+                <ul class="tier-features">
+                    <li>Everything in RESOLVE Manual</li>
+                    <li class="highlight">Kai AI agent ( proactive assistance )</li>
+                    <li class="highlight">Voice commands via Telegram/Discord</li>
+                    <li class="highlight">Context-aware suggestions</li>
+                    <li class="highlight">Automated weekly reviews</li>
+                    <li class="highlight">Cross-app intelligence</li>
+                </ul>
+                <a href="#" class="btn btn-accent" style="width: 100%; justify-content: center;">Join Waitlist</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Section -->
+    <section class="templates" id="templates">
+        <div class="section-header">
+            <h2>Choose your focus</h2>
+            <p>8 purpose-built templates. Start with one, customize forever.</p>
+        </div>
+        
+        <div class="templates-grid">
+            <div class="template-card">
+                <div class="template-icon">📊</div>
+                <h4>Trading & Investing</h4>
+                <p>Journal, setups, rules, and trade management for serious traders.</p>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-icon">🎥</div>
+                <h4>Content Creator</h4>
+                <p>Scripts, ideas, research, and publishing pipeline for creators.</p>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-icon">🎓</div>
+                <h4>Student & Research</h4>
+                <p>Courses, assignments, flashcards, and exam prep for learners.</p>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-icon">🤝</div>
+                <h4>Consulting & Coaching</h4>
+                <p>Client management, session notes, and deliverables tracking.</p>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-icon">✍️</div>
+                <h4>Writing & Publishing</h4>
+                <p>Manuscript workflow from outline to published book.</p>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-icon">📋</div>
+                <h4>Project Management</h4>
+                <p>Tasks, decisions, and team coordination without cloud lock-in.</p>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-icon">🧠</div>
+                <h4>General Knowledge</h4>
+                <p>Flexible system for notes, ideas, and personal knowledge.</p>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-icon">💙</div>
+                <h4>Therapy & Counseling</h4>
+                <p>Private, local notes for mental health professionals.</p>
             </div>
         </div>
     </section>
@@ -641,86 +613,44 @@
     <section class="features" id="features">
         <div class="section-header">
             <h2>Everything in one place</h2>
-            <p>Notes, tasks, and AI—unified. No more context switching between apps.</p>
+            <p>Notes, tasks, and AI—unified. No more context switching.</p>
         </div>
         
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">📝</div>
                 <h3>AI-Powered Notes</h3>
-                <p>Capture ideas with wiki-links that build your knowledge graph. Voice memos auto-transcribe and structure into markdown. Your second brain, with AI.</p>
+                <p>Capture ideas with wiki-links that build your knowledge graph. Voice memos auto-transcribe. Your second brain, with AI.</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon">📋</div>
                 <h3>Kanban Board</h3>
-                <p>Organize work with drag-and-drop cards. Set due dates, attach files, assign to AI or team. Recurring tasks automate your workflow.</p>
+                <p>Organize work with drag-and-drop cards. Set due dates, attach context. Workflow that matches your thinking.</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon">🤖</div>
                 <h3>Context-Aware AI</h3>
-                <p>One AI (Kai) across all channels—Code, Marketing, Strategy. It knows your notes, your board, your history. Ask "What's the status?" and get real answers.</p>
+                <p>One AI across notes and board. It knows your history. Ask "What's the status?" and get real answers.</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon">🏛️</div>
                 <h3>ClawVault Memory</h3>
-                <p>Every decision, lesson, and conversation saved as structured markdown. Search across months of work. Your knowledge compounds automatically.</p>
+                <p>Every decision and lesson saved as structured markdown. Search across months of work. Knowledge compounds.</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon">🎤</div>
                 <h3>Voice Everything</h3>
-                <p>Record voice memos that become structured notes. Talk to AI and get spoken responses. Work hands-free, anywhere.</p>
+                <p>Record voice memos that become structured notes. Talk to AI. Work hands-free, anywhere.</p>
             </div>
             
             <div class="feature-card">
                 <div class="feature-icon">📱</div>
                 <h3>Telegram Sync</h3>
-                <p>Send messages from Telegram, see them in RESOLVE. AI responds instantly. Work from your phone, stay in flow on desktop.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="section-header">
-            <h2>How it works</h2>
-            <p>From idea to outcome in four steps.</p>
-        </div>
-        
-        <div class="steps">
-            <div class="step">
-                <div class="step-number">1</div>
-                <div class="step-content">
-                    <h3>Capture</h3>
-                    <p>Write notes, record voice memos, or send messages from Telegram. Everything lands in one unified inbox.</p>
-                </div>
-            </div>
-            
-            <div class="step">
-                <div class="step-number">2</div>
-                <div class="step-content">
-                    <h3>Connect</h3>
-                    <p>Link notes with [[wiki-links]], organize tasks on the kanban board. AI sees the full context—no repetition needed.</p>
-                </div>
-            </div>
-            
-            <div class="step">
-                <div class="step-number">3</div>
-                <div class="step-content">
-                    <h3>Collaborate</h3>
-                    <p>Ask Kai anything. Switch between channels—Code, Marketing, Strategy—without losing context. Get suggestions, summaries, and insights.</p>
-                </div>
-            </div>
-            
-            <div class="step">
-                <div class="step-number">4</div>
-                <div class="step-content">
-                    <h3>Resolve</h3>
-                    <p>Decisions auto-save to ClawVault. Tasks get completed. Your knowledge graph grows. Ideas become outcomes.</p>
-                </div>
+                <p>Send messages from Telegram, see them in RESOLVE. Work from your phone, stay in flow on desktop.</p>
             </div>
         </div>
     </section>
@@ -729,7 +659,7 @@
     <section class="comparison">
         <div class="section-header">
             <h2>Why RESOLVE is different</h2>
-            <p>Not another productivity app. A unified thinking and doing system.</p>
+            <p>Not another productivity app. A unified thinking system.</p>
         </div>
         
         <div class="comparison-table">
@@ -739,7 +669,7 @@
                 <span>RESOLVE</span>
             </div>
             <div class="comparison-row">
-                <span>Notes + Tasks in one app</span>
+                <span>Notes + Tasks unified</span>
                 <span>❌</span>
                 <span>✓</span>
             </div>
@@ -749,57 +679,31 @@
                 <span>✓</span>
             </div>
             <div class="comparison-row">
-                <span>Persistent memory</span>
+                <span>Local-first, private</span>
                 <span>❌</span>
                 <span>✓</span>
             </div>
             <div class="comparison-row">
-                <span>Voice memos → structured notes</span>
+                <span>8 purpose-built templates</span>
                 <span>❌</span>
                 <span>✓</span>
             </div>
             <div class="comparison-row">
-                <span>Telegram integration</span>
+                <span>Upgrade to AI agent</span>
                 <span>❌</span>
                 <span>✓</span>
             </div>
             <div class="comparison-row">
-                <span>One-time purchase</span>
+                <span>One-time purchase option</span>
                 <span>❌</span>
                 <span>✓</span>
             </div>
-        </div>
-    </section>
-
-    <!-- Pricing -->
-    <section class="pricing" id="pricing">
-        <div class="section-header">
-            <h2>Simple pricing</h2>
-            <p>One-time purchase. No subscriptions. Yours forever.</p>
-        </div>
-        
-        <div class="pricing-card">
-            <h3>i am RESOLVE</h3>
-            <div class="price">$49 <span>one-time</span></div>
-            <ul class="pricing-features">
-                <li>Unlimited notes and wiki-links</li>
-                <li>Unlimited kanban boards and cards</li>
-                <li>AI chat with all channels</li>
-                <li>Voice memos and transcription</li>
-                <li>ClawVault memory system</li>
-                <li>Telegram integration</li>
-                <li>Lifetime updates</li>
-            </ul>
-            <a href="#" class="btn btn-primary" style="width: 100%; justify-content: center;">Get RESOLVE</a>
-            <p style="margin-top: 16px; font-size: 13px; color: var(--color-text-muted);">
-                Or get the complete bundle: MIND + FLOW + RESOLVE for $99
-            </p>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <p>© 2026 i_am_Hicks. Built with intention.</p>
+        <p>© 2026 i_am_Hicks. Built with intention. From intention to resolution.</p>
     </footer>
 </body>
 </html>
