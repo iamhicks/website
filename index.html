@@ -3,1722 +3,1998 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>i_am_Hicks — MIND | Offline Notes with Private AI</title>
-    <meta name="description" content="MIND — Beautiful, offline-first AI-powered notes. $39 one-time purchase. No subscriptions. Private. Your data stays yours.">
+    <title>Hicks — Your Personal Advisory Board</title>
+    <meta name="description" content="Stop building alone. Get strategic advice from 15 AI advisors who understand the solo founder journey. $19/month.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            /* Monochrome palette */
-            --off-white: #F1F1F1;
-            --dark: #1B1B1D;
-            --dark-lighter: #2A2A2C;
-            --dark-card: #252527;
-            
-            /* Text colors */
-            --text-white: #FFFFFF;
-            --text-gray: #817D7D;
-            --text-black: #000000;
-            
-            /* Semantic colors */
-            --bg-primary: var(--off-white);
-            --bg-secondary: var(--dark);
-            --bg-tertiary: var(--dark-lighter);
-            --bg-card: var(--dark-card);
-            --text-primary: var(--text-white);
-            --text-secondary: var(--text-gray);
-            --text-muted: #6b6b6b;
-            --text-dark: var(--text-black);
-            --text-dark-secondary: #333333;
-            
-            /* Accent colors - monochrome */
-            --accent-mind: var(--text-white);
-            --accent-mind-glow: rgba(255, 255, 255, 0.15);
-            --accent-flow: var(--text-gray);
-            --accent-flow-glow: rgba(129, 125, 125, 0.2);
-            --accent-gradient: linear-gradient(135deg, #FFFFFF 0%, #817D7D 100%);
-            
-            /* Effects */
-            --border-light: rgba(255, 255, 255, 0.1);
-            --border-hover: rgba(255, 255, 255, 0.2);
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
-            --shadow-glow-mind: 0 0 40px rgba(255, 255, 255, 0.1);
-            --shadow-glow-flow: 0 0 40px rgba(129, 125, 125, 0.15);
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --surface-light: #1a1a25;
+            --text: #ffffff;
+            --text-secondary: rgba(255,255,255,0.6);
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --success: #10b981;
         }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--dark);
-            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
-            font-weight: 400;
-            letter-spacing: -0.015em;
-            overflow-x: hidden;
         }
-
-        /* Playful serif for headings */
-        h1, h2, h3, .display-font {
-            font-family: 'Fraunces', Georgia, serif;
-            font-weight: 600;
-        }
-
+        
         /* Navigation */
         nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 64px;
-            background: rgba(241, 241, 241, 0.85);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            z-index: 9999;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        }
-
-        .nav-content {
-            max-width: 1200px;
-            width: 100%;
-            height: 100%;
-            margin: 0 auto;
-            padding: 0 24px;
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
         }
-
-        .nav-logo {
-            font-family: 'Fraunces', Georgia, serif;
-            font-weight: 600;
-            font-size: 20px;
-            letter-spacing: -0.01em;
-            color: var(--text-dark);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .nav-logo span {
-            font-weight: 300;
-            opacity: 0.7;
-        }
-
+        
+        .logo { font-size: 20px; font-weight: 700; }
+        .logo span { color: var(--accent); }
+        
         .nav-links {
             display: flex;
             gap: 32px;
             align-items: center;
         }
-
+        
         .nav-links a {
-            color: var(--text-dark-secondary);
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 14px;
-            font-weight: 500;
             transition: color 0.2s;
-            position: relative;
         }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--dark);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-dark);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
+        
+        .nav-links a:hover { color: var(--text); }
+        
         .nav-cta {
-            background: var(--dark);
-            color: var(--off-white) !important;
+            background: var(--accent);
+            color: white !important;
             padding: 10px 20px;
             border-radius: 100px;
-            font-weight: 600;
-            box-shadow: none;
-            transition: all 0.3s ease !important;
+            font-weight: 500;
         }
-
-        .nav-cta::after {
-            display: none !important;
-        }
-
-        .nav-cta:hover {
-            background: #2A2A2C;
-        }
-
-        /* ===== WAVE STYLES ===== */
-        .wave-container {
-            position: absolute;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-        }
-
-        .wave-container.bottom {
-            bottom: -1px;
-        }
-
-        .wave-container.top {
-            top: -1px;
-            transform: rotate(180deg);
-        }
-
-        .wave-container svg {
-            position: relative;
-            display: block;
-            width: calc(200% + 1.3px);
-            height: 120px;
-            animation: waveFlow 20s linear infinite;
-        }
-
-        .wave-container svg path {
-            transition: fill 0.3s ease;
-        }
-
-        /* Wave Animations */
-        @keyframes waveFlow {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        @keyframes waveBob {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-8px);
-            }
-        }
-
-        @keyframes waveGentle {
-            0%, 100% {
-                d: path("M0,64 C320,100 420,20 640,64 C860,108 960,28 1280,64 L1280,128 L0,128 Z");
-            }
-            50% {
-                d: path("M0,64 C320,28 420,108 640,64 C860,20 960,100 1280,64 L1280,128 L0,128 Z");
-            }
-        }
-
-        . {
-            animation: waveBob 6s ease-in-out infinite;
-        }
-
-        /* Hero Section - Superrb.com Style */
+        
+        .nav-cta:hover { background: var(--accent-hover); }
+        
+        /* Hero */
         .hero {
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
+            align-items: center;
             text-align: center;
-            padding: 140px 40px 180px;
-            position: relative;
-            background: var(--off-white);
-            overflow: hidden;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-        }
-
-        .hero h1 {
-            font-size: clamp(64px, 12vw, 140px);
-            font-weight: 600;
-            line-height: 0.9;
-            letter-spacing: -0.03em;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, var(--text-black) 0%, var(--text-dark-secondary) 50%, var(--text-black) 100%);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradient-shift 8s ease infinite;
-        }
-
-        @keyframes gradient-shift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero h1 span {
-            font-weight: 300;
-            opacity: 1;
-            color: #817D7D;
-            -webkit-text-fill-color: #817D7D;
-        }
-
-        .hero-tagline {
-            font-family: 'Fraunces', sans-serif;
-            font-size: clamp(24px, 4vw, 36px);
-            font-weight: 400;
-            color: var(--text-dark-secondary);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-
-        .hero-subhead {
-            font-size: clamp(18px, 2.5vw, 22px);
-            font-weight: 400;
-            color: var(--text-gray);
-            margin-bottom: 48px;
-            max-width: 560px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.7;
-        }
-
-        .hero-cta-group {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 64px;
-        }
-
-        .btn {
-            padding: 18px 36px;
-            border-radius: 100px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            padding: 120px 20px 80px;
             position: relative;
             overflow: hidden;
         }
-
-        .btn::before {
+        
+        .hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%);
+            pointer-events: none;
         }
-
-        .btn:hover::before {
-            left: 100%;
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139,92,246,0.1);
+            border: 1px solid rgba(139,92,246,0.2);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
         }
-
-        .btn-primary {
-            background: var(--dark);
-            color: var(--off-white);
-            box-shadow: none;
+        
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
-
-        .btn-primary:hover {
-            background: #2A2A2C;
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-black);
-            border: 1px solid var(--text-dark-secondary);
-            box-shadow: none;
+        
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 700;
+            line-height: 1.1;
+            max-width: 900px;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .btn-secondary:hover {
-            background: rgba(0, 0, 0, 0.05);
-            border-color: var(--text-black);
+        
+        .hero-subhead {
+            font-size: clamp(18px, 2vw, 22px);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 40px;
+            line-height: 1.6;
         }
-
-        .hero-apps {
+        
+        .hero-price {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .price-main {
+            font-size: 56px;
+            font-weight: 700;
+        }
+        
+        .price-note {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        
+        .cta-group {
             display: flex;
             gap: 16px;
-            justify-content: center;
             flex-wrap: wrap;
+            justify-content: center;
         }
-
-        .hero-app-link {
+        
+        .btn {
+            padding: 16px 32px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.4);
+        }
+        
+        /* Problem Section */
+        .problem {
+            padding: 120px 20px;
+            background: var(--surface);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+        
+        .section-headline {
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+        
+        .section-subhead {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            line-height: 1.7;
+        }
+        
+        .pain-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 60px;
+        }
+        
+        .pain-card {
+            background: var(--surface-light);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .pain-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #ef4444;
+        }
+        
+        .pain-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Solution Section */
+        .solution {
+            padding: 120px 20px;
+        }
+        
+        .solution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-top: 60px;
+        }
+        
+        @media (max-width: 900px) {
+            .solution-grid { grid-template-columns: 1fr; gap: 40px; }
+        }
+        
+        .solution-visual {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .advisor-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .advisor-row {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 14px 24px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 16px;
-            text-decoration: none;
-            color: var(--text-black);
-            font-size: 15px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
         }
-
-        .hero-app-link:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            border-color: rgba(0, 0, 0, 0.15);
-        }
-
-        .hero-app-link .icon {
-            width: 36px;
-            height: 36px;
+        
+        .advisor-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            transition: transform 0.3s ease;
         }
-
-        .hero-app-link:hover .icon {
-            transform: scale(1.1);
+        
+        .advisor-info h4 {
+            font-size: 15px;
+            margin-bottom: 2px;
         }
-
-        .hero-app-link.mind .icon {
-            background: var(--dark);
-            color: white;
+        
+        .advisor-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
         }
-
-        .hero-app-link.flow .icon {
-            background: var(--text-gray);
-            color: white;
+        
+        .solution-list {
+            list-style: none;
         }
-
-        /* Products Section */
-        .products {
-            padding: 120px 40px;
-            background: var(--dark);
-            position: relative;
+        
+        .solution-list li {
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
         }
-
-        .section-header {
-            text-align: center;
-            max-width: 640px;
-            margin: 0 auto 80px;
-        }
-
-        .section-header h2 {
-            font-size: clamp(40px, 6vw, 56px);
+        
+        .solution-list li::before {
+            content: '→';
+            color: var(--accent);
             font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-            color: var(--text-white);
-            font-family: 'Fraunces', Georgia, serif;
         }
-
-        .section-header p {
-            font-size: 20px;
-            color: var(--text-gray);
+        
+        .solution-list strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 4px;
         }
-
-        .products-grid {
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        .solution-list span {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        
+        /* Advisors Grid */
+        .advisors {
+            padding: 120px 20px;
+            background: var(--surface);
+        }
+        
+        .advisors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-            gap: 32px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 60px;
         }
-
-        .product-card {
-            background: var(--bg-card);
-            border-radius: 32px;
-            padding: 48px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid var(--border-light);
+        
+        .advisor-card {
+            background: var(--surface-light);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s;
         }
-
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            transition: height 0.3s ease;
+        
+        .advisor-card:hover {
+            border-color: rgba(139,92,246,0.3);
+            transform: translateY(-4px);
         }
-
-        .product-card.mind::before {
-            background: linear-gradient(90deg, #fff 0%, #817D7D 100%);
-        }
-
-        .product-card.flow::before {
-            background: linear-gradient(90deg, #817D7D 0%, #fff 100%);
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--border-hover);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .product-card:hover::before {
-            height: 4px;
-        }
-
-        .product-icon {
-            width: 72px;
-            height: 72px;
-            border-radius: 20px;
+        
+        .advisor-card .icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            margin-bottom: 28px;
-            transition: transform 0.3s ease;
-        }
-
-        .product-card:hover .product-icon {
-            transform: scale(1.1);
-        }
-
-        .product-card.mind .product-icon {
-            background: linear-gradient(135deg, #fff 0%, #817D7D 100%);
-            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.1);
-        }
-
-        .product-card.flow .product-icon {
-            background: linear-gradient(135deg, #817D7D 0%, #fff 100%);
-            box-shadow: 0 12px 32px rgba(129, 125, 125, 0.2);
-        }
-
-        .product-card h3 {
-            font-size: 36px;
-            font-weight: 600;
-            margin-bottom: 2px;
-            letter-spacing: -0.02em;
-            font-family: 'Fraunces', Georgia, serif;
-            color: #fff;
-        }
-
-        .product-card .tagline {
-            font-family: 'Fraunces', sans-serif;
-            font-size: 18px;
-            color: var(--text-gray);
-            margin-bottom: 8px;
-            letter-spacing: 0.05em;
-        }
-
-        .product-card > p {
-            color: var(--text-gray);
+            font-size: 24px;
             margin-bottom: 16px;
+        }
+        
+        .advisor-card h3 {
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+        
+        .advisor-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        /* Brainstorm Section */
+        .brainstorm {
+            padding: 120px 20px;
+            background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+        }
+        
+        .brainstorm-demo {
+            background: var(--surface-light);
+            border-radius: 24px;
+            padding: 40px;
+            margin-top: 60px;
+            border: 1px solid rgba(139,92,246,0.2);
+        }
+        
+        .brainstorm-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .brainstorm-badge {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .brainstorm-question {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .conversation {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .message.moderator {
+            background: rgba(139,92,246,0.08);
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .message-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .message-content h4 {
+            font-size: 15px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .message-content h4 span {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .message-content p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .synthesis {
+            background: linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(139,92,246,0.05) 100%);
+            padding: 28px;
+            border-radius: 16px;
+            margin-top: 24px;
+            border: 1px solid rgba(139,92,246,0.2);
+        }
+        
+        .synthesis h4 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--accent);
+        }
+        
+        .synthesis ul {
+            list-style: none;
+            margin: 0;
+        }
+        
+        .synthesis li {
+            padding: 8px 0;
+            font-size: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .synthesis li::before {
+            content: '→';
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .action-plan {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .action-plan h5 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--success);
+            margin-bottom: 12px;
+        }
+        
+        .action-plan p {
             font-size: 15px;
             line-height: 1.6;
         }
 
-        .product-features {
-            list-style: none;
-            margin-bottom: 32px;
+        /* Data Ownership Section */
+        .data-ownership {
+            padding: 120px 20px;
+            background: var(--surface);
         }
 
-        .product-features li {
-            padding: 12px 0;
-            padding-left: 32px;
-            position: relative;
-            color: var(--text-gray);
-            font-size: 15px;
-            border-bottom: 1px solid var(--border-light);
-            transition: all 0.2s ease;
-        }
-
-        .product-features li:last-child {
-            border-bottom: none;
-        }
-
-        .product-card:hover .product-features li {
-            color: var(--text-white);
-        }
-
-        .product-features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
+        .ownership-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
             align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: 700;
+            margin-top: 60px;
         }
 
-        .product-card.mind .product-features li::before {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+        @media (max-width: 900px) {
+            .ownership-grid { grid-template-columns: 1fr; gap: 40px; }
         }
 
-        .product-card.flow .product-features li::before {
-            background: rgba(129, 125, 125, 0.2);
-            color: var(--text-gray);
+        .ownership-visual {
+            background: var(--surface-light);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .product-price {
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            margin-bottom: 28px;
-        }
-
-        .price {
-            font-size: 42px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            font-family: 'Fraunces', sans-serif;
-        }
-
-        .price-note {
-            font-size: 14px;
-            color: var(--text-gray);
-        }
-
-        .product-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .product-actions .btn {
-            padding: 14px 28px;
-            font-size: 15px;
-        }
-
-        .btn-mind {
-            background: var(--off-white);
-            color: var(--dark);
-            box-shadow: none;
-        }
-
-        .btn-mind:hover {
-            background: #FFFFFF;
-        }
-
-        .btn-flow {
-            background: var(--off-white);
-            color: var(--dark);
-            box-shadow: none;
-        }
-
-        .btn-flow:hover {
-            background: #FFFFFF;
-        }
-
-        .btn-demo {
-            background: var(--bg-tertiary);
-            color: var(--text-white);
-            border: 1px solid var(--border-light);
-            box-shadow: none;
-        }
-
-        .btn-demo:hover {
-            background: var(--dark-lighter);
-            border-color: var(--border-hover);
-        }
-
-        /* Product Mockup Styles */
-        .product-mockup {
-            margin: 24px 0;
+        .file-preview {
+            background: #0d1117;
             border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-light);
-            background: var(--dark-lighter);
+            padding: 24px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            line-height: 1.6;
         }
 
-        .mockup-header {
-            background: var(--dark);
-            padding: 12px 16px;
+        .file-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .mockup-dot {
+        .file-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
         }
 
-        .mockup-dot.red { background: #ff5f56; }
-        .mockup-dot.yellow { background: #ffbd2e; }
-        .mockup-dot.green { background: #27c93f; }
+        .file-dot.red { background: #ff5f57; }
+        .file-dot.yellow { background: #febc2e; }
+        .file-dot.green { background: #28c840; }
 
-        .mockup-content {
-            padding: 20px;
-            min-height: 240px;
-        }
-
-        .mockup-sidebar {
-            display: flex;
-            gap: 20px;
-        }
-
-        .mockup-nav {
-            width: 120px;
-            flex-shrink: 0;
-        }
-
-        .mockup-nav-item {
-            padding: 8px 12px;
-            margin-bottom: 4px;
-            border-radius: 6px;
+        .file-name {
+            color: var(--text-secondary);
             font-size: 12px;
-            color: var(--text-gray);
         }
 
-        .mockup-nav-item.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+        .file-content {
+            color: #c9d1d9;
         }
 
-        .mockup-editor {
-            flex: 1;
-            background: var(--dark);
-            border-radius: 8px;
-            padding: 16px;
-        }
+        .file-content .comment { color: #8b949e; }
+        .file-content .title { color: #f0883e; font-weight: 600; }
+        .file-content .meta { color: #58a6ff; }
+        .file-content .tag { color: #3fb950; }
 
-        .mockup-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #fff;
-        }
-
-        .mockup-text {
-            font-size: 13px;
-            line-height: 1.6;
-            color: var(--text-gray);
-        }
-
-        .mockup-text p {
-            margin-bottom: 8px;
-        }
-
-        .mockup-kanban {
-            display: flex;
-            gap: 12px;
-        }
-
-        .mockup-column {
-            flex: 1;
-            background: var(--dark);
-            border-radius: 8px;
-            padding: 12px;
-        }
-
-        .mockup-column-header {
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .mockup-card {
-            background: var(--dark-lighter);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 8px;
-            font-size: 11px;
-            color: var(--text-gray);
-        }
-
-        /* Bundle Section */
-        .bundle {
-            padding: 120px 40px;
-            background: var(--off-white);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bundle-content {
-            max-width: 700px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .bundle-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            padding: 10px 20px;
-            border-radius: 100px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 32px;
-        }
-
-        .bundle h2 {
-            font-size: clamp(40px, 6vw, 56px);
-            font-weight: 600;
-            margin-bottom: 20px;
-            letter-spacing: -0.02em;
-            color: var(--text-black);
-        }
-
-        .bundle p {
-            font-size: 20px;
-            color: var(--text-gray);
-            margin-bottom: 40px;
-        }
-
-        .bundle-price {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-
-        .bundle-price .current {
-            font-size: 72px;
-            font-weight: 600;
-            font-family: 'Fraunces', sans-serif;
-            letter-spacing: -0.03em;
-            color: var(--text-black);
-        }
-
-        .bundle-price .original {
-            font-size: 36px;
-            color: var(--text-gray);
-            text-decoration: line-through;
-        }
-
-        .bundle-price .save {
-            background: var(--dark);
-            color: #fff;
-            padding: 10px 18px;
-            border-radius: 100px;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .bundle .btn-primary {
-            font-size: 20px;
-            padding: 22px 48px;
-            background: var(--dark);
-            color: var(--off-white);
-        }
-
-        /* Comparison Section */
-        .comparison {
-            padding: 120px 40px;
-            background: var(--dark);
-            position: relative;
-        }
-
-        .comparison-grid {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            margin-top: 48px;
-        }
-
-        @media (max-width: 768px) {
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .comparison-column h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--text-white);
-            font-family: 'Fraunces', Georgia, serif;
-        }
-
-        .comparison-column.them h3 {
-            color: var(--text-gray);
-        }
-
-        .comparison-column ul {
+        .ownership-features {
             list-style: none;
         }
 
-        .comparison-column li {
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-light);
-            color: var(--text-gray);
+        .ownership-features li {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             display: flex;
-            align-items: center;
-            gap: 12px;
+            align-items: flex-start;
+            gap: 16px;
         }
 
-        .comparison-column li:before {
-            content: '✓';
-            color: #fff;
-            font-weight: bold;
+        .ownership-features li:last-child {
+            border-bottom: none;
         }
 
-        .comparison-column.them li:before {
-            content: '✗';
-            color: var(--text-gray);
-        }
-
-        /* Built Different Section */
-        .built-different {
-            padding: 120px 40px;
-            background: var(--dark-lighter);
-            position: relative;
-        }
-
-        .built-different .section-header {
-            margin-bottom: 64px;
-        }
-
-        .built-different .section-header h2 {
-            color: var(--text-white);
-            background: none;
-            -webkit-background-clip: unset;
-            -webkit-text-fill-color: unset;
-            background-clip: unset;
-        }
-
-        .features-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border-radius: 24px;
-            padding: 36px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid var(--border-light);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--border-hover);
-            box-shadow: var(--shadow-md);
-        }
-
-        .feature-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
+        .ownership-features .icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            margin-bottom: 20px;
-            background: var(--dark-lighter);
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1);
-            background: #fff;
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #fff;
-            font-family: 'Fraunces', Georgia, serif;
-        }
-
-        .feature-card p {
-            font-size: 15px;
-            color: var(--text-gray);
-            line-height: 1.7;
-        }
-
-        /* Stats */
-        .stats {
-            padding: 100px 40px;
-            background: var(--off-white);
-            position: relative;
-        }
-
-        .stats .section-header h2 {
-            background: linear-gradient(135deg, var(--text-black) 0%, var(--text-gray) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stats-grid {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 60px;
-        }
-
-        .stat-item {
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-4px);
-        }
-
-        .stat-number {
-            font-size: 64px;
-            font-weight: 600;
-            font-family: 'Fraunces', sans-serif;
-            background: linear-gradient(135deg, var(--text-black) 0%, var(--text-gray) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.03em;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 15px;
-            color: var(--text-gray);
-            font-weight: 500;
-            margin-top: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* FAQ */
-        .faq {
-            padding: 120px 40px;
-            background: var(--dark);
-            position: relative;
-        }
-
-        .faq-grid {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .faq-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: 20px;
-            padding: 28px 32px;
-            margin-bottom: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .faq-item:hover {
-            border-color: var(--border-hover);
-            transform: translateX(4px);
-        }
-
-        .faq-item h4 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #fff;
-        }
-
-        .faq-item p {
-            font-size: 15px;
-            color: var(--text-gray);
-            line-height: 1.7;
-        }
-
-        /* Footer */
-        footer {
-            padding: 80px 40px 40px;
-            background: var(--off-white);
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 40px;
-        }
-
-        .footer-brand {
-            max-width: 300px;
-        }
-
-        .footer-logo {
-            font-family: 'Fraunces', sans-serif;
             font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-black);
+            flex-shrink: 0;
         }
 
-        .footer-logo span {
-            font-weight: 300;
-            opacity: 0.7;
+        .ownership-features h3 {
+            font-size: 17px;
+            margin-bottom: 6px;
         }
 
-        .footer-tagline {
-            font-size: 14px;
-            color: var(--text-gray);
+        .ownership-features p {
+            font-size: 15px;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
-
-        .footer-links {
+            line-height: 1.6;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 120px 20px;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+        
+        @media (max-width: 900px) {
+            .steps { grid-template-columns: 1fr 1fr; }
+        }
+        
+        @media (max-width: 600px) {
+            .steps { grid-template-columns: 1fr; }
+        }
+        
+        .step {
+            text-align: center;
+            padding: 32px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--accent);
+            border-radius: 50%;
             display: flex;
-            gap: 48px;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 20px;
         }
-
-        .footer-links-column h4 {
-            font-size: 14px;
+        
+        .step h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .step p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Social Proof */
+        .social-proof {
+            padding: 80px 20px;
+            background: var(--surface);
+            text-align: center;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 700px) {
+            .stats { grid-template-columns: 1fr 1fr; }
+        }
+        
+        .stat h3 {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .stat p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        
+        /* Comparison */
+        .comparison {
+            padding: 120px 20px;
+        }
+        
+        .comparison-table {
+            background: var(--surface);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 60px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr;
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            align-items: center;
+        }
+        
+        .comparison-row:last-child { border-bottom: none; }
+        .comparison-row.header { background: rgba(139,92,246,0.1); }
+        
+        .comparison-row.hicks { background: rgba(139,92,246,0.05); }
+        
+        .comparison-label { font-size: 15px; }
+        .comparison-value {
+            text-align: center;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        
+        .comparison-value strong {
+            color: var(--text);
+            font-size: 18px;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 120px 20px;
+            background: var(--surface);
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 800px) {
+            .pricing-cards { grid-template-columns: 1fr; max-width: 400px; }
+        }
+        
+        .pricing-card {
+            background: var(--surface-light);
+            padding: 40px 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent);
+            position: relative;
+        }
+        
+        .pricing-card.featured::before {
+            content: 'BEST VALUE';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 11px;
             font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-black);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
-
-        .footer-links-column a {
-            display: block;
-            color: var(--text-gray);
-            text-decoration: none;
+        
+        .pricing-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 24px 0;
+        }
+        
+        .pricing-card .price span {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin: 32px 0;
+            text-align: left;
+        }
+        
+        .pricing-card li {
+            padding: 8px 0;
             font-size: 14px;
-            margin-bottom: 10px;
-            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        .footer-links-column a:hover {
-            color: var(--dark);
-            transform: translateX(4px);
+        
+        .pricing-card li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: 600;
         }
-
-        .footer-bottom {
-            max-width: 1200px;
+        
+        /* FAQ */
+        .faq {
+            padding: 120px 20px;
+        }
+        
+        .faq-list {
+            max-width: 800px;
             margin: 60px auto 0;
-            padding-top: 24px;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .faq-item {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .faq-item:hover {
+            background: var(--surface-light);
+        }
+        
+        .faq-question {
+            font-size: 17px;
+            font-weight: 500;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
         }
-
-        .footer-copy {
-            font-size: 13px;
-            color: var(--text-gray);
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 16px;
-        }
-
-        .footer-social a {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-gray);
-            font-size: 18px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .footer-social a:hover {
-            background: var(--dark);
-            border-color: var(--dark);
-            color: #fff;
-            transform: translateY(-3px);
-        }
-
-        /* Screenshots Section */
-        .screenshots {
-            padding: 120px 40px;
-            background: var(--dark-lighter);
-            position: relative;
-        }
-
-        .screenshots-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 100px;
-        }
-
-        .screenshot-item {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .screenshot-item:nth-child(even) {
-            direction: rtl;
-        }
-
-        .screenshot-item:nth-child(even) > * {
-            direction: ltr;
-        }
-
-        .screenshot-image {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            aspect-ratio: 16 / 10;
-            background: var(--dark-card);
-        }
-
-        .screenshot-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        .screenshot-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--dark-card) 0%, var(--dark-lighter) 100%);
-            border: 2px dashed rgba(255, 255, 255, 0.1);
-        }
-
-        .placeholder-content {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .placeholder-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.8;
-        }
-
-        .placeholder-content p {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-white);
-            margin-bottom: 8px;
-        }
-
-        .placeholder-content span {
-            font-size: 14px;
-            color: var(--text-gray);
-        }
-
-        .screenshot-info h3 {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--text-white);
-            font-family: 'Fraunces', Georgia, serif;
-        }
-
-        .screenshot-info p {
-            font-size: 17px;
+        
+        .faq-answer {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-top: 12px;
             line-height: 1.7;
-            color: var(--text-gray);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
         }
-
-        @media (max-width: 968px) {
-            .screenshot-item {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .screenshot-item:nth-child(even) {
-                direction: ltr;
-            }
-
-            .screenshot-image {
-                aspect-ratio: 16 / 9;
-            }
-
-            .screenshot-info h3 {
-                font-size: 28px;
-            }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
         }
-
-        /* Mobile */
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+        }
+        
+        .cta-section h2 {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .cta-section p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+        
+        footer a:hover {
+            color: var(--text);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Enhanced Mobile Responsive */
         @media (max-width: 768px) {
             nav {
-                height: 56px;
+                padding: 16px 20px;
             }
-
+            
             .nav-links {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--surface);
+                flex-direction: column;
+                padding: 20px;
+                gap: 16px;
+                border-top: 1px solid rgba(255,255,255,0.1);
             }
-
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a {
+                font-size: 16px;
+                padding: 12px 0;
+            }
+            
+            .nav-cta {
+                text-align: center;
+                margin-top: 8px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
             .hero {
-                padding: 120px 24px 80px;
+                padding: 100px 16px 60px;
+                min-height: auto;
             }
-
-            .hero-apps {
+            
+            .hero h1 {
+                font-size: 32px;
+                line-height: 1.2;
+            }
+            
+            .hero-subhead {
+                font-size: 16px;
+            }
+            
+            .hero-badge {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            .hero-price {
                 flex-direction: column;
                 align-items: center;
+                gap: 8px;
             }
-
-            .products-grid {
-                grid-template-columns: 1fr;
+            
+            .price-main {
+                font-size: 42px;
             }
-
-            .product-card {
-                padding: 32px;
+            
+            .price-note {
+                text-align: center;
+                font-size: 14px;
             }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
+            
+            .cta-group {
                 flex-direction: column;
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+            
+            section {
+                padding: 60px 16px;
+            }
+            
+            .section-headline {
+                font-size: 28px;
+            }
+            
+            .section-subhead {
+                font-size: 16px;
+            }
+            
+            .pain-points {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-top: 40px;
+            }
+            
+            .pain-card {
+                padding: 24px;
+            }
+            
+            .solution-grid {
+                grid-template-columns: 1fr;
                 gap: 40px;
             }
-
-            .bundle-price {
+            
+            .solution-visual {
+                padding: 24px;
+                order: 2;
+            }
+            
+            .advisor-preview {
+                gap: 10px;
+            }
+            
+            .advisor-row {
+                padding: 12px;
+            }
+            
+            .advisor-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .advisor-info h4 {
+                font-size: 14px;
+            }
+            
+            .advisor-info p {
+                font-size: 12px;
+            }
+            
+            .advisors-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin-top: 40px;
+            }
+            
+            .advisor-card {
+                padding: 16px;
+            }
+            
+            .advisor-card .icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            
+            .advisor-card h3 {
+                font-size: 14px;
+            }
+            
+            .advisor-card p {
+                font-size: 12px;
+                display: none;
+            }
+            
+            .brainstorm-demo {
+                padding: 20px;
+                margin-top: 40px;
+            }
+            
+            .brainstorm-header {
                 flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .message {
+                gap: 12px;
+            }
+            
+            .message-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .message-content h4 {
+                font-size: 13px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+            }
+            
+            .message-content h4 span {
+                font-size: 11px;
+            }
+            
+            .message-content p {
+                font-size: 13px;
+            }
+            
+            .synthesis {
+                padding: 20px;
+            }
+            
+            .synthesis li {
+                font-size: 13px;
+            }
+            
+            .action-plan {
+                padding: 16px;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
                 gap: 16px;
             }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
+            
+            .step {
+                padding: 24px;
             }
-
-            .footer-links {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 32px;
+            
+            .step-number {
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
             }
-
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+            
+            .stat h3 {
+                font-size: 36px;
+            }
+            
+            .comparison-table {
+                margin-top: 40px;
+                font-size: 13px;
+            }
+            
+            .comparison-row {
+                grid-template-columns: 1.2fr 1fr 1fr;
+                padding: 14px 12px;
+                gap: 8px;
+            }
+            
+            .comparison-label {
+                font-size: 12px;
+            }
+            
+            .comparison-value {
+                font-size: 12px;
+            }
+            
+            .comparison-value strong {
+                font-size: 13px;
+            }
+            
+            .pricing-cards {
+                grid-template-columns: 1fr;
+                max-width: 340px;
+                margin-top: 40px;
+            }
+            
+            .pricing-card {
+                padding: 28px 24px;
+            }
+            
+            .pricing-card .price {
+                font-size: 40px;
+            }
+            
+            .faq-item {
+                padding: 20px;
+            }
+            
+            .faq-question {
+                font-size: 15px;
+            }
+            
+            .ownership-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .file-preview {
+                padding: 16px;
+                font-size: 11px;
+            }
+            
+            .ownership-features li {
+                padding: 16px 0;
+            }
+            
+            .ownership-features .icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .ownership-features h3 {
+                font-size: 15px;
+            }
+            
+            .ownership-features p {
+                font-size: 13px;
+            }
+            
+            .cta-section {
+                padding: 80px 16px;
+            }
+            
+            .cta-section h2 {
+                font-size: 32px;
+            }
+            
+            .cta-section p {
+                font-size: 16px;
             }
         }
-
-        /* Scroll reveal animation */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .advisors-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .advisor-card p {
+                display: block;
+                font-size: 13px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            
+            .stat h3 {
+                font-size: 28px;
+            }
+            
+            .stat p {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav>
-        <div class="nav-content">
-            <a href="/" class="nav-logo"><span>i_am_</span>Hicks</a>
-            <div class="nav-links">
-                <a href="/mind/">MIND</a>
-                <!-- <a href="/flow/">Flow_ai</a> -->
-                <a href="/about/">About</a>
-            </div>
+        <div class="logo">Hicks</div>
+        <button class="mobile-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</button>
+        <div class="nav-links">
+            <a href="#problem">Problem</a>
+            <a href="#advisors">Advisors</a>
+            <a href="#brainstorm">Brainstorm</a>
+            <a href="#data">Data</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#pricing" class="nav-cta">Start Free Trial</a>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero">
-        <div class="hero-content">
-            <h1><span>i_am_</span>Hicks</h1>
-            <p class="hero-tagline">Define yourself</p>
-            <p class="hero-subhead">A knowledge base with <strong>private AI in every note</strong>. $49 once. Offline. Your data stays yours.</p>
-            
-            <div class="hero-cta-group">
-                <a href="/mind/" class="btn btn-primary">Get MIND — $49</a>
-                <a href="/mind-demo/" class="btn btn-secondary">Try Demo</a>
-            </div>
+        <div class="hero-badge">
+            <div class="pulse"></div>
+            15 Expert Advisors Available Now
         </div>
-
-        <!-- Dark Wave Divider -->
-        <div class="wave-container bottom ">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
-                <defs>
-                    <path id="waveDark" d="M0,64 C320,100 420,20 640,64 C860,108 960,28 1280,64 L1280,128 L0,128 Z" fill="#1B1B1D"/>
-                </defs>
-                <use href="#waveDark" x="0" y="0"/>
-                <use href="#waveDark" x="1280" y="0"/>
-            </svg>
+        
+        <h1>Your Personal AI Advisory Board</h1>
+        
+        <p class="hero-subhead">
+            Stop making critical decisions alone. Get strategic guidance from 15 AI advisors who understand the solo founder journey — from pricing and positioning to code and cash flow.
+        </p>
+        
+        <div class="hero-price">
+            <span class="price-main">$19</span>
+            <span class="price-note">/month — or $299 one-time<br>7-day free trial • Cancel anytime</span>
         </div>
+        
+        <div class="cta-group">
+            <a href="#pricing" class="btn btn-primary">Start Free Trial</a>
+            <a href="#data" class="btn btn-secondary">Own Your Data</a>
+        </div>
+        
+        <p style="margin-top: 32px; font-size: 14px; color: rgba(255,255,255,0.5);">
+            💡 Your ideas are yours. Everything exports as Markdown files you own forever.
+        </p>
     </section>
 
-    <!-- Products Section -->
-    <section class="products" id="products">
-        <div class="section-header reveal">
-            <h2>i_am_Mind</h2>
-            <p><strong>Write smarter with AI in every note</strong>. Get instant feedback, brainstorm ideas, develop concepts. Every conversation is saved with that note — private and offline.</p>
-        </div>
-
-        <div class="products-grid">
-            <!-- MIND -->
-            <div class="product-card mind reveal">
-                <h3>MIND</h3>
-                <p class="tagline">i am Clear</p>
-                <p><strong>AI Chat in every note.</strong> A beautiful, offline-first knowledge base where each note has its own private AI conversation. Brainstorm, get feedback, and develop ideas — right alongside your writing.</p>
+    <!-- Problem Section -->
+    <section id="problem" class="problem">
+        <div class="container">
+            <div class="section-label">The Real Problem</div>
+            <h2 class="section-headline">Building Alone Is Expensive</h2>
+            
+            <p class="section-subhead">
+                Solo founders face a brutal reality: every major decision falls on you. Should you pivot? How do you price? Is this feature worth building? Without experienced guidance, you're flying blind — and blind decisions cost time, money, and sanity.
+            </p>
+            
+            <div class="pain-points">
+                <div class="pain-card">
+                    <h3>❌ Decision Paralysis</h3>
+                    <p>Analysis paralysis kills momentum. You spend weeks debating instead of shipping. Every day of indecision is a day of burn.</p>
+                </div>
                 
-                <!-- Product Mockup -->
-                <div class="product-mockup">
-                    <div class="mockup-header">
-                        <div class="mockup-dot red"></div>
-                        <div class="mockup-dot yellow"></div>
-                        <div class="mockup-dot green"></div>
-                    </div>
-                    <div class="mockup-content">
-                        <div class="mockup-sidebar">
-                            <div class="mockup-nav">
-                                <div class="mockup-nav-item active">📁 All Notes</div>
-                                <div class="mockup-nav-item">⭐ Favorites</div>
-                                <div class="mockup-nav-item">🔖 Bookmarks</div>
-                                <div class="mockup-nav-item">🏷️ Tags</div>
-                            </div>
-                            <div class="mockup-editor">
-                                <div class="mockup-title">Meeting Notes</div>
-                                <div class="mockup-text">
-                                    <p>Discussed Q4 roadmap and key deliverables...</p>
-                                    <p>Action items assigned to design and engineering teams.</p>
-                                    <p style="color: rgba(255,255,255,0.5);">✨ AI: Summarize key decisions?</p>
-                                    <p style="color: rgba(255,255,255,0.5);">✨ AI: Create follow-up tasks?</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="pain-card">
+                    <h3>❌ Costly Mistakes</h3>
+                    <p>Wrong pricing, wrong positioning, wrong features. A single bad decision can cost months of work and thousands in lost revenue.</p>
                 </div>
-
-                <ul class="product-features">
-                    <li>AI writing assistance & smart suggestions</li>
-                    <li>Intelligent tagging & auto-organization</li>
-                    <li>Save bookmarks with full-text search</li>
-                    <li>100% offline — AI runs locally</li>
-                    <li>Export to Markdown / JSON anytime</li>
-                </ul>
-
-                <div class="product-price">
-                    <span class="price">$49</span>
-                    <span class="price-note">One-time • Lifetime updates</span>
+                
+                <div class="pain-card">
+                    <h3>❌ Founder Isolation</h3>
+                    <p>No one to bounce ideas off. No one to call at 3 AM when doubt strikes. The loneliness of solo building is real and it affects your decisions.</p>
                 </div>
-
-                <div class="product-actions">
-                    <a href="https://gumroad.com" class="btn btn-mind">Buy MIND — $49</a>
-                    <a href="/mind-demo/" class="btn btn-demo">Try Demo</a>
-                    <a href="/mind/" class="btn btn-demo">Learn More</a>
+                
+                <div class="pain-card">
+                    <h3>❌ Bad Advice Is Expensive</h3>
+                    <p>Traditional advisors cost $50K–$500K/year or 0.5%–2% equity. Consultants charge $300+/hour. Accelerators want 7% of your company.</p>
                 </div>
             </div>
-        </div>
-
-        <!-- Cream Wave Divider -->
-        <div class="wave-container bottom ">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
-                <defs>
-                    <path id="waveCream" d="M0,80 C240,40 400,100 640,60 C880,20 1040,80 1280,40 L1280,128 L0,128 Z" fill="#F1F1F1"/>
-                </defs>
-                <use href="#waveCream" x="0" y="0"/>
-                <use href="#waveCream" x="1280" y="0"/>
-            </svg>
         </div>
     </section>
 
-    <!-- Screenshots Section -->
-    <section class="screenshots" id="screenshots">
-        <div class="section-header reveal">
-            <h2>See MIND in Action</h2>
-            <p>Private AI conversations in every note. Here's what makes MIND different.</p>
-        </div>
-        
-        <div class="screenshots-grid">
-            <!-- Screenshot 1: AI Chat -->
-            <div class="screenshot-item reveal">
-                <div class="screenshot-image">
-                    <img src="assets/screenshot-ai-chat.jpg" alt="AI Chat in MIND - Shows a note with AI conversation sidebar" loading="lazy">
-                    <div class="screenshot-placeholder">
-                        <div class="placeholder-content">
-                            <div class="placeholder-icon">💬</div>
-                            <p>AI Chat Feature</p>
-                            <span>Every note has its own private AI conversation</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="screenshot-info">
-                    <h3>AI Chat in Every Note</h3>
-                    <p>Each note has its own isolated AI conversation. Ask questions, brainstorm ideas, get writing feedback, or analyze research — all saved with that specific note forever. Writers use it to refine drafts. Researchers use it to extract insights. Thinkers use it to develop concepts. Every chat is private, offline, and persists across sessions.</p>
-                </div>
-            </div>
+    <!-- Solution Section -->
+    <section class="solution">
+        <div class="container">
+            <div class="section-label">The Solution</div>
+            <h2 class="section-headline">Expert Advice, Founder-Scale Pricing</h2>
             
-            <!-- Screenshot 2: Organization -->
-            <div class="screenshot-item reveal">
-                <div class="screenshot-image">
-                    <img src="assets/screenshot-organize.jpg" alt="MIND organization - Shows folder tree and tags" loading="lazy">
-                    <div class="screenshot-placeholder">
-                        <div class="placeholder-content">
-                            <div class="placeholder-icon">📁</div>
-                            <p>Organization</p>
-                            <span>Folders, tags, and smart filtering</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="screenshot-info">
-                    <h3>Organize Your Way</h3>
-                    <p>Structure your knowledge with folders, tags, and pinned favorites. Drag and drop to reorder. Filter by multiple tags to find exactly what you need. The folder tree shows your hierarchy at a glance. Everything is designed to scale from a few notes to a complete knowledge library without getting overwhelming.</p>
-                </div>
-            </div>
+            <p class="section-subhead">
+                Imagine having 15 specialists on speed dial. A strategist for big decisions. A marketer for growth. A finance expert for runway. Available instantly, 24/7, for less than your coffee budget.
+            </p>
             
-            <!-- Screenshot 3: Rich Editor -->
-            <div class="screenshot-item reveal">
-                <div class="screenshot-image">
-                    <img src="assets/screenshot-editor.jpg" alt="MIND editor - Shows rich text editing with formatting" loading="lazy">
-                    <div class="screenshot-placeholder">
-                        <div class="placeholder-content">
-                            <div class="placeholder-icon">📝</div>
-                            <p>Rich Editor</p>
-                            <span>Beautiful writing experience</span>
+            <div class="solution-grid">
+                <div class="solution-visual">
+                    <div class="advisor-preview">
+                        <div class="advisor-row">
+                            <div class="advisor-icon">🎯</div>
+                            <div class="advisor-info">
+                                <h4>Strategy Advisor</h4>
+                                <p>"The Decision: Test it. Reality check: You can reverse this if wrong..."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="advisor-row">
+                            <div class="advisor-icon">📢</div>
+                            <div class="advisor-info">
+                                <h4>Marketing Advisor</h4>
+                                <p>"Niche down to grow. Your ideal customer: founders making first $1K..."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="advisor-row">
+                            <div class="advisor-icon">💰</div>
+                            <div class="advisor-info">
+                                <h4>Finance Advisor</h4>
+                                <p>"At $19 vs $29, you need 52% more customers. Here's the math..."</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="screenshot-info">
-                    <h3>Beautiful Writing Experience</h3>
-                    <p>Distraction-free WYSIWYG editor with just the right amount of formatting. Bold, italic, headings, lists, quotes — everything you need, nothing you don't. The clean typography and generous whitespace make writing a pleasure. Your notes look polished without any effort.</p>
+                
+                <div>
+                    <ul class="solution-list">
+                        <li>
+                            <div>
+                                <strong>Specialized Expertise</strong>
+                                <span>Each advisor is an expert in one domain — strategy, marketing, sales, code, finance, mindset, and more.</span>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div>
+                                <strong>Solo Founder Context</strong>
+                                <span>Every advisor understands your constraints: limited resources, decision fatigue, and the psychology of building alone.</span>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div>
+                                <strong>Actionable Output</strong>
+                                <span>No generic platitudes. Every response includes specific next steps you can implement today.</span>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div>
+                                <strong>Brainstorm Mode</strong>
+                                <span>Stuck on a big decision? Get 3-4 advisors to discuss it and synthesize a clear recommendation.</span>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div>
+                                <strong>100% Private</strong>
+                                <span>Your conversations never leave your device. No data mining. No training. Just you and your advisors.</span>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div>
+                                <strong>Own Your Data</strong>
+                                <span>Everything exports as Markdown (.md) files — the universal format. No lock-in. Take your notes to Obsidian, Notion, or any text editor.</span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            
-            <!-- Screenshot 4: Offline & Private -->
-            <div class="screenshot-item reveal">
-                <div class="screenshot-image">
-                    <img src="assets/screenshot-offline.jpg" alt="MIND offline - Shows the app working without internet" loading="lazy">
-                    <div class="screenshot-placeholder">
-                        <div class="placeholder-content">
-                            <div class="placeholder-icon">🔒</div>
-                            <p>100% Offline</p>
-                            <span>Your data never leaves your device</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="screenshot-info">
-                    <h3>100% Offline & Private</h3>
-                    <p>No internet required. No accounts to create. No data harvesting. Your notes and AI conversations live only on your device. Works on planes, trains, and anywhere else. Export to Markdown or JSON anytime — your data is truly yours, now and forever.</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Dark Wave Divider -->
-        <div class="wave-container bottom ">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
-                <use href="#waveDark" x="0" y="0"/>
-                <use href="#waveDark" x="1280" y="0"/>
-            </svg>
         </div>
     </section>
 
-    <!-- Built Different Section -->
-    <section class="built-different" id="features">
-        <div class="wave-container top">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
-                <path d="M0,64 C320,100 420,20 640,64 C860,108 960,28 1280,64 L1280,128 L0,128 Z" fill="#F1F1F1"/>
-            </svg>
+    <!-- Advisors Grid -->
+    <section id="advisors" class="advisors">
+        <div class="container">
+            <div class="section-label">Your Advisory Board</div>
+            <h2 class="section-headline">15 Experts. One Mission.</h2>
+            
+            <p class="section-subhead">
+                Each advisor brings deep expertise in one area. No generalists. No fluff. Just focused guidance when you need it.
+            </p>
+            
+            <div class="advisors-grid">
+                <div class="advisor-card">
+                    <div class="icon">💬</div>
+                    <h3>General</h3>
+                    <p>Daily prioritization, founder psychology, and ruthless resource allocation</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">🎯</div>
+                    <h3>Strategy</h3>
+                    <p>Pivot vs persevere, resource allocation, and regret minimization frameworks</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">💻</div>
+                    <h3>Code</h3>
+                    <p>Ship fast, manage technical debt, and know when to build vs buy</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">📢</div>
+                    <h3>Marketing</h3>
+                    <p>Zero-budget growth, content strategy, and landing pages that convert</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">🎯</div>
+                    <h3>Sales</h3>
+                    <p>Cold outreach, objection handling, and closing without being sleazy</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">📦</div>
+                    <h3>Product</h3>
+                    <p>Feature prioritization and ruthless scope management</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">🎨</div>
+                    <h3>Design</h3>
+                    <p>Conversion-focused UI and DIY brand identity</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">💰</div>
+                    <h3>Finance</h3>
+                    <p>Runway planning, unit economics, and pricing strategy</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">⚖️</div>
+                    <h3>Legal</h3>
+                    <p>Contract review in plain English and risk identification</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">🔬</div>
+                    <h3>Research</h3>
+                    <p>Quick market validation and competitive intelligence</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">✍️</div>
+                    <h3>Writing</h3>
+                    <p>Founder storytelling and content that builds audiences</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">⚙️</div>
+                    <h3>Operations</h3>
+                    <p>Automation and process optimization for one-person teams</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">🧘</div>
+                    <h3>Mindset</h3>
+                    <p>Burnout prevention and imposter syndrome management</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">🚀</div>
+                    <h3>Entrepreneur</h3>
+                    <p>AI strategy, business model architecture, and path to $1M ARR</p>
+                </div>
+                
+                <div class="advisor-card">
+                    <div class="icon">🐛</div>
+                    <h3>Debug</h3>
+                    <p>Systematic problem solving when things break at 3 AM</p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="section-header reveal">
-            <h2>Built Different</h2>
-            <p>Most software sells your data, locks you into subscriptions, or disappears when the startup folds. We don't play those games.</p>
+    <!-- Brainstorm Mode Section -->
+    <section id="brainstorm" class="brainstorm">
+        <div class="container">
+            <div class="section-label">Multi-Advisor Mode</div>
+            <h2 class="section-headline">When One Advisor Isn't Enough</h2>
+            
+            <p class="section-subhead">
+                Big decisions need multiple perspectives. Activate Brainstorm Mode and watch 3-4 advisors discuss your question, challenge each other's assumptions, and synthesize a clear action plan.
+            </p>
+            
+            <div class="brainstorm-demo">
+                <div class="brainstorm-header">
+                    <div class="brainstorm-badge">🎭 Brainstorm Mode Active</div>
+                    <div class="brainstorm-question">"I'm launching Hicks MIND next week. Should I price at $19/month or $29/month?"</div>
+                </div>
+                
+                <div class="conversation">
+                    <div class="message moderator">
+                        <div class="message-avatar">🎭</div>
+                        <div class="message-content">
+                            <h4>Moderator <span> framing the discussion</span></h4>
+                            <p>We need to evaluate this pricing decision from multiple angles: strategic positioning, financial impact, and market perception. Strategy, Finance, and Marketing — please share your perspectives.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="message">
+                        <div class="message-avatar">🎯</div>
+                        <div class="message-content">
+                            <h4>Strategy Advisor <span>• Positioning angle</span></h4>
+                            <p>The $19 price point positions us as accessible to early-stage founders — our core market. $29 risks filtering out the exact people who need us most. Remember: we're replacing $50K advisory boards, not $19/month tools.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="message">
+                        <div class="message-avatar">💰</div>
+                        <div class="message-content">
+                            <h4>Finance Advisor <span>• Unit economics</span></h4>
+                            <p>At $19 vs $29, you need 52% more customers to hit the same revenue. But at $0 MRR, customer volume matters more than revenue per customer. Lower price = faster feedback loops = faster iteration.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="message">
+                        <div class="message-avatar">📢</div>
+                        <div class="message-content">
+                            <h4>Marketing Advisor <span>• Market angle</span></h4>
+                            <p>Start at $19, then grandfather early users when you raise prices later. Creates urgency: "Lock in $19 before it goes to $29." This is exactly how successful SaaS companies build initial traction.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="synthesis">
+                        <h4>🎯 Synthesized Recommendation</h4>
+                        <ul>
+                            <li>Launch at $19/month to maximize early adoption and feedback velocity</li>
+                            <li>Position as "founder-friendly pricing" vs expensive traditional advisory</li>
+                            <li>Plan price increase to $29 at month 6, grandfathering early users</li>
+                            <li>Create urgency messaging: "Early adopter pricing — lock in $19 forever"</li>
+                        </ul>
+                        
+                        <div class="action-plan">
+                            <h5>Your Action Plan</h5>
+                            <p>Set price at $19/month for launch. Create "Founding Member" tier that locks in this price. Plan migration to $29 for new users in 6 months once you have 100+ paying customers and social proof.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 40px; text-align: center;">
+                <p style="color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto;">
+                    <strong>Brainstorm Mode is like having a real advisory board meeting</strong> — but instead of waiting weeks for calendar alignment, you get multiple expert perspectives in under 60 seconds.
+                </p>
+            </div>
         </div>
+    </section>
 
-        <div class="features-grid">
-            <div class="feature-card reveal">
-                <div class="feature-icon">🔒</div>
-                <h3>i am Private</h3>
-                <p>Your data stays on your device. No cloud syncing. No data mining. No "analytics." Just pure, private productivity.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">💰</div>
-                <h3>i am Free</h3>
-                <p>One purchase. Lifetime access. All future updates included. No monthly fees. No surprise charges. Ever.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">⚡</div>
-                <h3>i am Fast</h3>
-                <p>Single HTML files that load instantly. No bloated Electron apps. No waiting for servers. Just click and go.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">📱</div>
-                <h3>i am Portable</h3>
-                <p>Any device with a browser. Mac, PC, Linux, Chromebook. Your data exports with you. True portability.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">🎨</div>
-                <h3>i am Focused</h3>
-                <p>Thoughtfully crafted interfaces that make you want to use them. Beautiful by default. No clutter. Just focus.</p>
-            </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">🚀</div>
-                <h3>i am Professional</h3>
-                <p>Built by a 20-year UI/UX veteran who actually uses these tools daily. Every feature solves a real problem.</p>
+    <!-- How It Works -->
+    <section id="how" class="how-it-works">
+        <div class="container">
+            <div class="section-label">Simple Process</div>
+            <h2 class="section-headline">How It Works</h2>
+            
+            <p class="section-subhead">
+                No onboarding, no setup, no learning curve. Just open and start asking.
+            </p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Pick Your Advisor</h3>
+                    <p>Choose from 15 specialists. Strategy stuck? Talk to Strategy. Pricing question? Ask Finance.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Ask Anything</h3>
+                    <p>Type naturally. "Should I pivot?" "How do I price this?" Your advisors understand founder context.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Guidance</h3>
+                    <p>Receive specific, actionable advice with next steps you can implement today.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Brainstorm Mode</h3>
+                    <p>Big decision? Activate Brainstorm Mode — multiple advisors discuss and synthesize a recommendation.</p>
+                </div>
             </div>
         </div>
+    </section>
 
-        <!-- Cream Wave Divider -->
-        <div class="wave-container bottom ">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
-                <use href="#waveCream" x="0" y="0"/>
-                <use href="#waveCream" x="1280" y="0"/>
-            </svg>
+    <!-- Data Ownership Section -->
+    <section id="data" class="data-ownership">
+        <div class="container">
+            <div class="section-label">Intellectual Property</div>
+            <h2 class="section-headline">You Own Your Ideas. Forever.</h2>
+            
+            <p class="section-subhead">
+                Unlike other AI platforms that claim rights to your prompts or trap your insights in proprietary formats, Hicks ensures <strong>everything you create is 100% yours</strong>. Your business strategies, your product decisions, your proprietary thinking — stored as plain Markdown files on your computer, not our servers.
+            </p>
+            
+            <div class="ownership-grid">
+                <div class="ownership-visual">
+                    <div class="file-preview">
+                        <div class="file-header">
+                            <div class="file-dot red"></div>
+                            <div class="file-dot yellow"></div>
+                            <div class="file-dot green"></div>
+                            <div class="file-name">pricing-decision.md</div>
+                        </div>
+                        <div class="file-content">
+                            <div class="title"># Pricing Strategy Notes</div>
+                            <br>
+                            <div class="meta">**Date:** 2026-02-17</div>
+                            <div class="meta">**Tags:** #strategy #pricing #launch</div>
+                            <br>
+                            <div>Decision: Launch at $19/month</div>
+                            <br>
+                            <div class="tag">Rationale:</div>
+                            <div>- Maximize early adoption</div>
+                            <div>- Faster feedback loops</div>
+                            <div>- Grandfather early users at $29</div>
+                            <br>
+                            <div class="comment"><!-- Auto-saved from Brainstorm Mode --></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <ul class="ownership-features">
+                        <li>
+                            <div class="icon">🧠</div>
+                            <div>
+                                <h3>You Own Your Ideas</h3>
+                                <p>Your business strategies, product decisions, pricing models, and proprietary thinking — <strong>all your intellectual property stays 100% yours</strong>. We claim zero rights to your prompts, your insights, or your competitive advantages. Unlike other AI platforms.</p>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="icon">📄</div>
+                            <div>
+                                <h3>Standard Markdown Files</h3>
+                                <p>Every note, bookmark, and conversation exports as a .md file — the universal format readable by any text editor, Obsidian, Notion, VS Code, or any other tool you prefer. Your ideas in a format that will outlive any app.</p>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="icon">💾</div>
+                            <div>
+                                <h3>Local Storage, Auto-Backup</h3>
+                                <p>Your data lives on your hard drive, not our servers. Automatic daily backups to your chosen folder. Sync to Dropbox, iCloud, or Git — your choice. You control where your IP lives.</p>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <div class="icon">🔓</div>
+                            <div>
+                                <h3>Zero Vendor Lock-In</h3>
+                                <p>Cancel anytime and keep everything. Your notes work in any Markdown app. Your bookmarks are plain URLs. Your data is always yours, forever. No proprietary formats, no extraction fees, no hostage situation.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="container">
+            <div class="section-label">The Numbers</div>
+            <h2 class="section-headline">$500K/Year vs $19/Month</h2>
+            
+            <div class="stats">
+                <div class="stat">
+                    <h3>15</h3>
+                    <p>Expert Advisors</p>
+                </div>
+                
+                <div class="stat">
+                    <h3>24/7</h3>
+                    <p>Availability</p>
+                </div>
+                
+                <div class="stat">
+                    <h3>0%</h3>
+                    <p>Equity Taken</p>
+                </div>
+                
+                <div class="stat">
+                    <h3>$19</h3>
+                    <p>Per Month</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="comparison">
+        <div class="container">
+            <div class="section-label">The Alternative</div>
+            <h2 class="section-headline">Traditional Advisory vs Hicks</h2>
+            
+            <div class="comparison-table">
+                <div class="comparison-row header">
+                    <div class="comparison-label"></div>
+                    <div class="comparison-value">Traditional Board</div>
+                    <div class="comparison-value">Hicks MIND</div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-label">Annual Cost</div>
+                    <div class="comparison-value">$50,000 – $500,000</div>
+                    <div class="comparison-value hicks"><strong>$228</strong></div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-label">Response Time</div>
+                    <div class="comparison-value">Days to weeks</div>
+                    <div class="comparison-value hicks"><strong>Instant</strong></div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-label">Availability</div>
+                    <div class="comparison-value">Business hours</div>
+                    <div class="comparison-value hicks"><strong>24/7</strong></div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-label">Number of Advisors</div>
+                    <div class="comparison-value">3 – 5 people</div>
+                    <div class="comparison-value hicks"><strong>15 specialists</strong></div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-label">Equity Required</div>
+                    <div class="comparison-value">0.5% – 2%</div>
+                    <div class="comparison-value hicks"><strong>None</strong></div>
+                </div>
+                
+                <div class="comparison-row">
+                    <div class="comparison-label">Cancel Anytime</div>
+                    <div class="comparison-value">❌</div>
+                    <div class="comparison-value hicks"><strong>✓</strong></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-label">Simple Pricing</div>
+            <h2 class="section-headline">Start Free. Scale As You Grow.</h2>
+            
+            <p class="section-subhead">
+                No hidden fees. No surprise charges. Just straightforward pricing that respects your budget.
+            </p>
+            
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    
+                    <ul>
+                        <li>General Advisor</li>
+                        <li>Unlimited Notes</li>
+                        <li>Bookmark Saving</li>
+                        <li>Full-text Search</li>
+                    </ul>
+                    
+                    <a href="#" class="btn btn-secondary" style="width: 100%; display: block; text-align: center;">Download Free</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <h3>Pro Monthly</h3>
+                    <div class="price">$19<span>/month</span></div>
+                    
+                    <ul>
+                        <li>All 15 Advisors</li>
+                        <li>Brainstorm Mode</li>
+                        <li>Cloud AI (Faster)</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    
+                    <a href="#" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">Start Free Trial</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Lifetime</h3>
+                    <div class="price">$299<span>one-time</span></div>
+                    
+                    <ul>
+                        <li>All 15 Advisors</li>
+                        <li>Brainstorm Mode</li>
+                        <li>Lifetime Updates</li>
+                        <li>First 100 Only</li>
+                    </ul>
+                    
+                    <a href="#" class="btn btn-secondary" style="width: 100%; display: block; text-align: center;">Get Lifetime</a>
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin-top: 40px; color: var(--text-secondary);">
+                7-day free trial • No credit card required • Cancel anytime
+            </p>
         </div>
     </section>
 
     <!-- FAQ -->
-    <section class="faq" id="faq">
-        <div class="wave-container top">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 128" preserveAspectRatio="none">
-                <path d="M0,80 C240,40 400,100 640,60 C880,20 1040,80 1280,40 L1280,128 L0,128 Z" fill="#2A2A2C"/>
-            </svg>
-        </div>
-        
-        <div class="section-header reveal">
-            <h2>Questions? Answered.</h2>
-        </div>
-        
-        <div class="faq-grid">
-            <div class="faq-item reveal">
-                <h4>What makes MIND different from other note apps?</h4>
-                <p>Every note has its own private AI conversation. Brainstorm ideas, get writing feedback, or analyze research — all saved with that specific note. Plus it's 100% offline, so your thoughts never leave your device.</p>
-            </div>
-            <div class="faq-item reveal">
-                <h4>How does the AI chat work?</h4>
-                <p>Each note has its own isolated AI conversation. Ask questions, get summaries, or brainstorm ideas. Every chat is saved with that note and backed up automatically. Return months later and your conversation history is right there.</p>
-            </div>
-            <div class="faq-item reveal">
-                <h4>Where is my data stored?</h4>
-                <p>Right on your computer. Set up auto-backup to any folder you choose — MIND saves a backup every 10 minutes. You can also export anytime as Markdown or JSON to any location. Your data never touches our servers.</p>
-            </div>
-            <div class="faq-item reveal">
-                <h4>Can I use MIND on multiple devices?</h4>
-                <p>Yes. Your license covers all your personal devices. Install MIND on each computer and use the export/import feature to move your data — including your AI chat history. You can also set up auto-backup to a shared folder (like Dropbox or iCloud) to keep everything in sync effortlessly.</p>
-            </div>
-            <div class="faq-item reveal">
-                <h4>Do you offer refunds?</h4>
-                <p>Yes. 30-day money-back guarantee, no questions asked. If MIND doesn't improve your workflow, you shouldn't pay for it.</p>
-            </div>
-            <div class="faq-item reveal">
-                <h4>Will there be updates?</h4>
-                <p>Yes. All updates are free for life. When you buy, you're added to our update list. Just re-download the file when we announce new versions.</p>
+    <section class="faq">
+        <div class="container">
+            <div class="section-label">Questions</div>
+            <h2 class="section-headline">FAQ</h2>
+            
+            <div class="faq-list">
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">How is this different from ChatGPT?</div>
+                    <div class="faq-answer">
+                        Three key differences: (1) Specialized advisors trained on solo founder challenges, not general knowledge. (2) 100% offline — your data never leaves your device. (3) Brainstorm Mode — multi-advisor discussions that synthesize conflicting perspectives into clear recommendations.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">Is my data really private?</div>
+                    <div class="faq-answer">
+                        Yes. MIND runs entirely in your browser. Your conversations are stored locally using localStorage. We have no servers, no database, no way to access your data. You can verify this yourself — open developer tools and check the network tab. Zero outbound requests for your conversations.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">Do you own my ideas or conversations?</div>
+                    <div class="faq-answer">
+                        <strong>Absolutely not.</strong> Your business strategies, product decisions, pricing models, and proprietary thinking are 100% yours. We claim zero rights to your prompts, insights, or competitive advantages. Unlike other AI platforms that use your data to train models or reserve rights to your content, Hicks treats your intellectual property as exactly that — <strong>your property</strong>. Our Terms explicitly state you retain all ownership of everything you create.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">What format is my data in? Can I export it?</div>
+                    <div class="faq-answer">
+                        Everything exports as standard Markdown (.md) files — the universal format readable by any text editor, Obsidian, Notion, VS Code, or any other tool. Your notes, bookmarks, and even advisor conversations are all plain text files you own completely. No proprietary formats, no lock-in, no hassle.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">What happens if I cancel?</div>
+                    <div class="faq-answer">
+                        You keep all your notes and bookmarks forever. The free version includes unlimited notes and the General advisor. You only lose access to specialized advisors and Brainstorm Mode. Your data is always yours — export anytime as Markdown files that work in any text editor.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">Can I use this on multiple devices?</div>
+                    <div class="faq-answer">
+                        Yes. Your license covers all your personal devices. Copy the HTML file to each device and use export/import to move your data. Everything stays in sync manually — no cloud required.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">Is there a free trial?</div>
+                    <div class="faq-answer">
+                        Yes. Start with a 7-day free trial — no credit card required. You'll get full access to all 15 advisors and Brainstorm Mode. If it's not for you, simply stop using it.
+                    </div>
+                </div>
+                
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="faq-question">What's the difference between monthly and lifetime?</div>
+                    <div class="faq-answer">
+                        Monthly ($19/month) gives you flexibility to cancel anytime. Lifetime ($299 one-time) pays for itself at month 16 and includes all future updates. Both include the same features.
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Final CTA -->
+    <section class="cta-section">
+        <h2>Stop Building Alone</h2>
+        <p>Join solo founders who've replaced decision paralysis with clarity.</p>
+        
+        <div class="cta-group">
+            <a href="#pricing" class="btn btn-primary" style="font-size: 18px; padding: 18px 36px;">Start Free Trial — $19/month</a>
+        </div>
+        
+        <p style="margin-top: 24px; font-size: 14px; color: var(--text-secondary);">7-day free trial • No credit card required • Cancel anytime</p>
+    </section>
+
     <!-- Footer -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-brand">
-                <div class="footer-logo"><span>i_am_</span>Hicks</div>
-                <p class="footer-tagline">Beautiful, offline-first productivity tools that respect your privacy and your wallet.</p>
-            </div>
-            <div class="footer-links">
-                <div class="footer-links-column">
-                    <h4>Product</h4>
-                    <a href="/mind/">MIND</a>
-                    <a href="/mind-demo/">Try Demo</a>
-                    <a href="https://gumroad.com">Buy Now — $49</a>
-                </div>
-                <div class="footer-links-column">
-                    <h4>Resources</h4>
-                    <a href="#faq">FAQ</a>
-                    <a href="mailto:hello@iamhicks.com">Contact</a>
-                </div>
-                <div class="footer-links-column">
-                    <h4>Company</h4>
-                    <a href="/about/">About</a>
-                    <a href="mailto:hello@iamhicks.com">Support</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="footer-copy">© 2026 i_am_Hicks. Define yourself.</div>
-            <div class="footer-social">
-                <a href="#" title="Twitter">𝕏</a>
-                <a href="#" title="GitHub">⌘</a>
-            </div>
-        </div>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+        <a href="#">Twitter</a>
+        <br><br>
+        <p>© 2026 Hicks. Built for solo founders.</p>
+        <p style="margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.4);">
+            You own your ideas. We claim zero rights to your data, prompts, or intellectual property.
+        </p>
     </footer>
 
     <script>
-        // Scroll to top on page load/refresh
-        window.onload = function() {
-            window.scrollTo(0, 0);
-        };
-
-        // Scroll reveal animation
-        const revealElements = document.querySelectorAll('.reveal');
-        
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('active');
-                    }, index * 100);
-                    revealObserver.unobserve(entry.target);
-                }
+        // Smooth scroll and close mobile menu
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                document.querySelector('.nav-links').classList.remove('active');
             });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
         });
-
-        revealElements.forEach(el => revealObserver.observe(el));
     </script>
 </body>
 </html>
