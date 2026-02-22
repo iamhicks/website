@@ -3,766 +3,578 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIND — Your Second Brain That Thinks While You Sleep</title>
+  <title>Hicks — Your Living Memory</title>
   <style>
     :root {
       --bg-primary: #F1F1F1;
       --bg-secondary: #FFFFFF;
+      --bg-accent: #1B1B1D;
       --text-primary: #1B1B1D;
       --text-secondary: #6B6B6E;
+      --text-light: #F1F1F1;
       --accent: #1B1B1D;
       --border: #E0E0E0;
-      --success: #22C55E;
+      --gradient-start: #F8F8F8;
+      --gradient-end: #E8E8E8;
     }
-    
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       line-height: 1.6;
+      overflow-x: hidden;
     }
-    
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-    
-    nav {
-      padding: 24px 0;
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(241, 241, 241, 0.95);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
-      background: var(--bg-secondary);
+      z-index: 1000;
+      padding: 16px 0;
     }
-    
-    nav .container {
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
+
     .logo {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--text-primary);
       text-decoration: none;
+      letter-spacing: -0.5px;
     }
-    
-    .nav-links a {
+
+    .header-nav a {
       margin-left: 32px;
       color: var(--text-secondary);
       text-decoration: none;
       font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
     }
-    
-    .nav-links a:hover { color: var(--text-primary); }
-    
+
+    .header-nav a:hover {
+      color: var(--text-primary);
+    }
+
     /* Hero */
     .hero {
-      padding: 100px 0 80px;
-      background: var(--bg-secondary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
     }
-    
-    h1 {
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(27, 27, 29, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(27, 27, 29, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .hero h1 {
       font-size: 64px;
       font-weight: 800;
-      line-height: 1.05;
+      line-height: 1.1;
       margin-bottom: 32px;
       letter-spacing: -2px;
     }
-    
+
     .hero-subtitle {
-      font-size: 24px;
+      font-size: 20px;
       color: var(--text-secondary);
-      max-width: 700px;
+      max-width: 600px;
       margin: 0 auto 40px;
+      line-height: 1.7;
     }
-    
-    .hero-pain {
-      font-size: 18px;
+
+    .trust-badges {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 24px;
+      font-size: 13px;
       color: var(--text-secondary);
-      margin-bottom: 40px;
+      font-weight: 500;
     }
-    
-    .hero-pain strong {
-      color: var(--text-primary);
-      display: block;
-      margin: 8px 0;
+
+    .trust-badges span::before {
+      content: '•';
+      margin-right: 8px;
+      color: var(--accent);
     }
-    
+
+    .trust-badges span:first-child::before {
+      content: none;
+    }
+
+    /* Buttons */
     .cta-group {
       display: flex;
       gap: 16px;
       justify-content: center;
-      margin-bottom: 60px;
+      flex-wrap: wrap;
     }
-    
+
     .btn {
       padding: 16px 32px;
       border-radius: 8px;
       font-size: 16px;
       font-weight: 600;
       text-decoration: none;
+      transition: all 0.2s;
       cursor: pointer;
       border: none;
     }
-    
+
     .btn-primary {
       background: var(--accent);
-      color: white;
+      color: var(--text-light);
     }
-    
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
     .btn-secondary {
       background: transparent;
       color: var(--text-primary);
       border: 2px solid var(--border);
     }
-    
-    .hero-example {
-      background: var(--bg-primary);
-      border-radius: 16px;
-      padding: 32px;
-      max-width: 800px;
+
+    .btn-secondary:hover {
+      border-color: var(--text-primary);
+    }
+
+    /* Section Styles */
+    section {
+      padding: 100px 24px;
+    }
+
+    .container {
+      max-width: 900px;
       margin: 0 auto;
-      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .section-content {
+      font-size: 21px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .section-content p {
+      margin-bottom: 24px;
+    }
+
+    .section-content strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Transformation Section */
+    .transformation {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Core Positioning */
+    .positioning {
+      text-align: center;
+    }
+
+    .positioning blockquote {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--text-primary);
+      border-left: 4px solid var(--accent);
+      padding-left: 32px;
+      margin: 0;
       text-align: left;
     }
-    
-    .hero-example-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
+
+    /* Life Improvement */
+    .life-improvement {
+      background: var(--bg-secondary);
     }
-    
-    .hero-example-content {
-      font-size: 16px;
-      line-height: 1.6;
-    }
-    
-    .hero-example-content strong {
-      color: var(--success);
-    }
-    
-    /* Section styles */
-    .section { padding: 100px 0; }
-    .section-alt { background: var(--bg-secondary); }
-    
-    h2 {
-      font-size: 48px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      letter-spacing: -1px;
-    }
-    
-    .section-header {
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto 60px;
-    }
-    
-    .section-intro {
-      font-size: 20px;
-      color: var(--text-secondary);
-    }
-    
-    /* Comparison */
-    .comparison {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      margin-top: 60px;
-    }
-    
-    .comparison-col {
-      padding: 40px;
-    }
-    
-    .comparison-col:last-child {
-      background: var(--bg-primary);
-      border-left: 1px solid var(--border);
-    }
-    
-    .comparison-col h3 {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-secondary);
-      margin-bottom: 12px;
-    }
-    
-    .comparison-col h4 {
-      font-size: 28px;
-      margin-bottom: 32px;
-    }
-    
-    .comparison-col ul {
+
+    .outcomes-list {
       list-style: none;
+      padding: 0;
     }
-    
-    .comparison-col li {
-      padding: 16px 0;
-      color: var(--text-secondary);
+
+    .outcomes-list li {
+      padding: 20px 0;
       border-bottom: 1px solid var(--border);
-      font-size: 15px;
-    }
-    
-    .comparison-col li:last-child {
-      border-bottom: none;
-    }
-    
-    .comparison-col:first-child li::before {
-      content: "✕";
-      margin-right: 12px;
-      color: #999;
-    }
-    
-    .comparison-col:last-child li::before {
-      content: "✓";
-      margin-right: 12px;
-      color: var(--success);
-    }
-    
-    /* Scenarios */
-    .scenarios {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      margin-top: 60px;
-    }
-    
-    .scenario {
-      background: var(--bg-secondary);
-      border-radius: 16px;
-      padding: 40px;
-      border: 1px solid var(--border);
-    }
-    
-    .scenario-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    
-    .scenario-icon {
-      font-size: 32px;
-    }
-    
-    .scenario-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
-    
-    .scenario-desc {
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-      font-size: 16px;
-    }
-    
-    .scenario-demo {
-      background: var(--bg-primary);
-      border-radius: 12px;
-      padding: 24px;
-      border: 1px solid var(--border);
-      font-family: monospace;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    
-    .scenario-demo .highlight {
-      color: var(--success);
-      font-weight: 600;
-    }
-    
-    /* Memory systems */
-    .memory-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 60px;
-    }
-    
-    .memory-card {
-      background: var(--bg-secondary);
-      padding: 32px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-    }
-    
-    .memory-card .rate {
-      display: inline-block;
-      padding: 4px 12px;
-      background: var(--bg-primary);
-      border-radius: 100px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 16px;
-    }
-    
-    .memory-card h3 {
       font-size: 18px;
-      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
     }
-    
-    .memory-card .plain {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-    }
-    
-    .memory-card .example {
-      font-size: 13px;
-      color: var(--text-secondary);
-      font-style: italic;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-    
-    /* Quote */
-    .quote-section {
-      padding: 120px 0;
-      text-align: center;
-      background: var(--bg-primary);
-    }
-    
-    .quote {
-      font-size: 36px;
-      font-weight: 700;
-      max-width: 900px;
-      margin: 0 auto 40px;
-      line-height: 1.3;
-      letter-spacing: -1px;
-    }
-    
-    .quote-author {
-      color: var(--text-secondary);
-      font-size: 16px;
-    }
-    
-    /* Pricing */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 32px;
-      max-width: 900px;
-      margin: 60px auto 0;
-    }
-    
-    .pricing-card {
-      background: var(--bg-secondary);
-      padding: 48px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-    }
-    
-    .pricing-card.featured {
-      border: 2px solid var(--accent);
-    }
-    
-    .pricing-card h3 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-    
-    .pricing-card .tagline {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-    }
-    
-    .price {
-      font-size: 48px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    
-    .price span {
-      font-size: 16px;
-      font-weight: 400;
-      color: var(--text-secondary);
-    }
-    
-    .pricing-card .speed {
-      font-size: 14px;
-      color: var(--success);
-      font-weight: 600;
-      margin-bottom: 32px;
-    }
-    
-    .pricing-card ul {
-      list-style: none;
-      margin-bottom: 32px;
-    }
-    
-    .pricing-card li {
-      padding: 10px 0;
-      color: var(--text-secondary);
-      font-size: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .pricing-card li:last-child {
+
+    .outcomes-list li:last-child {
       border-bottom: none;
     }
-    
-    .pricing-card li::before {
-      content: "✓";
-      margin-right: 8px;
-      color: var(--accent);
+
+    .outcomes-list strong {
+      color: var(--text-primary);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
     }
-    
-    .pricing-note {
+
+    .outcome-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    /* CTA Bridge */
+    .cta-bridge {
       text-align: center;
-      margin-top: 40px;
-      color: var(--text-secondary);
-      font-size: 14px;
+      padding: 80px 24px;
     }
-    
+
+    .cta-bridge h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .cta-reassurance {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 16px;
+    }
+
+    /* Final CTA */
+    .final-cta {
+      background: var(--bg-accent);
+      color: var(--text-light);
+      text-align: center;
+      padding: 120px 24px;
+    }
+
+    .final-cta h2 {
+      font-size: 42px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .final-cta p {
+      font-size: 20px;
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    .final-cta .btn-primary {
+      background: var(--text-light);
+      color: var(--bg-accent);
+    }
+
     /* Footer */
     footer {
-      padding: 40px 0;
-      border-top: 1px solid var(--border);
+      padding: 60px 24px;
       text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-tagline {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
       color: var(--text-secondary);
+      text-decoration: none;
       font-size: 14px;
     }
-    
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 24px;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
-      h1 { font-size: 40px; }
-      h2 { font-size: 32px; }
-      .comparison { grid-template-columns: 1fr; }
-      .comparison-col:last-child { border-left: none; border-top: 1px solid var(--border); }
-      .memory-grid { grid-template-columns: 1fr; }
-      .pricing-grid { grid-template-columns: 1fr; }
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      .hero-subtitle {
+        font-size: 18px;
+      }
+
+      .trust-badges {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .trust-badges span::before {
+        content: none;
+      }
+
+      .positioning blockquote {
+        font-size: 22px;
+        padding-left: 20px;
+      }
+
+      .final-cta h2 {
+        font-size: 32px;
+      }
+
+      .header-nav {
+        display: none;
+      }
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(27, 27, 29, 0.05) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      animation: pulse 8s ease-in-out infinite;
     }
   </style>
 </head>
 <body>
 
-<nav>
-  <div class="container">
-    <a href="/" class="logo">MIND</a>
-    <div class="nav-links">
-      <a href="#problem">The Problem</a>
-      <a href="#how-it-works">How It Works</a>
-      <a href="#pricing">Pricing</a>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <a href="/" class="logo">Hicks</a>
+      <nav class="header-nav">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#features">Features</a>
+        <a href="https://github.com/qwibitai/hicks">GitHub</a>
+        <a href="#get-started" class="btn btn-primary" style="padding: 8px 20px; font-size: 14px;">Get Started</a>
+      </nav>
     </div>
-  </div>
-</nav>
+  </header>
 
-<!-- Hero -->
-<section class="hero">
-  <div class="container">
-    <h1>Your Second Brain Is Drowning</h1>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Welcome. I am Hicks—your living memory that metabolizes, dreams, and reweaves itself.</h1>
+      
+      <p class="hero-subtitle">
+        Imagine never losing a single good idea again. No more sessions that vanish into thin air. 
+        No more scrolling through endless notes, wondering what you once knew. 
+        No more repeating the same mistakes because yesterday's friction got forgotten.
+      </p>
+      <p class="hero-subtitle">
+        With Hicks, your mind becomes continuous.
+      </p>
+
+      <div class="cta-group">
+        <a href="#get-started" class="btn btn-primary">Create Your Hicks Vault — $299</a>
+        <a href="#demo" class="btn btn-secondary">Watch 60-Second Demo</a>
+      </div>
+
+      <div class="trust-badges">
+        <span>Local-first</span>
+        <span>Open source</span>
+        <span>Markdown forever</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transformation Section -->
+  <section class="transformation">
+    <div class="container">
+      <div class="section-content">
+        <p>
+          Every article you read, every conversation you have, every insight that flashes across your screen 
+          becomes food for something alive. Hicks <strong>digests it</strong>—breaks it into clean, sharp pieces, 
+          finds the real connections, strengthens what's already there, throws away the noise—and quietly grows 
+          stronger while you sleep.
+        </p>
+        
+        <p>
+          You wake up to a vault that learned overnight. Old notes aren't frozen in time; they're quietly 
+          rethought, sharpened, updated so they reflect what you understand today, not six months ago. 
+          Friction that used to frustrate you now becomes fuel—patterns surface, small improvements propose 
+          themselves, and with one click you approve them. Your second brain gets better at being you every 
+          single day.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Positioning Section -->
+  <section class="positioning">
+    <div class="container">
+      <blockquote>
+        This isn't another app that stores your thoughts. This is your extended mind—persistent, self-aware, 
+        evolving. It remembers how you work best, what trips you up, what lights you up. It holds your habits, 
+        your experiences, your hard-won knowledge… and quietly turns them into something wiser.
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- Life Improvement Section -->
+  <section class="life-improvement" id="features">
+    <div class="container">
+      <p class="section-title">Life With Hicks</p>
+      
+      <ul class="outcomes-list">
+        <li>
+          <span class="outcome-icon">💡</span>
+          <div>
+            <strong>Decisions come faster</strong>
+            because the right context is already there. Your pricing strategy from March, 
+            your customer research from last quarter—it all surfaces exactly when you need it.
+          </div>
+        </li>
+        
+        <li>
+          <span class="outcome-icon">🌊</span>
+          <div>
+            <strong>Creative work flows deeper</strong>
+            because forgotten threads suddenly reconnect. That half-baked idea from six months ago? 
+            It just linked to your current project. Patterns emerge you never saw before.
+          </div>
+        </li>
+        
+        <li>
+          <span class="outcome-icon">⏱️</span>
+          <div>
+            <strong>You waste less time</strong>
+            re-explaining yourself to yourself. Hicks remembers your reasoning, your decisions, 
+            your evolving understanding. No more starting from zero.
+          </div>
+        </li>
+        
+        <li>
+          <span class="outcome-icon">🌱</span>
+          <div>
+            <strong>You feel more like the version of you</strong>
+            that's always learning, always growing, never starting from zero. Hicks isn't about 
+            collecting more notes. It's about becoming more you.
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CTA Bridge -->
+  <section class="cta-bridge" id="get-started">
+    <div class="container">
+      <h2>Start today. Your vault is waiting.</h2>
+      <p class="section-content">
+        One conversation, one drop of raw material, and it begins to live.
+      </p>
+
+      <div class="cta-group">
+        <a href="https://github.com/qwibitai/hicks/releases" class="btn btn-primary">Create Your Hicks Vault — $299</a>
+      </div>
+
+      <p class="cta-reassurance">
+        Local-first. Open source. Forever yours. No credit card. No lock-in. Just your mind, upgraded.
+      </p>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <h2>Your memory shouldn't die with the session. Hicks lives. Hicks learns. Hicks becomes more you every day.</h2>
     
-    <p class="hero-pain">
-      Notion. Obsidian. Bear. You've tried them all.
-      <strong>The folders got deeper.</strong>
-      <strong>The links got broken.</strong>
-      <strong>The ideas got buried.</strong>
-    </p>
-    
-    <p class="hero-subtitle">
-      You don't need another filing cabinet. You need a mind that <em>thinks</em> while you're away.
-    </p>
-    
+    <p>Claim your living memory today.</p>
+
     <div class="cta-group">
-      <a href="#pricing" class="btn btn-primary">Get MIND — $299</a>
-      <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+      <a href="https://github.com/qwibitai/hicks/releases" class="btn btn-primary">Begin →</a>
     </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-tagline">Hicks — I am Hicks.</p>
     
-    <div class="hero-example">
-      <div class="hero-example-label">While you were away:</div>
-      <div class="hero-example-content">
-        You clipped 3 articles about creativity. <strong>MIND extracted 12 atomic claims, found 7 connections to your notes on habits, psychology, and your novel draft.</strong> The sources archived. The knowledge integrated. You wake up to connections you didn't know existed.
-      </div>
+    <div class="footer-links">
+      <a href="https://github.com/qwibitai/hicks">GitHub</a>
+      <a href="/docs">Docs</a>
+      <a href="/blog">Blog</a>
+      <a href="https://twitter.com/hicksai">Twitter/X</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
     </div>
-  </div>
-</section>
 
-<!-- Problem Comparison -->
-<section class="section section-alt" id="problem">
-  <div class="container">
-    <div class="section-header">
-      <h2>Storage vs Metabolism</h2>
-      <p class="section-intro">
-        A filing cabinet doesn't get smarter. It just fills up. MIND breaks down what you capture, 
-        distributes it through your knowledge graph, and strengthens connections while you sleep.
-      </p>
-    </div>
-    
-    <div class="comparison">
-      <div class="comparison-col">
-        <h3>Every Notes App</h3>
-        <h4>Storage</h4>
-        <ul>
-          <li>Store articles whole</li>
-          <li>You organize everything manually</li>
-          <li>Old notes rot in place</li>
-          <li>Search and hope you find it</li>
-          <li>AI starts fresh every chat</li>
-          <li>Connections are manual (if you remember)</li>
-          <li>Folder hell — misc, temp, sort</li>
-        </ul>
-      </div>
-      
-      <div class="comparison-col">
-        <h3>MIND</h3>
-        <h4>Metabolism</h4>
-        <ul>
-          <li>Breaks into atomic claims automatically</li>
-          <li>Auto-organizes as you capture</li>
-          <li>Old notes get stronger with new links</li>
-          <li>Connections surface automatically</li>
-          <li>AI remembers everything you discussed</li>
-          <li>Links found while you sleep</li>
-          <li>Emergent structure — no folders needed</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- How It Works (Scenarios) -->
-<section class="section" id="how-it-works">
-  <div class="container">
-    <div class="section-header">
-      <h2>What Living Memory Feels Like</h2>
-      <p class="section-intro">
-        Not features. Behaviors. Things that happen while you're doing something else.
-      </p>
-    </div>
-    
-    <div class="scenarios">
-      <!-- Scenario 1 -->
-      <div class="scenario">
-        <div class="scenario-header">
-          <span class="scenario-icon">🌙</span>
-          <span class="scenario-title">The Morning Surprise</span>
-        </div>
-        <p class="scenario-desc">Monday 9 AM. You open MIND to find your overnight processing complete:</p>
-        
-        <div class="scenario-demo">
-📄 Processed 3 articles you clipped
-   → Extracted 12 atomic claims
-   → Found 7 connections to your notes
-   → Archived sources
-
-🔗 "Behavioral Economics" now connects to:
-      Pricing Psychology
-      Habit Formation  
-      Your novel draft (Ch 3)
-
-<span class="highlight">[Review connections]  [Dismiss]</span>
-        </div>
-      </div>
-      
-      <!-- Scenario 2 -->
-      <div class="scenario">
-        <div class="scenario-header">
-          <span class="scenario-icon">💬</span>
-          <span class="scenario-title">The Chat That Remembers</span>
-        </div>
-        <p class="scenario-desc">You ask a question. Your AI doesn't start fresh — it brings your history:</p>
-        
-        <div class="scenario-demo">
-You: Should I add a free tier?
-
-🤖 AI: Based on your <span class="highlight">March strategy session</span>, 
-you prioritized revenue over growth. You also expressed concern 
-about support burden <span class="highlight">twice in previous conversations</span>.
-
-I'd recommend against it. Here's why...
-
-[Links to: "Revenue vs Growth Decision" — March 15]
-[Links to: "Support Burden Concerns" — Chat from 3 weeks ago]
-        </div>
-      </div>
-      
-      <!-- Scenario 3 -->
-      <div class="scenario">
-        <div class="scenario-header">
-          <span class="scenario-icon">🔍</span>
-          <span class="scenario-title">The Pattern Recognition</span>
-        </div>
-        <p class="scenario-desc">MIND notices what you don't — patterns across your captures:</p>
-        
-        <div class="scenario-demo">
-💡 Pattern detected
-
-You've captured 8 notes about "customer research" this month.
-
-But none link to your "Product Roadmap" or "Feature Decisions."
-
-Want me to suggest connections?
-
-<span class="highlight">[Show me]  [Ignore]  [Don't ask again]</span>
-        </div>
-      </div>
-      
-      <!-- Scenario 4 -->
-      <div class="scenario">
-        <div class="scenario-header">
-          <span class="scenario-icon">📈</span>
-          <span class="scenario-title">The Self-Improvement</span>
-        </div>
-        <p class="scenario-desc">Your AI learns how you work — and adapts:</p>
-        
-        <div class="scenario-demo">
-🤖 AI: I've noticed something. You always ask for bullet points first, 
-then expand if needed.
-
-I've updated my default response style.
-
-BEFORE: "Here's my analysis..." [long paragraph]
-AFTER: "Key points:" [bullets] "Details below..."
-
-<span class="highlight">[Keep new style]  [Revert]  [View all changes]</span>
-        </div>
-      </div>
-      
-      <!-- Scenario 5 -->
-      <div class="scenario">
-        <div class="scenario-header">
-          <span class="scenario-icon">🩺</span>
-          <span class="scenario-title">The Health Check</span>
-        </div>
-        <p class="scenario-desc">Before you start, MIND checks your knowledge graph vitals:</p>
-        
-        <div class="scenario-demo">
-🩺 Knowledge Health — Monday, 9:03 AM
-
-12 orphan notes (no incoming links)
-3 broken wiki-links  
-1 contradictory claim detected
-
-Your knowledge graph is 94% healthy.
-
-<span class="highlight">[Fix issues]  [Remind me tomorrow]</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Quote -->
-<section class="quote-section">
-  <div class="container">
-    <p class="quote">
-      "I used to spend Sunday organizing notes. Now I just capture. MIND connects the dots while I sleep."
+    <p class="footer-copy">
+      Open source • Local markdown • Built from Agentic Note-Taking research<br>
+      © 2026 Hicks • Privacy-first • No cloud lock-in
     </p>
-    <p class="quote-author">— Maya K., Writer & Researcher</p>
-  </div>
-</section>
-
-<!-- Three Memories -->
-<section class="section section-alt">
-  <div class="container">
-    <div class="section-header">
-      <h2>Three Memories, One Mind</h2>
-      <p class="section-intro">
-        Human memory isn't one system — it's three. MIND mirrors this architecture, 
-        each growing at its own pace.
-      </p>
-    </div>
-    
-    <div class="memory-grid">
-      <div class="memory-card">
-        <span class="rate">Steady Growth</span>
-        <h3>🧠 Semantic Memory</h3>
-        <p class="plain">Your Knowledge</p>
-        <p class="plain">Facts, concepts, domain knowledge. Your notes with wiki-links, Maps of Content, connected ideas.</p>
-        <div class="example">"Every new note strengthens the web. A node with 6 incoming links is more valuable than one with 1."</div>
-      </div>
-      
-      <div class="memory-card">
-        <span class="rate">Slow Evolution</span>
-        <h3>👤 Episodic Memory</h3>
-        <p class="plain">Your AI's Identity</p>
-        <p class="plain">How you work, what you prefer, patterns learned over months of conversation.</p>
-        <div class="example">"I've noticed you always ask for bullet points first. I've updated my default style."</div>
-      </div>
-      
-      <div class="memory-card">
-        <span class="rate">High Churn → Graduate</span>
-        <h3>⚙️ Procedural Memory</h3>
-        <p class="plain">The System's Wisdom</p>
-        <p class="plain">How MIND works. Observations, friction logs, methodology that evolves.</p>
-        <div class="example">"Orphan notes > 10 detected. Surface for review? [Yes] [Ignore]"</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Pricing -->
-<section class="section" id="pricing">
-  <div class="container">
-    <div class="section-header">
-      <h2>Choose Your Metabolism</h2>
-      <p class="section-intro">
-        Same core. Different speed. Both digest, both connect, both evolve.
-      </p>
-    </div>
-    
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <h3>MIND Solo</h3>
-        <p class="tagline">For those who want total control</p>
-        <div class="price">$299 <span>one-time</span></div>
-        <p class="speed">Local digestion</p>
-        
-        <ul>
-          <li>Rich note-taking with wiki-links</li>
-          <li>Web clipper & voice capture</li>
-          <li>Local AI chat (Ollama)</li>
-          <li>File-based storage (Markdown/YAML)</li>
-          <li>You create connections manually</li>
-          <li>AI starts fresh each session</li>
-          <li>Works 100% offline</li>
-        </ul>
-        
-        <a href="#" class="btn btn-secondary" style="width: 100%; display: block; text-align: center;">Buy Solo</a>
-      </div>
-      
-      <div class="pricing-card featured">
-        <h3>MIND Connected ⭐</h3>
-        <p class="tagline">For those who want Living Memory</p>
-        <div class="price">$299 <span>+ OpenClaw</span></div>
-        <p class="speed">Cloud-accelerated digestion</p>
-        
-        <ul>
-          <li>Everything in Solo, plus:</li>
-          <li>Atomic claim extraction (automated)</li>
-          <li>Automatic connection finding</li>
-          <li>Persistent conversation history</li>
-          <li>AI learns your style over time</li>
-          <li>Proactive health checks</li>
-          <li>Pattern recognition & suggestions</li>
-        </ul>
-        
-        <a href="#" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">Buy Connected</a>
-      </div>
-    </div>
-    
-    <p class="pricing-note">
-      <strong>Data portability:</strong> Your notes are always yours (Markdown files). AI learned patterns in Connected mode are exportable as a "memory seed." <br><br>
-      Both include lifetime updates. 30-day money-back guarantee. No subscriptions, ever.
-    </p>
-  </div>
-</section>
-
-<footer>
-  <div class="container">
-    <p>© 2026 i_am_Hicks. MIND connects what you forgot you captured. Surfaces what you didn't know you knew. Grows stronger while you sleep.</p>
-  </div>
-</footer>
+  </footer>
 
 </body>
 </html>
